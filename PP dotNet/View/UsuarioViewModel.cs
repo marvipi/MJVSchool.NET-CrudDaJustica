@@ -32,4 +32,9 @@ public readonly struct UsuarioViewModel
         DataDeNascimento = dataDeNascimento;
         Centenario = centenario;
     }
+
+    public override string ToString()
+    {
+        return string.Format("{0}\t{1}\t{2}", Nome, DataDeNascimento, Centenario);
+    }
 }

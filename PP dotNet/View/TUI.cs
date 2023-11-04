@@ -12,6 +12,12 @@ public class TUI
     private readonly UsuarioController usuarioController;
     private readonly EscritorDeConsole escritorDeConsole;
     private readonly CultureInfo culturaLocal;
+    private readonly Stack<string> path;
+
+    // Summary: Transforms the path into a string, separating each view with a forward slash.
+    // Returns: A string in the form FIRST_VIEW/SECOND_VIEW/THIRD_VIEW...
+    private string PathToString() => path
+        .Aggregate((s, r) => r + "/" + s);
 
     /// <summary>
     /// Instancia uma nova interface de linha de comando.
@@ -26,6 +32,7 @@ public class TUI
         this.usuarioController = usuarioController;
         this.escritorDeConsole = escritorDeConsole;
         this.culturaLocal = culturaLocal;
+        path = new();
     }
 
     /// <summary>
@@ -33,240 +40,242 @@ public class TUI
     /// </summary>
     public void Iniciar()
     {
-        Inicio();
+        Home();
         Environment.Exit(0);
     }
 
+    private void Exit() => Environment.Exit(0);
+
     // O ponto de entrada para todas as outras exibições.
-    private void Inicio()
+    private void Home()
     {
-        var dictInstrucoes = new Dictionary<ConsoleKey, string>()
-        {
-            {ConsoleKey.Escape, "Sair"},
-            {ConsoleKey.H, "Herois" },
-            {ConsoleKey.V, "Viloes" },
-        };
-        var instrucoes = new Instrucoes(dictInstrucoes, 5);
+        path.Push(nameof(Home).ToUpper());
+        var inicioView = new ViewBuilder()
+            .AppendLine("USER::ADMIN: J'ONN J'ONNZ")
+            .AppendLine(PathToString())
+            .Add(new BoundKeyMap(Exit, ConsoleKey.Escape, "ESC: EXIT"))
+            .Add(new BoundKeyMap(Heroes, ConsoleKey.H, "H: HEROES"))
+            .Add(new BoundKeyMap(Villains, ConsoleKey.V, "V: VILLAINS"))
+            .Build();
 
         while (true)
         {
-            escritorDeConsole.Exibir(instrucoes);
-
-            switch (Console.ReadKey(true).Key)
-            {
-                case ConsoleKey.H:
-                    Herois();
-                    break;
-                case ConsoleKey.Escape:
-                    return;
-            }
+            inicioView.Display();
+            inicioView.Invoke(Console.ReadKey(true).Key);
         }
     }
 
-    private void Herois()
-    {
-        escritorDeConsole.AvancarCaminho(nameof(Herois).ToUpper());
+    private void Villains() => Exit();
 
-        var dictInstrucoes = new Dictionary<ConsoleKey, string>()
-        {
-            {ConsoleKey.Escape, "Voltar"},
-            {ConsoleKey.C, "Cadastrar" },
-            {ConsoleKey.A, "Atualizar" },
-            {ConsoleKey.D, "Deletar" },
-        };
-        var instrucoes = new Instrucoes(dictInstrucoes, 5);
+    private void Heroes()
+    {
+        path.Push(nameof(Heroes).ToUpper());
+
+        var header = new ViewBuilder()
+            .AppendLine("USER::ADMIN: J'ONN J'ONNZ")
+            .AppendLine(PathToString())
+            .Add(new UnboundKeyMap(ConsoleKey.Escape, "ESC: Back"))
+            .Add(new BoundKeyMap(Create, ConsoleKey.C, "C: Create"))
+            .Add(new BoundKeyMap(Update, ConsoleKey.U, "U: Update"))
+            .Add(new BoundKeyMap(Delete, ConsoleKey.D, "D: Delete"))
+            .Build();
+
+        var nextPage = new BoundKeyMap(usuarioController.AvancarPagina, ConsoleKey.RightArrow, "->: Next page");
+        var prevPage = new BoundKeyMap(usuarioController.VoltarPagina, ConsoleKey.LeftArrow, "<-: Previous page");
+        var nextElem = new UnboundKeyMap(ConsoleKey.DownArrow, "\\/: Next element");
+        var prevElem = new UnboundKeyMap(ConsoleKey.UpArrow, "/\\: Previous element");
+        var listing = new Listing<UsuarioViewModel>(usuarioController.Listar, nextPage, prevPage, nextElem, prevElem);
 
         while (true)
         {
-            var listagemDeUsuarios = usuarioController.Listar();
-            escritorDeConsole.Exibir(instrucoes, listagemDeUsuarios);
+            header.Display();
+            listing.Display();
 
-            switch (Console.ReadKey(true).Key)
+            var input = Console.ReadKey(true).Key;
+            if (input == ConsoleKey.Escape)
             {
-                case ConsoleKey.C:
-                    Cadastrar();
-                    break;
-
-                case ConsoleKey.A:
-                    Atualizar();
-                    break;
-
-                case ConsoleKey.D:
-                    Deletar();
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    usuarioController.AvancarPagina();
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    usuarioController.VoltarPagina();
-                    break;
-
-                case ConsoleKey.Escape:
-                    escritorDeConsole.ReverterCaminho();
-                    return;
-            }
-        }
-    }
-
-    private void Cadastrar()
-    {
-        escritorDeConsole.AvancarCaminho(nameof(Cadastrar).ToUpper());
-
-        var dictInstrucoes = new Dictionary<ConsoleKey, string>()
-        {
-            {ConsoleKey.Escape, "Voltar"},
-            {ConsoleKey.Enter, "Confirmar"},
-        };
-        var instrucoes = new Instrucoes(dictInstrucoes, 5);
-
-        while (true)
-        {
-
-            var novoUsuario = escritorDeConsole.Exibir(instrucoes, new FormularioDeUsuario(culturaLocal));
-
-            switch (Console.ReadKey(true).Key)
-            {
-                case ConsoleKey.Enter:
-                    usuarioController.Cadastrar(novoUsuario.Nome, novoUsuario.DataDeNascimento);
-                    return;
-
-                case ConsoleKey.Escape:
-                    escritorDeConsole.ReverterCaminho();
-                    return;
-
-            }
-        }
-    }
-
-    private void Deletar()
-    {
-        escritorDeConsole.AvancarCaminho(nameof(Deletar).ToUpper());
-
-        var dictInstrucoes = new Dictionary<ConsoleKey, string>()
-        {
-            {ConsoleKey.Escape, "Cancelar"},
-            {ConsoleKey.UpArrow, "Cima"},
-            {ConsoleKey.DownArrow, "Baixo"},
-            {ConsoleKey.D, "Deletar"},
-        };
-
-        var instrucoes = new Instrucoes(dictInstrucoes, 5);
-        var posicao = 0;
-
-        while (true)
-        {
-            var listagemDeUsuarios = usuarioController.Listar();
-
-            if (!listagemDeUsuarios.Any())
-            {
-                Console.Beep(1000, 100);
-                escritorDeConsole.ReverterCaminho();
+                path.Pop();
                 return;
             }
 
-            posicao = listagemDeUsuarios.Count() < posicao
-                ? listagemDeUsuarios.Count()
-                : posicao;
+            header.Invoke(input);
+            listing.Invoke(input);
+        }
+    }
 
-            escritorDeConsole.Selecionar(instrucoes, listagemDeUsuarios, posicao);
+    private void Create()
+    {
+        path.Push(nameof(Create).ToUpper());
 
-            switch (Console.ReadKey(true).Key)
+        var header = new ViewBuilder()
+            .AppendLine("USER::ADMIN: J'ONN J'ONNZ")
+            .AppendLine(PathToString())
+            .Add(new UnboundKeyMap(ConsoleKey.Escape, "ENTER: Next"))
+            .Build();
+
+        var form = new FormBuilder(" {0}: ")
+            .Append(new Field("Nome"))
+            .Append(new Field("Data de nascimento"))
+            .Add(new UnboundKeyMap(ConsoleKey.Escape, "ESC: Cancel"))
+            .Add(new UnboundKeyMap(ConsoleKey.End, "ENTER: Save"))
+            .Build();
+
+        header.Display();
+
+        var formData = form.Display();
+
+        while (true)
+        {
+            var input = Console.ReadKey(true).Key;
+            if (input == ConsoleKey.Escape)
             {
-                case ConsoleKey.UpArrow:
-                    posicao = posicao > 0 ? posicao - 1 : posicao;
-                    break;
+                path.Pop();
+                return;
+            }
 
-                case ConsoleKey.DownArrow:
-                    posicao = posicao < listagemDeUsuarios.Count() - 1 ? posicao + 1 : posicao;
-                    break;
+            if (input == ConsoleKey.Enter)
+            {
+                var nome = formData.Data["Nome"] ?? "N/A"; // TODO Validar
+                var dataNasc = formData.Data["Data de nascimento"]; // TODO Validar
+                DateOnly.TryParseExact(dataNasc, culturaLocal.DateTimeFormat.ShortDatePattern, culturaLocal, DateTimeStyles.None, out var dataValida);
+                usuarioController.Cadastrar(nome, dataValida);
+                path.Pop();
+                return;
+            }
 
-                case ConsoleKey.RightArrow:
-                    usuarioController.AvancarPagina();
-                    listagemDeUsuarios = usuarioController.Listar();
-                    posicao = listagemDeUsuarios.Count() < posicao
-                        ? listagemDeUsuarios.Count() - 1
-                        : posicao;
-                    break;
+            Console.Beep(800, 200);
+        }
+    }
 
-                case ConsoleKey.LeftArrow:
-                    usuarioController.VoltarPagina();
-                    break;
+    private void Delete()
+    {
+        path.Push(nameof(Delete).ToUpper());
 
-                case ConsoleKey.D:
-                    usuarioController.Deletar(posicao);
-                    listagemDeUsuarios = usuarioController.Listar();
-                    if (!listagemDeUsuarios.Any())
-                    {
-                        usuarioController.VoltarPagina();
-                    }
-                    posicao = listagemDeUsuarios.Count() <= posicao
-                        ? listagemDeUsuarios.Count() - 1
-                        : posicao;
-                    break;
+        var heroDeleteView = new ViewBuilder()
+            .AppendLine("USER::ADMIN: J'ONN J'ONNZ")
+            .AppendLine(PathToString())
+            .Add(new UnboundKeyMap(ConsoleKey.Escape, "ESC: Back"))
+            .Add(new UnboundKeyMap(ConsoleKey.D, "D: Delete"))
+            .Build();
 
-                case ConsoleKey.Escape:
-                    escritorDeConsole.ReverterCaminho();
-                    return;
+        var nextPage = new BoundKeyMap(usuarioController.AvancarPagina, ConsoleKey.RightArrow, "->: Next page");
+        var prevPage = new BoundKeyMap(usuarioController.VoltarPagina, ConsoleKey.LeftArrow, "<-: Previous page");
+        var nextElem = new UnboundKeyMap(ConsoleKey.DownArrow, "\\/: Next element");
+        var prevElem = new UnboundKeyMap(ConsoleKey.UpArrow, "/\\: Previous element");
+        var listing = new Listing<UsuarioViewModel>(usuarioController.Listar, nextPage, prevPage, nextElem, prevElem);
+
+        while (true)
+        {
+            heroDeleteView.Display();
+            listing.Display();
+
+            var input = Console.ReadKey(true).Key;
+
+            if (input == ConsoleKey.Escape)
+            {
+                path.Pop();
+                return;
+            }
+
+            if (input == ConsoleKey.D)
+            {
+                break;
+            }
+
+            heroDeleteView.Invoke(input);
+            listing.Invoke(input);
+        }
+
+        Console.Clear();
+
+        while (true)
+        {
+            heroDeleteView.Display();
+            listing.Display();
+
+            var input = Console.ReadKey(true).Key;
+            listing.Invoke(input);
+
+            if (input == ConsoleKey.D)
+            {
+                usuarioController.Deletar(listing.CurrentlySelectedElement);
+            }
+
+            if (input == ConsoleKey.Escape)
+            {
+                path.Pop();
+                return;
             }
         }
     }
 
-    private void Atualizar()
+    private void Update()
     {
-        escritorDeConsole.AvancarCaminho(nameof(Atualizar));
+        path.Push(nameof(Update).ToUpper());
 
-        var dictInstrucoes = new Dictionary<ConsoleKey, string>()
-        {
-            {ConsoleKey.Escape, "Cancelar"},
-            {ConsoleKey.UpArrow, "Cima"},
-            {ConsoleKey.DownArrow, "Baixo"},
-            {ConsoleKey.A, "Atualizar"},
-        };
-        var instrucoes = new Instrucoes(dictInstrucoes, 5);
-        var posicao = 0;
+        var form = new FormBuilder(" {0}: ")
+            .Append(new Field("Nome"))
+            .Append(new Field("Data de nascimento"))
+            .Add(new UnboundKeyMap(ConsoleKey.Escape, "ESC: Cancel"))
+            .Add(new UnboundKeyMap(ConsoleKey.Enter, "ENTER: Next"))
+            .Build();
 
+        var header = new ViewBuilder()
+            .AppendLine("USER::ADMIN: J'ONN J'ONNZ")
+            .AppendLine(PathToString())
+            .Add(new UnboundKeyMap(ConsoleKey.Escape, "ESC: Back"))
+            .Add(new UnboundKeyMap(ConsoleKey.U, "U: Update"))
+            .Build();
+
+        var nextPage = new BoundKeyMap(usuarioController.AvancarPagina, ConsoleKey.RightArrow, "->: Next page");
+        var prevPage = new BoundKeyMap(usuarioController.VoltarPagina, ConsoleKey.LeftArrow, "<-: Previous page");
+        var nextElem = new UnboundKeyMap(ConsoleKey.DownArrow, "\\/: Next element");
+        var prevElem = new UnboundKeyMap(ConsoleKey.UpArrow, "/\\: Previous element");
+        var listing = new Listing<UsuarioViewModel>(usuarioController.Listar, nextPage, prevPage, nextElem, prevElem);
         while (true)
         {
-            var listagemDeUsuarios = usuarioController.Listar();
-            posicao = listagemDeUsuarios.Count() < posicao
-                ? listagemDeUsuarios.Count()
-                : posicao;
+            header.Display();
+            listing.Display();
 
-            escritorDeConsole.Selecionar(instrucoes, listagemDeUsuarios, posicao);
+            var input = Console.ReadKey(true).Key;
 
-            switch (Console.ReadKey(true).Key)
+            if (input == ConsoleKey.Escape)
             {
-                case ConsoleKey.UpArrow:
-                    posicao = posicao > 0 ? posicao - 1 : posicao;
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    posicao = posicao < listagemDeUsuarios.Count() - 1 ? posicao + 1 : posicao;
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    usuarioController.AvancarPagina();
-                    listagemDeUsuarios = usuarioController.Listar();
-                    posicao = listagemDeUsuarios.Count() < posicao
-                        ? listagemDeUsuarios.Count() - 1
-                        : posicao;
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    usuarioController.VoltarPagina();
-                    break;
-
-                case ConsoleKey.A:
-                    var dados = escritorDeConsole.Exibir(instrucoes, new FormularioDeUsuario(culturaLocal));
-                    usuarioController.Atualizar(dados.Nome, dados.DataDeNascimento, posicao);
-                    break;
-
-                case ConsoleKey.Escape:
-                    escritorDeConsole.ReverterCaminho();
-                    return;
+                path.Pop();
+                return;
             }
+
+            if (input == ConsoleKey.U)
+            {
+                break;
+            }
+
+            header.Invoke(input);
+            listing.Invoke(input);
+        }
+
+        header.Display();
+        var formData = form.Display();
+        while (true)
+        {
+            var input = Console.ReadKey().Key;
+            if (input == ConsoleKey.Escape)
+            {
+                path.Pop();
+                return;
+            }
+
+            if (input == ConsoleKey.Enter)
+            {
+                var nome = formData.Data["Nome"] ?? "N/A"; // TODO Validar
+                var dataNasc = formData.Data["Data de nascimento"]; // TODO Validar
+                DateOnly.TryParseExact(dataNasc, culturaLocal.DateTimeFormat.ShortDatePattern, culturaLocal, DateTimeStyles.None, out var dataValida);
+                usuarioController.Atualizar(nome, dataValida, listing.CurrentlySelectedElement);
+                path.Pop();
+                return;
+            }
+
+            Console.Beep(800, 200);
         }
     }
 }

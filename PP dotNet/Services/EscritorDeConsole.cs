@@ -59,7 +59,9 @@ public class EscritorDeConsole
     // Retorna
     private int Listar(Instrucoes instrucoes, IEnumerable<UsuarioViewModel> usuarios)
     {
-        Exibir(instrucoes);
+        Console.CursorVisible = true;
+        ExibirCabecalho();
+        ExibirInstrucoes(instrucoes);
         Console.CursorVisible = false;
 
         var primeiraLinha = Console.GetCursorPosition().Top;
@@ -71,25 +73,10 @@ public class EscritorDeConsole
                 usuario.Centenario);
         }
 
+        Console.SetCursorPosition(0, primeiraLinha + primeiraLinha);
+        Console.Write(">");
+
         return primeiraLinha;
-    }
-
-    public UsuarioViewModel Exibir(Instrucoes instrucoes, FormularioDeUsuario formulario)
-    {
-        ExibirCabecalho();
-
-        var coordenadas = formulario.ListarCampos();
-
-        while (!formulario.Preenchido)
-        {
-            (var linha, var coluna) = coordenadas.Peek();
-            Console.SetCursorPosition(linha, coluna);
-            formulario.LerProximo();
-            coordenadas.Dequeue();
-        }
-
-        ExibirInstrucoes(instrucoes);
-        return formulario.Salvar();
     }
 
 
