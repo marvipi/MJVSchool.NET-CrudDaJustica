@@ -1,7 +1,7 @@
-﻿namespace PP_dotNet.View;
+﻿namespace PP_dotNet.View.Forms;
 
 /// <summary>
-/// Represents a field in a <see cref="Form"/>.
+/// Represents a field <see cref="Form{T}"/>.
 /// </summary>
 public class Field
 {

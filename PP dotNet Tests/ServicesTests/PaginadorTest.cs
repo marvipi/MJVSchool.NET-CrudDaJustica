@@ -13,9 +13,9 @@ public class PaginadorTest
     public void UltimaPagina_TamanhoRepositorioEQuantidadeSaoValoresValidos_CalculaAUltimaPaginaCorretamente
         (int tamanhoRepositorio, int quantidade, int esperado)
     {
-        var paginador = new Paginador(tamanhoRepositorio, quantidade);
+        var paginador = new PagingService(tamanhoRepositorio, quantidade);
 
-        var resultado = paginador.UltimaPagina;
+        var resultado = paginador.LastPage;
 
         Assert.That(resultado, Is.EqualTo(esperado));
     }
@@ -25,7 +25,7 @@ public class PaginadorTest
     {
         var naoEstaSendoTestado = 10;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Paginador(-1, naoEstaSendoTestado));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(-1, naoEstaSendoTestado));
     }
 
     [Test]
@@ -33,75 +33,75 @@ public class PaginadorTest
     {
         var naoEstaSendoTestado = 10;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Paginador(naoEstaSendoTestado, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(naoEstaSendoTestado, 0));
     }
 
     [TestCase(10, 5, 20, 4)]
     public void TamanhoRepositorio_Atribuicao_AtualizaOValorDaUltimaPagina
         (int tamanhoRepositorioInicial, int quantidadeValida, int novoTamanho, int esperado)
     {
-        var paginador = new Paginador(tamanhoRepositorioInicial, quantidadeValida);
+        var paginador = new PagingService(tamanhoRepositorioInicial, quantidadeValida);
 
-        paginador.TamanhoRepositorio = novoTamanho;
+        paginador.RepositorySize = novoTamanho;
 
-        Assert.That(paginador.UltimaPagina, Is.EqualTo(esperado));
+        Assert.That(paginador.LastPage, Is.EqualTo(esperado));
     }
 
     [TestCase(250, 150)]
     public void Atual_NumeroDaPaginaRetornadaEIgualAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
     {
-        var paginador = new Paginador(tamanhoRepositorioValido, quantidadeValida);
+        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
 
-        var paginaAtual = paginador.Atual();
+        var paginaAtual = paginador.GetCurrentPage();
 
-        Assert.That(paginaAtual.Numero, Is.EqualTo(paginador.PaginaAtual));
+        Assert.That(paginaAtual.Number, Is.EqualTo(paginador.CurrentPage));
     }
 
     [TestCase(5, 98)]
     public void Atual_QuantidadeDaPaginaRetornadaEIgualAQuantidade(int tamanhoRepositorioValido, int quantidadeValida)
     {
-        var paginador = new Paginador(tamanhoRepositorioValido, quantidadeValida);
+        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
 
-        var paginaAtual = paginador.Atual();
+        var paginaAtual = paginador.GetCurrentPage();
 
-        Assert.That(paginaAtual.Quantidade, Is.EqualTo(paginador.Quantidade));
+        Assert.That(paginaAtual.Rows, Is.EqualTo(paginador.RowsPerPage));
     }
 
     [TestCase(200, 20)]
     public void Avancar_PaginaAtualMenorQueAUltima_IncrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
     {
-        var paginador = new Paginador(tamanhoRepositorioValido, quantidadeValida);
-        var paginaAtualInicial = paginador.PaginaAtual;
+        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
+        var paginaAtualInicial = paginador.CurrentPage;
 
-        paginador.Avancar();
+        paginador.NextPage();
 
         var esperado = paginaAtualInicial + 1;
 
-        Assert.That(paginador.PaginaAtual, Is.EqualTo(esperado));
+        Assert.That(paginador.CurrentPage, Is.EqualTo(esperado));
     }
 
     [TestCase(1, 10)]
     public void Avancar_PaginaAtualEIgualAUltima_NaoIncrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
     {
-        var paginador = new Paginador(tamanhoRepositorioValido, quantidadeValida);
-        var paginaAtualInicial = paginador.PaginaAtual;
+        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
+        var paginaAtualInicial = paginador.CurrentPage;
 
-        paginador.Avancar();
+        paginador.NextPage();
 
-        var novaPaginaAtual = paginador.PaginaAtual;
+        var novaPaginaAtual = paginador.CurrentPage;
         Assert.That(paginaAtualInicial, Is.EqualTo(novaPaginaAtual));
     }
 
     [TestCase(10, 6)]
     public void Voltar_PaginaAtualEMaiorQueAPrimeira_DecrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
     {
-        var paginador = new Paginador(tamanhoRepositorioValido, quantidadeValida);
-        var paginaInicial = paginador.PaginaAtual;
+        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
+        var paginaInicial = paginador.CurrentPage;
 
-        paginador.Avancar();
-        paginador.Voltar();
+        paginador.NextPage();
+        paginador.PreviousPage();
 
-        var novaPaginaAtual = paginador.PaginaAtual;
+        var novaPaginaAtual = paginador.CurrentPage;
 
         Assert.That(novaPaginaAtual, Is.EqualTo(paginaInicial));
     }
@@ -109,11 +109,11 @@ public class PaginadorTest
     [TestCase(75, 4)]
     public void Voltar_PaginaAtualEIgualAPrimeira_NaoDecrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
     {
-        var paginador = new Paginador(tamanhoRepositorioValido, quantidadeValida);
-        var numPrimeiraPagina = paginador.PaginaAtual;
+        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
+        var numPrimeiraPagina = paginador.CurrentPage;
 
-        paginador.Voltar();
+        paginador.PreviousPage();
 
-        Assert.That(paginador.PaginaAtual, Is.EqualTo(numPrimeiraPagina));
+        Assert.That(paginador.CurrentPage, Is.EqualTo(numPrimeiraPagina));
     }
 }

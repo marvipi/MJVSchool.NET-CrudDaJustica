@@ -1,19 +1,14 @@
 ﻿using PP_dotNet.Controller;
 using PP_dotNet.Data;
-using PP_dotNet.Services;
-using PP_dotNet.View;
-using System.Globalization;
+using PP_dotNet.View.UI;
 
-// A quantidade de elementos que serão exibidos em cada paginação.
-const int QTD_PAGINACAO_INICIAL = 10;
+const int INITIAL_REPO_SIZE = 10;
+const int ROWS_PER_PAGE = 10;
 
-var cabecalho = new Cabecalho("J'ONN J'ONNZ", "INICIO", "NONE");
+IHeroRepository virtualRepo = new VirtualRepository(INITIAL_REPO_SIZE);
+var pagingService = new PagingService(virtualRepo.RepositorySize, ROWS_PER_PAGE);
+var heroController = new HeroController(virtualRepo, pagingService);
 
-IRepositorio repositorio = new RepositorioVirtual();
-var paginador = new Paginador(repositorio.QtdUsuarios, QTD_PAGINACAO_INICIAL);
-var usuarioController = new UsuarioController(repositorio, paginador);
-var escritorDeConsole = new EscritorDeConsole(cabecalho);
-
-var tui = new TUI(usuarioController, escritorDeConsole, CultureInfo.CurrentUICulture);
-tui.Iniciar();
+var cli = new CLI(heroController);
+cli.Start();
 
