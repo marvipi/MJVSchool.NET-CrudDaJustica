@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.CliLib.Keybindings;
+﻿namespace CrudDaJustica.Cli.Lib.Keybindings;
 
 /// <summary>
 /// Represents the mapping of a <see cref="ConsoleKey"/> to an <see cref="Action"/>.

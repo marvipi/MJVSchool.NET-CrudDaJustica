@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PP dotNet\CrudDaJustica.CliApp.csproj" />
+    <ProjectReference Include="..\CrudDaJustica.Cli.App\CrudDaJustica.Cli.App.csproj" />
   </ItemGroup>
 
 </Project>

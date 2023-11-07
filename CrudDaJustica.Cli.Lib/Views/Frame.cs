@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.CliLib.Views;
+﻿namespace CrudDaJustica.Cli.Lib.Views;
 
 /// <summary>
 /// Represents a screen in the user interface.

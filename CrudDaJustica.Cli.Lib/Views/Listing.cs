@@ -1,6 +1,6 @@
-﻿using CrudDaJustica.CliLib.Keybindings;
+﻿using CrudDaJustica.Cli.Lib.Keybindings;
 
-namespace CrudDaJustica.CliLib.Views;
+namespace CrudDaJustica.Cli.Lib.Views;
 
 /// <summary>
 /// Represents an interactable list of <see cref="T"/>.

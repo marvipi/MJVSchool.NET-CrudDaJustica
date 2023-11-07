@@ -1,8 +1,8 @@
-﻿using System.Reflection;
-using CrudDaJustica.CliLib.Keybindings;
-using CrudDaJustica.CliLib.Views;
+﻿using CrudDaJustica.Cli.Lib.Keybindings;
+using CrudDaJustica.Cli.Lib.Views;
+using System.Reflection;
 
-namespace CrudDaJustica.CliLib.Forms;
+namespace CrudDaJustica.Cli.Lib.Forms;
 
 /// <summary>
 /// Represents a form that generates fields automatically for a <typeparamref name="T"/> and uses them to read input from the user.

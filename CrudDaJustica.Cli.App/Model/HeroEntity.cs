@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace PP_dotNet.Model;
+﻿namespace PP_dotNet.Model;
 
 /// <summary>
 /// Represents a hero from the DC Universe.

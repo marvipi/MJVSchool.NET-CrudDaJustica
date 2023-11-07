@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.CliLib.Keybindings;
+﻿namespace CrudDaJustica.Cli.Lib.Keybindings;
 
 /// <summary>
 /// Represents a <see cref="ConsoleKey"/> that can be displayed in the console window.

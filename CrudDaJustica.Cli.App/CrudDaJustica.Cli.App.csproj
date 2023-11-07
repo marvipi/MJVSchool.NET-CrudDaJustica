@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CrudDaJustica.CliLib\CrudDaJustica.CliLib.csproj" />
+    <ProjectReference Include="..\CrudDaJustica.Cli.Lib\CrudDaJustica.Cli.Lib.csproj" />
   </ItemGroup>
 
 </Project>

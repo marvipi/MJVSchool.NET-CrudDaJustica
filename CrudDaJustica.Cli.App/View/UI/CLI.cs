@@ -1,8 +1,7 @@
-﻿using CrudDaJustica.CliLib.Forms;
-using CrudDaJustica.CliLib.Keybindings;
-using CrudDaJustica.CliLib.Views;
+﻿using CrudDaJustica.Cli.Lib.Forms;
+using CrudDaJustica.Cli.Lib.Keybindings;
+using CrudDaJustica.Cli.Lib.Views;
 using PP_dotNet.Controller;
-using PP_dotNet.View.Forms;
 using PP_dotNet.View.Models;
 using System.Text;
 
@@ -28,6 +27,7 @@ public class CLI
 
         // Bugs:
         //  User can call trigger an Update if a listing is empty.
+        //  User can call trigger a Deletion if a listing is empty.
 
         // WARNING: Boilerplate ahead!
 

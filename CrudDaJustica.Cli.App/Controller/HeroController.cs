@@ -1,7 +1,6 @@
 ﻿using PP_dotNet.Data;
 using PP_dotNet.Model;
 using PP_dotNet.Services;
-using PP_dotNet.View.Forms;
 using PP_dotNet.View.Models;
 using System.Globalization;
 
@@ -71,7 +70,7 @@ public class HeroController
             CultureInfo.CurrentCulture,
             DateTimeStyles.None,
             out var validDate); // TODO Validate
-        heroRepository.UpdateHero(pagingService.GetCurrentPage(), row, 
+        heroRepository.UpdateHero(pagingService.GetCurrentPage(), row,
             new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.MiddleName, heroFormModel.LastName)); // TODO Refactor
     }
 

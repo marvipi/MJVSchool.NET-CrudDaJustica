@@ -69,7 +69,7 @@ public class VirtualRepository : IHeroRepository
     // Summary: Calculates how many rows of data to take in a data page.
     // Remarks: Used for paging data.
     private static int Take(DataPage page) => page.Number * page.Rows;
-    
+
 
     // Summary: Produces the last filled index in an array of T.
     private static int LastFilledIndex<T>(T[] array)
