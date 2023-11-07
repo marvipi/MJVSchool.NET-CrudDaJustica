@@ -36,7 +36,7 @@ public class HeroController
             CultureInfo.CurrentCulture,
             DateTimeStyles.None,
             out var validDate); // TODO Validate
-        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.MiddleName, heroFormModel.LastName)); // TODO Refactor
+        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.LastName)); // TODO Refactor
         pagingService.RepositorySize = heroRepository.RepositorySize;
     }
 
@@ -52,7 +52,7 @@ public class HeroController
         var heroes = heroRepository.GetHeroes(currentPage);
 
         var heroViewModels = heroes
-            .Select(hero => new HeroViewModel(hero.Alias, hero.Debut, hero.FirstName, hero.MiddleName, hero.LastName))
+            .Select(hero => new HeroViewModel(hero.Alias, hero.Debut, hero.FirstName, hero.LastName))
             .ToList();
 
         return heroViewModels;
@@ -71,7 +71,7 @@ public class HeroController
             DateTimeStyles.None,
             out var validDate); // TODO Validate
         heroRepository.UpdateHero(pagingService.GetCurrentPage(), row,
-            new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.MiddleName, heroFormModel.LastName)); // TODO Refactor
+            new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.LastName)); // TODO Refactor
     }
 
     /// <summary>

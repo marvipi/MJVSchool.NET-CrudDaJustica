@@ -21,11 +21,6 @@ public class HeroEntity
     public string? FirstName { get; set; }
 
     /// <summary>
-    /// The middle name of the person behind the secret identity.
-    /// </summary>
-    public string? MiddleName { get; set; }
-
-    /// <summary>
     /// The last name of the person behind the secret identity.
     /// </summary>
     public string? LastName { get; set; }
@@ -47,12 +42,10 @@ public class HeroEntity
     /// <param name="alias"> The name of a hero's secret identity. </param>
     /// <param name="debut"> A date when a hero was first seen. </param>
     /// <param name="firstName"> The first name of the person behind the secret identity. </param>
-    /// <param name="middleName"> The middle name of the person behind the secret identity. </param>
     /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    public HeroEntity(string alias, DateOnly debut, string? firstName, string? middleName, string? lastName) : this(alias, debut)
+    public HeroEntity(string alias, DateOnly debut, string? firstName, string? lastName) : this(alias, debut)
     {
         FirstName = firstName;
-        MiddleName = middleName;
         LastName = lastName;
     }
 }
