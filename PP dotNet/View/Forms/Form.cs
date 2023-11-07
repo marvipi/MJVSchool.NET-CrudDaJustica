@@ -8,132 +8,107 @@ namespace PP_dotNet.View.Forms;
 /// Represents a form that generates fields automatically for a <typeparamref name="T"/> and uses them to read input from the user.
 /// </summary>
 /// <typeparam name="T"> The type of the class used to generate the fields. </typeparam>
-public class Form<T> : Window
+public class Form<T> : Frame where T : new()
 {
+    // Summary: The fields that have not been read yet.
     private readonly Queue<Field> fields;
-    private Queue<PropertyInfo> properties;
-    private readonly RebindableKey confirm;
-    private readonly T formData;
-    private readonly Action<T, int> updater;
-    private readonly Action<T> creator;
+
+    // Summary: All public properties of T.
+    // Remarks: Used to generate forms dynamically.
+    private readonly Queue<PropertyInfo> properties;
+
+    /// <summary>
+    /// The data read from the user.
+    /// </summary>
+    /// <remarks>
+    /// The contents of of a form are overwritten every time it is displayed.
+    /// </remarks>
+    public T FormData { get; init; }
+
+    // Summary: The key that will trigger an event that utilizes the form data.
+    private readonly Keybinding confirmKey;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Form{T}"/> class.
     /// </summary>
-    /// <param name="header"> </param>
-    /// <param name="cancelKey"> An unbound console key that will exit from the form. </param>
-    /// <param name="nextKey"> An unbound console key that will cause the form to advance to the next field. </param>
-    /// <param name="createKey"> An unbound console key that will save the data read from the user. </param>
-    public Form(Header header,
+    /// <param name="title"> The title to display on top of the screen. </param>
+    /// <param name="borderChar"> A character to draw on the borders of the console buffer. </param>
+    /// <param name="cancelKey"> An unbound console key that will discard all that in the the form. </param>
+    /// <param name="header"> Information to display on the top of the console buffer. </param>
+    /// <param name="confirmKey"> An unbound console key that will save the data in the form. </param>
+    public Form(string title,
+        char borderChar,
+        Header header,
         RebindableKey cancelKey,
-        RebindableKey confirm,
-        T emptyData,
-        RebindableKey nextKey,
-        Action<T, int> updater,
-        Action<T> creator) : base(cancelKey)
+        Keybinding confirmKey) : base(title, borderChar, header)
     {
         fields = new();
-        KeyBindings.Add(nextKey.Bind(ReadNext));
-        Header = header;
-        this.confirm = confirm;
-        formData = emptyData;
-        this.updater = updater;
-        this.creator = creator;
         properties = new();
+        FormData = new();
+        this.confirmKey = confirmKey;
+        var keybindings = new List<Keybinding>()
+        {
+            cancelKey.Bind(Exit),
+            confirmKey, // Used to display the keybinding when the confirmation prompt is shown.
+        };
+        Keybindings.AddRange(keybindings);
     }
 
+    /// <summary>
+    /// Displays this form on the console window.
+    /// </summary>
     public override void Display()
     {
+        Console.Clear();
+        base.Display();
+
         InitializeFields();
 
-        Console.Clear();
-        Header?.Display();
-        var screenCoords = DisplayFields();
+        var screenCoords = DrawFields();
 
-        DisplayFields(screenCoords);
+        ReadAllFields(screenCoords);
 
-        Console.Write(KeyBindings.First()); // Displays the exit key
-        Console.Write("\t");
-        Console.Write(confirm.Key);
-        Console.Write("\t");
+        DisplayConfirmationPrompt();
     }
 
-    public void Create()
+    // Summary: Prompts the user to save or discard the data entered in the form.
+    private void DisplayConfirmationPrompt()
     {
-        Display();
-
+        DisplayKeybindings();
         while (!ExitKeyPressed)
         {
             var input = Console.ReadKey(true).Key;
-            if (input == confirm?.Key)
+            if (input == confirmKey.Key)
             {
-                creator?.Invoke(formData);
-                break;
-            }
-            else
+                confirmKey.Invoke();
+                Exit();
+            } else
             {
                 Invoke(input);
             }
         }
-
         ExitKeyPressed = false;
-        properties = new();
     }
 
-    public void Update(int row)
-    {
-        Display();
-
-        while (!ExitKeyPressed)
-        {
-            var input = Console.ReadKey(true).Key;
-            if (input == confirm?.Key)
-            {
-                updater?.Invoke(formData, row);
-                break;
-            }
-            else
-            {
-                Invoke(input);
-            }
-        }
-
-        ExitKeyPressed = false;
-        properties = new();
-    }
-
+    // Summary: Creates a field for each public property in T.
     private void InitializeFields()
     {
-        foreach (var prop in formData.GetType().GetProperties())
+        foreach (var prop in FormData.GetType().GetProperties())
         {
             fields.Enqueue(new Field(prop.Name));
             properties.Enqueue(prop);
         }
     }
 
-
-    // Summary: Displays all field sequentially.
-    private void DisplayFields(Queue<(int column, int row)> screenCoords)
-    {
-        while (fields.Any())
-        {
-            (var column, var row) = screenCoords.Peek();
-            Console.SetCursorPosition(column, row);
-            ReadNext();
-            screenCoords.Dequeue();
-        }
-    }
-
-    // Summary: Displays the fields in the screen sequentially.
-    // Returns: The console coordinates after each field.
-    // Remarks: The returned coordinates are affected by the format given during instantiation.
-    private Queue<(int column, int row)> DisplayFields()
+    // Summary: Displays the fields vertically on the console screen.
+    // Returns: The console coordinates right after each field.
+    private Queue<(int column, int row)> DrawFields()
     {
         var coords = new Queue<(int column, int row)>();
 
         foreach (var prop in properties)
         {
-            Console.Write("{0}: ", prop.Name);
+            Console.Write(" {0}: ", prop.Name);
             coords.Enqueue(Console.GetCursorPosition());
             Console.WriteLine();
         }
@@ -141,8 +116,20 @@ public class Form<T> : Window
         return coords;
     }
 
-    // Summary: Reads input from the next field of the user form.
-    private void ReadNext()
+    // Summary: Reads input from each field in the form from top to bottom.
+    private void ReadAllFields(Queue<(int column, int row)> screenCoords)
+    {
+        while (screenCoords.Any())
+        {
+            (var column, var row) = screenCoords.Peek();
+            Console.SetCursorPosition(column, row);
+            ReadField();
+            screenCoords.Dequeue();
+        }
+    }
+
+    // Summary: Reads input from the current field of the user form.
+    private void ReadField()
     {
         Console.CursorVisible = true;
         var currentField = fields.Peek();
@@ -150,7 +137,7 @@ public class Form<T> : Window
 
         properties
             .Peek()
-            .SetValue(formData, currentField.Value);
+            .SetValue(FormData, currentField.Value);
 
         fields.Dequeue();
         properties.Dequeue();

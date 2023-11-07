@@ -26,7 +26,7 @@ public class HeroFormModel
     public string? LastName { get; set; }
 
     /// <summary>
-    /// A date when a hero was first seen.
+    /// The date when a hero was first seen.
     /// </summary>
     public string Debut { get; set; }
 }

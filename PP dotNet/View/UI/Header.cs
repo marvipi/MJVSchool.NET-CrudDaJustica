@@ -1,33 +1,29 @@
 ﻿using System.Text;
-using PP_dotNet.View.Keybindings;
 
 namespace PP_dotNet.View.UI;
 
 /// <summary>
-/// Represents a view used to display information at the top of the console.
+/// Represents an element used to display information at the top of the console.
 /// </summary>
-public class Header : Window
+public class Header
 {
     // Summary: A StringBuilder that contains the visual representation of this Header.
-    private readonly StringBuilder lines;
+    private readonly StringBuilder content;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Header"/> class.
     /// </summary>
-    /// <param name="exitKey"> An unbound console key that will cause the program to exit. </param>
-    /// <param name="keybindings"> A collection of keybindings used to interact with this <see cref="Header"/>. </param>
-    /// <param name="lines"> The lines to display. </param>
-    public Header(RebindableKey exitKey, IEnumerable<Keybinding> keybindings, StringBuilder lines) : base(exitKey, keybindings)
+    /// <param name="content"> The contents of the header that will be displayed in the user interface. </param>
+    public Header(StringBuilder content)
     {
-        // TODO Remove exit key
-        // TODO Remove keybindings
-        this.lines = lines;
+        this.content = content;
     }
 
-    public override void Display()
+    /// <summary>
+    /// Displays the contents of the header at the current console cursor position.
+    /// </summary>
+    public void Display()
     {
-        Console.Clear();
-        Console.Write(lines);
-        DisplayKeybindings();
+        Console.Write(content);
     }
 }

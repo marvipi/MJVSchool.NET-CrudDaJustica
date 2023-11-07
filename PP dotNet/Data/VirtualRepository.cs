@@ -10,6 +10,7 @@ namespace PP_dotNet.Data;
 /// </remarks>
 public class VirtualRepository : IHeroRepository
 {
+    // Summary: All heroes registered in this repository.
     private HeroEntity[] heroes;
 
     public int RepositorySize => LastFilledIndex(heroes) + 1;
@@ -21,13 +22,6 @@ public class VirtualRepository : IHeroRepository
     public VirtualRepository(uint initialSize)
     {
         heroes = new HeroEntity[initialSize];
-
-        // TODO Remove after prototype is done.
-        foreach (var i in Enumerable.Range(0, 25 + 1))
-        {
-            var newHero = new HeroEntity(i.ToString(), DateOnly.FromDateTime(DateTime.Now));
-            RegisterHero(newHero);
-        }
     }
 
     public void RegisterHero(HeroEntity newHero)
@@ -40,10 +34,10 @@ public class VirtualRepository : IHeroRepository
         heroes[firstEmptyIndex] = newHero;
     }
 
-    public IEnumerable<HeroEntity> GetHeroes(DataPage pagina)
+    public IEnumerable<HeroEntity> GetHeroes(DataPage page)
     {
-        var skip = (pagina.Number - 1) * pagina.Rows;
-        var take = pagina.Number * pagina.Rows;
+        var skip = Skip(page);
+        var take = Take(page);
         var heroesPage = heroes[skip..take];
 
         var amountNonNull = LastFilledIndex(heroesPage) + 1;
@@ -53,13 +47,13 @@ public class VirtualRepository : IHeroRepository
 
     public void UpdateHero(DataPage page, int row, HeroEntity updatedHero)
     {
-        var heroIndex = (page.Number - 1) * page.Rows + row;
+        var heroIndex = Skip(page) + row;
         heroes[heroIndex] = updatedHero;
     }
 
     public void DeleteHero(DataPage page, int row)
     {
-        var skip = (page.Number - 1) * page.Rows + row;
+        var skip = Skip(page) + row;
         var heroesUntilLastIndex = heroes.Length - 1 - skip;
 
         foreach (var i in Enumerable.Range(skip, heroesUntilLastIndex))
@@ -68,8 +62,17 @@ public class VirtualRepository : IHeroRepository
         }
     }
 
+    // Summary: Calculates how many rows of data to skip in a data page.
+    // Remarks: Used for paging data.
+    private static int Skip(DataPage page) => (page.Number - 1) * page.Rows;
+
+    // Summary: Calculates how many rows of data to take in a data page.
+    // Remarks: Used for paging data.
+    private static int Take(DataPage page) => page.Number * page.Rows;
+    
+
     // Summary: Produces the last filled index in an array of T.
-    private int LastFilledIndex<T>(T[] array)
+    private static int LastFilledIndex<T>(T[] array)
     {
         var firstEmptyIndex = Array.IndexOf(array, null);
         return int.IsNegative(firstEmptyIndex)

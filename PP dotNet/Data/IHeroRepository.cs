@@ -26,17 +26,17 @@ public interface IHeroRepository
     public IEnumerable<HeroEntity> GetHeroes(DataPage page);
 
     /// <summary>
-    /// Deletes a <see cref="HeroEntity"/> from the repository.
-    /// </summary>
-    /// <param name="page"> The page where the hero is registered. </param>
-    /// <param name="row"> The row where the hero is registered, in relation to <paramref name="page"/>. </param>
-    public void DeleteHero(DataPage page, int row);
-
-    /// <summary>
     /// Updates the information about a registered <see cref="HeroEntity"/>.
     /// </summary>
     /// <param name="page"> The page where the hero is registered. </param>
     /// <param name="row"> The row where the hero is registered, in relation to <paramref name="page"/>. </param>
     /// <param name="updatedHero"> A <see cref="HeroEntity"/> containing update to date information about the hero. </param>
     public void UpdateHero(DataPage page, int row, HeroEntity updatedHero);
+
+    /// <summary>
+    /// Deletes a <see cref="HeroEntity"/> from the repository.
+    /// </summary>
+    /// <param name="page"> The page where the hero is registered. </param>
+    /// <param name="row"> The row where the hero is registered, in relation to <paramref name="page"/>. </param>
+    public void DeleteHero(DataPage page, int row);
 }

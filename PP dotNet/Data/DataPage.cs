@@ -22,6 +22,7 @@ public readonly struct DataPage
     /// </summary>
     /// <param name="number"> The number of the page. </param>
     /// <param name="rows"> The amount of rows in the page. </param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public DataPage(int number, int rows)
     {
         if (int.IsNegative(number))

@@ -13,6 +13,11 @@ public class HeroEntity
     public string Alias { get; set; }
 
     /// <summary>
+    /// A date when a hero was first seen.
+    /// </summary>
+    public DateOnly Debut { get; set; }
+
+    /// <summary>
     /// The first name of the person behind the secret identity.
     /// </summary>
     public string? FirstName { get; set; }
@@ -28,26 +33,6 @@ public class HeroEntity
     public string? LastName { get; set; }
 
     /// <summary>
-    /// A date when a hero was first seen.
-    /// </summary>
-    public DateOnly Debut { get; set; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HeroEntity"/> class.
-    /// </summary>
-    /// <param name="alias"> The name of a hero's secret identity. </param>
-    /// <param name="firstName"> The first name of the person behind the secret identity. </param>
-    /// <param name="middleName"> The middle name of the person behind the secret identity. </param>
-    /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    /// <param name="debut"> A date when a hero was first seen. </param>
-    public HeroEntity(string alias, string firstName, string middleName, string lastName, DateOnly debut) : this(alias, debut)
-    {
-        FirstName = firstName;
-        MiddleName = middleName;
-        LastName = lastName;
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="HeroEntity"/> class.
     /// </summary>
     /// <param name="alias"> The name of a hero's secret identity. </param>
@@ -56,5 +41,20 @@ public class HeroEntity
     {
         Alias = alias;
         Debut = debut;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeroEntity"/> class.
+    /// </summary>
+    /// <param name="alias"> The name of a hero's secret identity. </param>
+    /// <param name="debut"> A date when a hero was first seen. </param>
+    /// <param name="firstName"> The first name of the person behind the secret identity. </param>
+    /// <param name="middleName"> The middle name of the person behind the secret identity. </param>
+    /// <param name="lastName"> The last name of the person behind the secret identity. </param>
+    public HeroEntity(string alias, DateOnly debut, string? firstName, string? middleName, string? lastName) : this(alias, debut)
+    {
+        FirstName = firstName;
+        MiddleName = middleName;
+        LastName = lastName;
     }
 }

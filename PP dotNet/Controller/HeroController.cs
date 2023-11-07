@@ -36,7 +36,7 @@ public class HeroController
             CultureInfo.CurrentCulture,
             DateTimeStyles.None,
             out var validDate); // TODO Validate
-        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias, validDate)); // TODO Refactor
+        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.MiddleName, heroFormModel.LastName)); // TODO Refactor
         pagingService.RepositorySize = heroRepository.RepositorySize;
     }
 
@@ -52,30 +52,10 @@ public class HeroController
         var heroes = heroRepository.GetHeroes(currentPage);
 
         var heroViewModels = heroes
-            .Select(hero => new HeroViewModel(hero.Alias, hero.Debut))
+            .Select(hero => new HeroViewModel(hero.Alias, hero.Debut, hero.FirstName, hero.MiddleName, hero.LastName))
             .ToList();
 
         return heroViewModels;
-    }
-
-    /// <summary>
-    /// Moves to the next page of the repository, up to the last page.
-    /// </summary>
-    public void NextPage() => pagingService.NextPage();
-
-    /// <summary>
-    /// Returns to the previous page of the repository, down to the first page.
-    /// </summary>
-    public void PreviousPage() => pagingService.PreviousPage();
-
-    /// <summary>
-    /// Removes a hero from the repository.
-    /// </summary>
-    /// <param name="row"> The row of the current page where the hero is registered. </param>
-    public void Delete(int row)
-    {
-        heroRepository.DeleteHero(pagingService.GetCurrentPage(), row);
-        pagingService.RepositorySize = heroRepository.RepositorySize;
     }
 
     /// <summary>
@@ -90,6 +70,27 @@ public class HeroController
             CultureInfo.CurrentCulture,
             DateTimeStyles.None,
             out var validDate); // TODO Validate
-        heroRepository.UpdateHero(pagingService.GetCurrentPage(), row, new HeroEntity(heroFormModel.Alias, validDate)); // TODO Refactor
+        heroRepository.UpdateHero(pagingService.GetCurrentPage(), row, 
+            new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.MiddleName, heroFormModel.LastName)); // TODO Refactor
     }
+
+    /// <summary>
+    /// Removes a hero from the repository.
+    /// </summary>
+    /// <param name="row"> The row of the current page where the hero is registered. </param>
+    public void Delete(int row)
+    {
+        heroRepository.DeleteHero(pagingService.GetCurrentPage(), row);
+        pagingService.RepositorySize = heroRepository.RepositorySize;
+    }
+
+    /// <summary>
+    /// Moves to the next page of the repository, up to the last page.
+    /// </summary>
+    public void NextPage() => pagingService.NextPage();
+
+    /// <summary>
+    /// Returns to the previous page of the repository, down to the first page.
+    /// </summary>
+    public void PreviousPage() => pagingService.PreviousPage();
 }

@@ -6,73 +6,86 @@ namespace PP_dotNet.View.UI;
 /// Represents an interactable list of <see cref="T"/>.
 /// </summary>
 /// <typeparam name="T"> The type of the element to list on the screen. </typeparam>
-public class Listing<T> : Window
+public class Listing<T> : Frame
 {
+    // Summary: The first column of the console buffer.
     private const int FAR_LEFT_COORD = 0;
-    private IEnumerable<T> elements;
-    private readonly Func<IEnumerable<T>> listRetriever;
-    private readonly List<Keybinding<int>> selectors;
+
+    // Summary: The row of the first element of the listing being displayed, in console buffer coordinates.
     private int firstRow;
+
+    // Summary: The row where the ">" is currently located, in console buffer coordinates.
     private int currentRow;
+
+    // Summary: The row of the last element of the listing being displayed, in console buffer coordinates.
     private int lastRow;
 
+    // Summary: The elements being listed on screen.
+    private IEnumerable<T> elements;
+
+    // Summary: A delegate that retrives the elements to be listed.
+    private readonly Func<IEnumerable<T>> listRetriever;
+
     /// <summary>
-    /// The position of the currently selected element in the current page.
+    /// The position of the currently selected element in the current data page.
     /// </summary>
     public int CurrentlySelectedElement => currentRow - firstRow;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Listing{T}"/> class.
     /// </summary>
-    /// <param name="exitKey"> An unbound console key that will cause the program to exit. </param>
+    /// <param name="title"> The title to display on top of the screen. </param>
+    /// <param name="borderChar"> A character to draw on the borders of the console buffer. </param>
+    /// <param name="header"> Information to display on the top of the console buffer. </param>
     /// <param name="listRetriever"> A reference to a method that retrieves the elements to be listed. </param>
-    /// <param name="selectors"> Methods that operate on the currently selected element of the listing. </param>
+    /// <param name="exitKey"> The console key that will exit this view. </param>
+    /// <param name="create"> A keybinding used to open up a creation form. </param>
     /// <param name="nextPage"> A key map used to get the next page in the <see cref="Listing{T}"/>. </param>
     /// <param name="previousPage"> A key map used to return to the previous page <see cref="Listing{T}"/>. </param>
     /// <param name="nextElement"> A key map used to select the next element in the <see cref="Listing{T}"/>. </param>
     /// <param name="previousElement"> A key map used to select the previous element in the <see cref="Listing{T}"/>. </param>
-    public Listing(RebindableKey exitKey,
-        Header? header,
+    public Listing(string title,
+        char borderChar,
+        Header header,
         Func<IEnumerable<T>> listRetriever,
-        IEnumerable<Keybinding<int>> selectors,
+        RebindableKey exitKey,
+        Keybinding create,
+        Keybinding update,
+        Keybinding delete,
         Keybinding nextPage,
         Keybinding previousPage,
         RebindableKey nextElement,
-        RebindableKey previousElement,
-        IEnumerable<Keybinding> optionalKeybindings) : base(exitKey, optionalKeybindings, header)
+        RebindableKey previousElement) : base(title, borderChar, header)
     {
         elements = new List<T>();
         this.listRetriever = listRetriever;
-        this.selectors = selectors.ToList();
-        var navigationKeys = new List<Keybinding>()
+        var keybindings = new List<Keybinding>()
         {
+            exitKey.Bind(Exit),
+            create,
+            update,
+            delete,
             nextPage,
             previousPage,
             nextElement.Bind(Next),
             previousElement.Bind(Previous),
         };
-        KeyBindings.AddRange(navigationKeys);
+        Keybindings.AddRange(keybindings);
     }
 
     /// <summary>
-    /// Displays each element of this listing sequentially, ignoring <see cref="null"/> elements.
+    /// Displays this listing on the console window.
     /// </summary>
-    /// <remarks>
-    /// Elements are displayed using their ToString method.
-    /// </remarks>
     public override void Display()
     {
-        Console.CursorVisible = false;
-
         while (!ExitKeyPressed)
         {
-            Console.Clear();
-            Header?.Display();
-
-            selectors.ForEach(selector => Console.Write("{0}\t", selector));
+            base.Display();
 
             DisplayKeybindings();
+
             firstRow = Console.GetCursorPosition().Top;
+
             ListElements();
 
             // Stops the cursor from appearing at the top left of the console when the listing is first displayed.
@@ -94,15 +107,10 @@ public class Listing<T> : Window
 
             var input = Console.ReadKey(true).Key;
 
-            selectors
-                .FirstOrDefault(s => s.Key == input)
-                ?.Invoke(CurrentlySelectedElement);
-
             Invoke(input);
         }
 
         ExitKeyPressed = false;
-        Console.CursorVisible = true;
     }
 
     // Summary: Retrieves and lists a collection of elements, if any exist.
@@ -145,7 +153,7 @@ public class Listing<T> : Window
         Select(currentRow);
     }
 
-    // Summary: Selects the element at a given row of the listing, if it has any elements.
+    // Summary: Selects the element at a given row of the listing, if any elements are being displayed.
     private void Select(int row)
     {
         // Stops the ">" from being drawn on the screen when the listing has no elements.
