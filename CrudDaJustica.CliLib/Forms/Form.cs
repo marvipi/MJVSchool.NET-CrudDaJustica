@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
-using PP_dotNet.View.Keybindings;
-using PP_dotNet.View.UI;
+using CrudDaJustica.CliLib.Keybindings;
+using CrudDaJustica.CliLib.Views;
 
-namespace PP_dotNet.View.Forms;
+namespace CrudDaJustica.CliLib.Forms;
 
 /// <summary>
 /// Represents a form that generates fields automatically for a <typeparamref name="T"/> and uses them to read input from the user.
@@ -82,7 +82,8 @@ public class Form<T> : Frame where T : new()
             {
                 confirmKey.Invoke();
                 Exit();
-            } else
+            }
+            else
             {
                 Invoke(input);
             }

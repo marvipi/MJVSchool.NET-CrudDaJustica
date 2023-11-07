@@ -1,6 +1,7 @@
 ﻿using System.Text;
+using PP_dotNet.Data;
 
-namespace PP_dotNet.Data;
+namespace PP_dotNet.Services;
 
 /// <summary>
 /// Represents a service that does data paging in a repository.

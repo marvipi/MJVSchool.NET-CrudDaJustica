@@ -1,4 +1,4 @@
-﻿namespace PP_dotNet.View.Forms;
+﻿namespace CrudDaJustica.CliLib.Forms;
 
 /// <summary>
 /// Represents a field <see cref="Form{T}"/>.

@@ -1,4 +1,4 @@
-﻿namespace PP_dotNet.View.Keybindings;
+﻿namespace CrudDaJustica.CliLib.Keybindings;
 
 /// <summary>
 /// Represents a <see cref="ConsoleKey"/> that can be displayed in the console window.
@@ -26,5 +26,5 @@ public abstract class UnboundKey
     /// A string that represents this <see cref="Key"/>.
     /// </returns>
     public override string ToString() => displayText;
-    
+
 }

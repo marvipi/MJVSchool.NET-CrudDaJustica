@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace PP_dotNet.View.UI;
+namespace CrudDaJustica.CliLib.Views;
 
 /// <summary>
 /// Represents an element used to display information at the top of the console.

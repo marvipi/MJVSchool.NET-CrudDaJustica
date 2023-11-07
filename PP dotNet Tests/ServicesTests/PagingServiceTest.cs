@@ -1,10 +1,11 @@
-﻿using PP_dotNet.Data;
-using PP_dotNet.Services;
+﻿using PP_dotNet.Services;
 
 namespace PP_dotNet_Tests.ServicesTests;
 
+// TODO Rewrite in English.
+
 [TestFixture]
-public class PaginadorTest
+public class PagingServiceTest
 {
     [TestCase(10, 10, 1)]
     [TestCase(40, 05, 8)]

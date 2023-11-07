@@ -1,6 +1,6 @@
-﻿using PP_dotNet.View.Keybindings;
+﻿using CrudDaJustica.CliLib.Keybindings;
 
-namespace PP_dotNet.View.UI;
+namespace CrudDaJustica.CliLib.Views;
 
 /// <summary>
 /// Represents an interactable list of <see cref="T"/>.

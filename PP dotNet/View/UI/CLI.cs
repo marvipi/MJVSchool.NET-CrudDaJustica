@@ -1,6 +1,9 @@
-﻿using PP_dotNet.Controller;
+﻿using CrudDaJustica.CliLib.Forms;
+using CrudDaJustica.CliLib.Keybindings;
+using CrudDaJustica.CliLib.Views;
+using PP_dotNet.Controller;
 using PP_dotNet.View.Forms;
-using PP_dotNet.View.Keybindings;
+using PP_dotNet.View.Models;
 using System.Text;
 
 namespace PP_dotNet.View.UI;
@@ -22,6 +25,9 @@ public class CLI
     public CLI(HeroController heroController)
     {
         this.heroController = heroController;
+
+        // Bugs:
+        //  User can call trigger an Update if a listing is empty.
 
         // WARNING: Boilerplate ahead!
 

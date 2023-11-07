@@ -1,7 +1,4 @@
-﻿using PP_dotNet.View.Keybindings;
-using System.Collections.Immutable;
-
-namespace PP_dotNet.View.UI;
+﻿namespace CrudDaJustica.CliLib.Views;
 
 /// <summary>
 /// Represents a screen in the user interface.

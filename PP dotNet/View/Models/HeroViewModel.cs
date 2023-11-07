@@ -1,4 +1,4 @@
-﻿namespace PP_dotNet.View.UI;
+﻿namespace PP_dotNet.View.Models;
 
 /// <summary>
 /// Contains information about a hero that can be displayed in the user interface.
@@ -38,7 +38,7 @@ public readonly struct HeroViewModel
     /// <param name="firstName"> The first name of the person behind the secret identity. </param>
     /// <param name="middleName"> The middle name of the person behind the secret identity. </param>
     /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    public HeroViewModel(string alias, DateOnly debut, string? firstName = "N/A", string? middleName = "N/A", string? lastName = "N/A")
+    public HeroViewModel(string alias, DateOnly debut, string? firstName, string? middleName, string? lastName)
     {
         Alias = alias;
         Debut = debut;
@@ -49,6 +49,7 @@ public readonly struct HeroViewModel
 
     public override string ToString()
     {
+        // TODO Display "N/A" if a field is null.
         return string.Format("{0} - {1} - {2} - {3} - {4}", Alias, FirstName, MiddleName, LastName, Debut);
     }
 }

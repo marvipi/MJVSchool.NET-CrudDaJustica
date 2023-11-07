@@ -1,4 +1,4 @@
-﻿namespace PP_dotNet.View.Keybindings;
+﻿namespace CrudDaJustica.CliLib.Keybindings;
 
 /// <summary>
 /// Represents a <see cref="ConsoleKey"/> that can later be mapped to an <see cref="Action"/>.
