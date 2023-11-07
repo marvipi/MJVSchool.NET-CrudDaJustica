@@ -21,11 +21,6 @@ public readonly struct HeroViewModel
     public string? FirstName { get; init; }
 
     /// <summary>
-    /// The middle name of the person behind the secret identity.
-    /// </summary>
-    public string? MiddleName { get; init; }
-
-    /// <summary>
     /// The last name of the person behind the secret identity.
     /// </summary>
     public string? LastName { get; init; }
@@ -36,20 +31,19 @@ public readonly struct HeroViewModel
     /// <param name="alias"> The name of a hero's secret identity. </param>
     /// <param name="debut"> A date when a hero was first seen. </param>
     /// <param name="firstName"> The first name of the person behind the secret identity. </param>
-    /// <param name="middleName"> The middle name of the person behind the secret identity. </param>
     /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    public HeroViewModel(string alias, DateOnly debut, string? firstName, string? middleName, string? lastName)
+    public HeroViewModel(string alias, DateOnly debut, string? firstName, string? lastName)
     {
         Alias = alias;
         Debut = debut;
         FirstName = firstName;
-        MiddleName = middleName;
         LastName = lastName;
     }
 
     public override string ToString()
     {
-        // TODO Display "N/A" if a field is null.
-        return string.Format("{0} - {1} - {2} - {3} - {4}", Alias, FirstName, MiddleName, LastName, Debut);
+        // TODO Display "N/A" if fullName is null.
+        var fullName = string.Format("{0} {1}", FirstName, LastName);
+        return string.Format("{0} - {1} - {2}", Alias, fullName, Debut);
     }
 }

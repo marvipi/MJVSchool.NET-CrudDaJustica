@@ -21,11 +21,6 @@ public class HeroFormModel
     public string? FirstName { get; set; }
 
     /// <summary>
-    /// The middle name of the person behind the secret identity.
-    /// </summary>
-    public string? MiddleName { get; set; }
-
-    /// <summary>
     /// The last name of the person behind the secret identity.
     /// </summary>
     public string? LastName { get; set; }
