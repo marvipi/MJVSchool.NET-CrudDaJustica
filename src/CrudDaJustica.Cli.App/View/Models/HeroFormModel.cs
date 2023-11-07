@@ -11,6 +11,11 @@ public class HeroFormModel
     public string Alias { get; set; }
 
     /// <summary>
+    /// The date when a hero was first seen.
+    /// </summary>
+    public string Debut { get; set; }
+
+    /// <summary>
     /// The first name of the person behind the secret identity.
     /// </summary>
     public string? FirstName { get; set; }
@@ -24,9 +29,4 @@ public class HeroFormModel
     /// The last name of the person behind the secret identity.
     /// </summary>
     public string? LastName { get; set; }
-
-    /// <summary>
-    /// The date when a hero was first seen.
-    /// </summary>
-    public string Debut { get; set; }
 }
