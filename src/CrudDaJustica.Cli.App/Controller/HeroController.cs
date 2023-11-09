@@ -1,10 +1,10 @@
-﻿using PP_dotNet.Data;
-using PP_dotNet.Model;
-using PP_dotNet.Services;
-using PP_dotNet.View.Models;
+﻿using CrudDaJustica.Cli.App.Data;
+using CrudDaJustica.Cli.App.Model;
+using CrudDaJustica.Cli.App.Services;
+using CrudDaJustica.Cli.App.View.Models;
 using System.Globalization;
 
-namespace PP_dotNet.Controller;
+namespace CrudDaJustica.Cli.App.Controller;
 
 /// <summary>
 /// Represents a controller that manages communication between the hero repository and the user interface.

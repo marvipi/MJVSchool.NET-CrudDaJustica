@@ -1,7 +1,7 @@
-﻿using PP_dotNet.Controller;
-using PP_dotNet.Data;
-using PP_dotNet.Services;
-using PP_dotNet.View.UI;
+﻿using CrudDaJustica.Cli.App.Controller;
+using CrudDaJustica.Cli.App.Data;
+using CrudDaJustica.Cli.App.Services;
+using CrudDaJustica.Cli.App.View.UI;
 
 const int INITIAL_PAGING_SIZE = 10;
 const int INITIAL_ROWS_PER_PAGE = 10;

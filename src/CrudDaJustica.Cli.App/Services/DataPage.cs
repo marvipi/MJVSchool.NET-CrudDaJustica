@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace PP_dotNet.Services;
+namespace CrudDaJustica.Cli.App.Services;
 
 /// <summary>
 /// Represents a page of information in a repository.
