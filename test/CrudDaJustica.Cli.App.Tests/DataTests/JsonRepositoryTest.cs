@@ -14,6 +14,17 @@ public class JsonRepositoryTest
 	private static void DeleteTestDir() => Directory.Delete(Path.GetDirectoryName(TestFilePath)!, true);
 
 	[Test]
+	public void Constructor_HeroDataFilePathIsNullOrRoot_ThrowsArgumentException()
+	{
+		Assert.Multiple(() =>
+		{
+			Assert.Throws<ArgumentException>(() => new JsonRepository(null!));
+			Assert.Throws<ArgumentException>(() => new JsonRepository("C:"));
+			Assert.Throws<ArgumentException>(() => new JsonRepository("/"));
+		});
+	}
+
+	[Test]
 	public void RegisterHero_EmptyRepository_AppendsNewHeroToTheEndOfTheFile()
 	{
 		try
