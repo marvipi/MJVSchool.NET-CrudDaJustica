@@ -23,6 +23,7 @@ public class HeroController
     {
         this.heroRepository = heroRepository;
         this.pagingService = pagingService;
+        this.pagingService.RepositorySize = heroRepository.RepositorySize;
     }
 
     /// <summary>
