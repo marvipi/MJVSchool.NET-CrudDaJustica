@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace PP_dotNet.Data;
+namespace PP_dotNet.Services;
 
 /// <summary>
 /// Represents a page of information in a repository.

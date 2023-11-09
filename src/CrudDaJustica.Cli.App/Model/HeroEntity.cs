@@ -3,8 +3,14 @@
 /// <summary>
 /// Represents a hero from the DC Universe.
 /// </summary>
+[Serializable]
 public class HeroEntity
 {
+    /// <summary>
+    /// A unique global identifier that distinguishes this hero from all others.
+    /// </summary>
+    public Guid Id { get; init; }
+
     /// <summary>
     /// The name of a hero's secret identity.
     /// </summary>
@@ -28,9 +34,14 @@ public class HeroEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroEntity"/> class.
     /// </summary>
+    public HeroEntity() { Id = Guid.NewGuid(); }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="HeroEntity"/> class.
+    /// </summary>
     /// <param name="alias"> The name of a hero's secret identity. </param>
     /// <param name="debut"> A date when a hero was first seen. </param>
-    public HeroEntity(string alias, DateOnly debut)
+    public HeroEntity(string alias, DateOnly debut) : this()
     {
         Alias = alias;
         Debut = debut;
@@ -48,4 +59,16 @@ public class HeroEntity
         FirstName = firstName;
         LastName = lastName;
     }
+
+    public override bool Equals(object? obj)
+    {
+        return obj is HeroEntity entity &&
+               Id.Equals(entity.Id);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id);
+    }
+
 }
