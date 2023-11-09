@@ -12,8 +12,10 @@ public class JsonRepository : IHeroRepository
     // Summary: The path of the json file where hero data is stored.
     private readonly string heroDataFilePath;
 
+    private readonly string heroDataDirPath;
+
     // Summary: A temporary file used to update or delete heroes from the repository.
-    private string HeroDataTempFilePath => Path.Combine(Path.GetTempPath(), new FileInfo(heroDataFilePath).Name);
+    private string HeroDataTempFilePath => Path.Combine(heroDataDirPath, "heroTemp.json");
 
     public int RepositorySize { get; private set; }
 
@@ -24,7 +26,7 @@ public class JsonRepository : IHeroRepository
     /// <param name="heroDataFilePath"> The absolute path where the hero data file is or will be stored. </param>
     public JsonRepository(string heroDataFilePath)
     {
-        var heroDataDirPath = Path.GetDirectoryName(heroDataFilePath);
+        heroDataDirPath = Path.GetDirectoryName(heroDataFilePath);
         var heroDataDir = new DirectoryInfo(heroDataDirPath);
 
         if (!heroDataDir.Exists)
@@ -41,6 +43,7 @@ public class JsonRepository : IHeroRepository
         }
 
         this.heroDataFilePath = heroDataFilePath;
+        RepositorySize = File.ReadLines(heroDataFilePath).Count();
     }
 
     public void RegisterHero(HeroEntity newHero)
@@ -84,7 +87,7 @@ public class JsonRepository : IHeroRepository
     //          All other rows in the repository will be left untouched.
     private void OverwriteData(DataPage page, int row, string? newData = null)
     {
-        var currentLine = 1;
+        var currentLine = 0;
         var lineToAlter = RowsToSkip(page) + row;
         var dataRow = string.Empty;
 
