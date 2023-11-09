@@ -23,7 +23,6 @@ public class HeroController
     {
         this.heroRepository = heroRepository;
         this.pagingService = pagingService;
-        this.pagingService.RepositorySize = heroRepository.RepositorySize;
     }
 
     /// <summary>
@@ -38,7 +37,6 @@ public class HeroController
             DateTimeStyles.None,
             out var validDate); // TODO Validate
         heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.LastName)); // TODO Refactor
-        pagingService.RepositorySize = heroRepository.RepositorySize;
     }
 
     /// <summary>
@@ -79,11 +77,7 @@ public class HeroController
     /// Removes a hero from the repository.
     /// </summary>
     /// <param name="row"> The row of the current page where the hero is registered. </param>
-    public void Delete(int row)
-    {
-        heroRepository.DeleteHero(pagingService.GetCurrentPage(), row);
-        pagingService.RepositorySize = heroRepository.RepositorySize;
-    }
+    public void Delete(int row) => heroRepository.DeleteHero(pagingService.GetCurrentPage(), row);
 
     /// <summary>
     /// Moves to the next page of the repository, up to the last page.

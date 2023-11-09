@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using CrudDaJustica.Cli.App.Data;
+using System.Text;
 
 namespace CrudDaJustica.Cli.App.Services;
 
@@ -7,7 +8,8 @@ namespace CrudDaJustica.Cli.App.Services;
 /// </summary>
 public class PagingService
 {
-    private int repositorySize;
+    // Summary: The hero repository being paged by this service.
+    private IHeroRepository heroRepository;
 
     /// <summary>
     /// The first page of data in the repository.
@@ -25,24 +27,6 @@ public class PagingService
     public int LastPage { get; private set; }
 
     /// <summary>
-    /// The total amount of data rows in the repository.
-    /// </summary>
-    /// <remarks>
-    /// Required for calculating the <see cref="LastPage"/> of a repository.
-    /// </remarks>
-    public int RepositorySize
-    {
-        get => repositorySize;
-        set
-        {
-            repositorySize = value;
-            var numPagesRequired = repositorySize / (double)RowsPerPage;
-            var lastPage = Math.Ceiling(numPagesRequired);
-            LastPage = Convert.ToInt32(lastPage);
-        }
-    }
-
-    /// <summary>
     /// The amount of rows read per page.
     /// </summary>
     public int RowsPerPage { get; private set; }
@@ -50,19 +34,11 @@ public class PagingService
     /// <summary>
     /// Initializes a new instance of the <see cref="PagingService"/> class.
     /// </summary>
-    /// <param name="repositorySize"> The total amount of data rows in the repository. </param>
+    /// <param name="heroRepository"> The hero repository that will be paged by this service. </param>
     /// <param name="rowsPerPage"> The amount of rows read per page. </param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public PagingService(int repositorySize, int rowsPerPage)
+    public PagingService(IHeroRepository heroRepository, int rowsPerPage)
     {
-        if (int.IsNegative(repositorySize))
-        {
-            var msg = new StringBuilder()
-                .AppendFormat("O parâmetro {0} não pode ser negativo.", nameof(repositorySize))
-                .ToString();
-            throw new ArgumentOutOfRangeException(msg);
-        }
-
         if (rowsPerPage < 1)
         {
             var msg = new StringBuilder()
@@ -71,9 +47,10 @@ public class PagingService
             throw new ArgumentOutOfRangeException(msg);
         }
 
+        this.heroRepository = heroRepository;
         RowsPerPage = rowsPerPage;
-        RepositorySize = repositorySize;
         CurrentPage = FIRST_PAGE;
+        CalculateLastPage();
     }
 
     /// <summary>
@@ -82,16 +59,15 @@ public class PagingService
     /// <returns>
     /// A <see cref="DataPage"/> that can be used to retrieve data from the repository.
     /// </returns>
-    public DataPage GetCurrentPage()
-    {
-        return new DataPage(CurrentPage, RowsPerPage);
-    }
+    public DataPage GetCurrentPage() => new DataPage(CurrentPage, RowsPerPage);
+    
 
     /// <summary>   
     /// Advances to the next page in the repository, up to the <see cref="LastPage"/>.
     /// </summary>
     public void NextPage()
     {
+        CalculateLastPage();
         if (CurrentPage < LastPage)
         {
             CurrentPage++;
@@ -103,9 +79,18 @@ public class PagingService
     /// </summary>
     public void PreviousPage()
     {
+        CalculateLastPage();
         if (CurrentPage > FIRST_PAGE)
         {
             CurrentPage--;
         }
+    }
+
+    // Summary: Calculates the last page of the repository using on its size.
+    private void CalculateLastPage()
+    {
+        var numPagesRequired = heroRepository.RepositorySize / (double)RowsPerPage;
+        var lastPage = Math.Ceiling(numPagesRequired);
+        LastPage = Convert.ToInt32(lastPage);
     }
 }
