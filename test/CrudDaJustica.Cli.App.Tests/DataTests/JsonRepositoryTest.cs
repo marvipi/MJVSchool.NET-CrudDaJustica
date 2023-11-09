@@ -1,10 +1,9 @@
-﻿using PP_dotNet.Data;
-using PP_dotNet.Model;
-using PP_dotNet.Services;
-using System.Reflection;
+﻿using CrudDaJustica.Cli.App.Data;
+using CrudDaJustica.Cli.App.Model;
+using CrudDaJustica.Cli.App.Services;
 using System.Text.Json;
 
-namespace PP_dotNet_Tests.Data;
+namespace CrudDaJustica.Cli.App.Test.DataTests;
 
 [TestFixture]
 public class JsonRepositoryTest
@@ -169,9 +168,9 @@ public class JsonRepositoryTest
 		}
 	}
 
+	[TestCase(0)]
 	[TestCase(1)]
 	[TestCase(2)]
-	[TestCase(3)]
 	public void UpdateHero_DataPageIsNotEmpty_OverwritesOnlyTheHeroAtTheGivenRowOfTheGivenPage(int rowToUpdate)
 	{
 		try
@@ -189,7 +188,7 @@ public class JsonRepositoryTest
 			jsonRepo.UpdateHero(dataPage, rowToUpdate, updatedHero);
 
 			var heroesInDataPage = jsonRepo.GetHeroes(dataPage).ToList();
-			Assert.That(heroesInDataPage[rowToUpdate - 1], Is.EqualTo(updatedHero));
+			Assert.That(heroesInDataPage[rowToUpdate], Is.EqualTo(updatedHero));
 		}
 		finally
 		{
@@ -197,9 +196,9 @@ public class JsonRepositoryTest
 		}
 	}
 
+	[TestCase(0)]
 	[TestCase(1)]
 	[TestCase(2)]
-	[TestCase(3)]
 	public void DeleteHero_PageIsNotEmpty_DeletesTheHeroAtTheGivenRowOfTheGivenPage(int rowToDelete)
 	{
 		try
@@ -219,7 +218,7 @@ public class JsonRepositoryTest
 			var newRepositorySize = jsonRepo.RepositorySize;
 
 			var heroesAfterDeletion = jsonRepo.GetHeroes(dataPage);
-			var deletedHero = heroesBeforeDeletion[rowToDelete - 1];
+			var deletedHero = heroesBeforeDeletion[rowToDelete];
 			Assert.Multiple(() =>
 			{
 				Assert.That(heroesAfterDeletion, Does.Not.Contain(deletedHero));

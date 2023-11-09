@@ -1,120 +1,118 @@
-﻿using PP_dotNet.Services;
+﻿using CrudDaJustica.Cli.App.Services;
 
-namespace PP_dotNet_Tests.ServicesTests;
-
-// TODO Rewrite in English.
+namespace CrudDaJustica.Cli.App.Test.ServicesTests;
 
 [TestFixture]
 public class PagingServiceTest
 {
-    [TestCase(10, 10, 1)]
-    [TestCase(40, 05, 8)]
-    [TestCase(11, 03, 4)]
-    [TestCase(01, 07, 1)]
-    public void UltimaPagina_TamanhoRepositorioEQuantidadeSaoValoresValidos_CalculaAUltimaPaginaCorretamente
-        (int tamanhoRepositorio, int quantidade, int esperado)
-    {
-        var paginador = new PagingService(tamanhoRepositorio, quantidade);
+	[TestCase(10, 10, 1)]
+	[TestCase(40, 05, 8)]
+	[TestCase(11, 03, 4)]
+	[TestCase(01, 07, 1)]
+	public void LastPage_RepositorySizeAndRowsPerPageAreValid_CalculatesTheLastPageCorrectly
+		(int repositorySize, int rowsPerPage, int expected)
+	{
+		var pagingService = new PagingService(repositorySize, rowsPerPage);
 
-        var resultado = paginador.LastPage;
+		var actual = pagingService.LastPage;
 
-        Assert.That(resultado, Is.EqualTo(esperado));
-    }
+		Assert.That(actual, Is.EqualTo(expected));
+	}
 
-    [Test]
-    public void Construtor_TamanhoRepositorioENegativo_LevantaUmArgumentOutOfRangeException()
-    {
-        var naoEstaSendoTestado = 10;
+	[Test]
+	public void Constructor_NegativeRepositorySize_RaisesArgumentOutOfRangeException()
+	{
+		var notBeingTested = 10;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(-1, naoEstaSendoTestado));
-    }
+		Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(-1, notBeingTested));
+	}
 
-    [Test]
-    public void Construtor_QuantidadeMenorQueUm_LevantaUmArgumentOutOfRangeException()
-    {
-        var naoEstaSendoTestado = 10;
+	[Test]
+	public void Constructor_RowsPerPageIsLessThanOne_RaisesArgumentOutOfRangeException()
+	{
+		var notBeingTested = 10;
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(naoEstaSendoTestado, 0));
-    }
+		Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(notBeingTested, 0));
+	}
 
-    [TestCase(10, 5, 20, 4)]
-    public void TamanhoRepositorio_Atribuicao_AtualizaOValorDaUltimaPagina
-        (int tamanhoRepositorioInicial, int quantidadeValida, int novoTamanho, int esperado)
-    {
-        var paginador = new PagingService(tamanhoRepositorioInicial, quantidadeValida);
+	[TestCase(10, 5, 20, 4)]
+	public void RepositorySize_Setting_AlsoUpdatesLastPage
+		(int initialRepositorySize, int validRowsPerPage, int newRepositorySize, int expected)
+	{
+		var pagingService = new PagingService(initialRepositorySize, validRowsPerPage);
 
-        paginador.RepositorySize = novoTamanho;
+		pagingService.RepositorySize = newRepositorySize;
 
-        Assert.That(paginador.LastPage, Is.EqualTo(esperado));
-    }
+		Assert.That(pagingService.LastPage, Is.EqualTo(expected));
+	}
 
-    [TestCase(250, 150)]
-    public void Atual_NumeroDaPaginaRetornadaEIgualAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
-    {
-        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
+	[TestCase(250, 150)]
+	public void GetCurrentPage_DataPageNumberIsEqualToCurrentPage(int validRepositorySize, int validRowsPerPage)
+	{
+		var pagingService = new PagingService(validRepositorySize, validRowsPerPage);
 
-        var paginaAtual = paginador.GetCurrentPage();
+		var currentPage = pagingService.GetCurrentPage();
 
-        Assert.That(paginaAtual.Number, Is.EqualTo(paginador.CurrentPage));
-    }
+		Assert.That(currentPage.Number, Is.EqualTo(pagingService.CurrentPage));
+	}
 
-    [TestCase(5, 98)]
-    public void Atual_QuantidadeDaPaginaRetornadaEIgualAQuantidade(int tamanhoRepositorioValido, int quantidadeValida)
-    {
-        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
+	[TestCase(5, 98)]
+	public void GetCurrentPage_DataPageRowsIsEqualToRowsPerPage(int validRepositorySize, int validRowsPerPage)
+	{
+		var pagingService = new PagingService(validRepositorySize, validRowsPerPage);
 
-        var paginaAtual = paginador.GetCurrentPage();
+		var currentPage = pagingService.GetCurrentPage();
 
-        Assert.That(paginaAtual.Rows, Is.EqualTo(paginador.RowsPerPage));
-    }
+		Assert.That(currentPage.Rows, Is.EqualTo(pagingService.RowsPerPage));
+	}
 
-    [TestCase(200, 20)]
-    public void Avancar_PaginaAtualMenorQueAUltima_IncrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
-    {
-        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
-        var paginaAtualInicial = paginador.CurrentPage;
+	[TestCase(200, 20)]
+	public void NextPage_CurrentPageIsLessThanLastPage_IncrementsCurrentPage(int validRepositorySize, int validRowsPerPage)
+	{
+		var pagingService = new PagingService(validRepositorySize, validRowsPerPage);
+		var initialCurrentPage = pagingService.CurrentPage;
 
-        paginador.NextPage();
+		pagingService.NextPage();
 
-        var esperado = paginaAtualInicial + 1;
+		var expected = initialCurrentPage + 1;
 
-        Assert.That(paginador.CurrentPage, Is.EqualTo(esperado));
-    }
+		Assert.That(pagingService.CurrentPage, Is.EqualTo(expected));
+	}
 
-    [TestCase(1, 10)]
-    public void Avancar_PaginaAtualEIgualAUltima_NaoIncrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
-    {
-        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
-        var paginaAtualInicial = paginador.CurrentPage;
+	[TestCase(1, 10)]
+	public void NextPage_CurrentPageIsEqualToLastPage_DoesntIncrementCurrentPage(int validRepositorySize, int validRowsPerPage)
+	{
+		var pagingService = new PagingService(validRepositorySize, validRowsPerPage);
+		var initialCurrentPage = pagingService.CurrentPage;
 
-        paginador.NextPage();
+		pagingService.NextPage();
 
-        var novaPaginaAtual = paginador.CurrentPage;
-        Assert.That(paginaAtualInicial, Is.EqualTo(novaPaginaAtual));
-    }
+		var newCurrentPage = pagingService.CurrentPage;
+		Assert.That(initialCurrentPage, Is.EqualTo(newCurrentPage));
+	}
 
-    [TestCase(10, 6)]
-    public void Voltar_PaginaAtualEMaiorQueAPrimeira_DecrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
-    {
-        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
-        var paginaInicial = paginador.CurrentPage;
+	[TestCase(10, 6)]
+	public void PreviousPage_CurrentPageIsGreaterThanFirstPage_DecrementsCurrentPage(int validRepositorySize, int validRowsPerPage)
+	{
+		var pagingService = new PagingService(validRepositorySize, validRowsPerPage);
+		var initialCurrentPage = pagingService.CurrentPage;
 
-        paginador.NextPage();
-        paginador.PreviousPage();
+		pagingService.NextPage();
+		pagingService.PreviousPage();
 
-        var novaPaginaAtual = paginador.CurrentPage;
+		var newCurrentPage = pagingService.CurrentPage;
 
-        Assert.That(novaPaginaAtual, Is.EqualTo(paginaInicial));
-    }
+		Assert.That(newCurrentPage, Is.EqualTo(initialCurrentPage));
+	}
 
-    [TestCase(75, 4)]
-    public void Voltar_PaginaAtualEIgualAPrimeira_NaoDecrementaAPaginaAtual(int tamanhoRepositorioValido, int quantidadeValida)
-    {
-        var paginador = new PagingService(tamanhoRepositorioValido, quantidadeValida);
-        var numPrimeiraPagina = paginador.CurrentPage;
+	[TestCase(75, 4)]
+	public void PreviousPage_CurrentPageIsEqualToFirstPage_DoesntDecrementCurrentPage(int validRepositorySize, int validRowsPerPage)
+	{
+		var pagingService = new PagingService(validRepositorySize, validRowsPerPage);
+		var numFirstPage = pagingService.CurrentPage;
 
-        paginador.PreviousPage();
+		pagingService.PreviousPage();
 
-        Assert.That(paginador.CurrentPage, Is.EqualTo(numPrimeiraPagina));
-    }
+		Assert.That(pagingService.CurrentPage, Is.EqualTo(numFirstPage));
+	}
 }

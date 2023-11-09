@@ -1,4 +1,4 @@
-﻿namespace PP_dotNet.View.Models;
+﻿namespace CrudDaJustica.Cli.App.View.Models;
 
 /// <summary>
 /// Represents the hero data that can be read from a form.

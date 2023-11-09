@@ -1,11 +1,11 @@
-﻿using CrudDaJustica.Cli.Lib.Forms;
+﻿using CrudDaJustica.Cli.App.Controller;
+using CrudDaJustica.Cli.App.View.Models;
+using CrudDaJustica.Cli.Lib.Forms;
 using CrudDaJustica.Cli.Lib.Keybindings;
 using CrudDaJustica.Cli.Lib.Views;
-using PP_dotNet.Controller;
-using PP_dotNet.View.Models;
 using System.Text;
 
-namespace PP_dotNet.View.UI;
+namespace CrudDaJustica.Cli.App.View.UI;
 
 /// <summary>
 /// Represents a command-line interface used to interact with this system.

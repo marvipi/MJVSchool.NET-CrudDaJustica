@@ -1,6 +1,7 @@
-﻿using PP_dotNet.Model;
+﻿using CrudDaJustica.Cli.App.Model;
+using CrudDaJustica.Cli.App.Services;
 
-namespace PP_dotNet.Data;
+namespace CrudDaJustica.Cli.App.Data;
 
 /// <summary>
 /// Represents a repository that stores data in memory.
@@ -26,15 +27,15 @@ public class VirtualRepository : IHeroRepository
         var newHeroes = new List<HeroEntity>()
         {
             new HeroEntity("Martian Manhunter", new(1955, 11, 1), "J'onn", "J'onzz"),
-             new HeroEntity("Superman", new(1938, 6, 1), "Clark", "Kent"),
-             new HeroEntity("Batman", new(1939, 5, 1), "Bruce", "Wayne"),
-             new HeroEntity("Wonder Woman", new(1939, 5, 1), "Diana", "of Themyscira"),
-             new HeroEntity("The Flash", new(1956, 10, 1), "Barry", "Allen"),
-             new HeroEntity("Green Lantern", new(1959, 10, 1), "Hal", "Jordan"),
-             new HeroEntity("Aquaman", new(1941, 11, 1), "Arthur", "Curry"),
-             new HeroEntity("Hawkgirl", new(1941, 7, 1), "Shiera", "Hall"),
-             new HeroEntity("Hawkman", new(1940, 1, 1), "Carter", "Hall"),
-             new HeroEntity("Atom", new(1961, 10, 1), "Ray", "Palmer"),
+            new HeroEntity("Superman", new(1938, 6, 1), "Clark", "Kent"),
+            new HeroEntity("Batman", new(1939, 5, 1), "Bruce", "Wayne"),
+            new HeroEntity("Wonder Woman", new(1939, 5, 1), "Diana", "of Themyscira"),
+            new HeroEntity("The Flash", new(1956, 10, 1), "Barry", "Allen"),
+            new HeroEntity("Green Lantern", new(1959, 10, 1), "Hal", "Jordan"),
+            new HeroEntity("Aquaman", new(1941, 11, 1), "Arthur", "Curry"),
+            new HeroEntity("Hawkgirl", new(1941, 7, 1), "Shiera", "Hall"),
+            new HeroEntity("Hawkman", new(1940, 1, 1), "Carter", "Hall"),
+            new HeroEntity("Atom", new(1961, 10, 1), "Ray", "Palmer"),
             new HeroEntity("Zatanna", new(1964, 11, 1), "Zatanna", "Zatara"),
         };
 
@@ -79,14 +80,11 @@ public class VirtualRepository : IHeroRepository
         }
     }
 
-    // Summary: Calculates how many rows of data to skip in a data page.
-    // Remarks: Used for paging data.
+    // Summary: Calculates how many rows of data to skip to reach a given data page.
     private static int Skip(DataPage page) => (page.Number - 1) * page.Rows;
 
-    // Summary: Calculates how many rows of data to take in a data page.
-    // Remarks: Used for paging data.
+    // Summary: Calculates how many rows of data to take in a given data page.
     private static int Take(DataPage page) => page.Number * page.Rows;
-
 
     // Summary: Produces the last filled index in an array of T.
     private static int LastFilledIndex<T>(T[] array)

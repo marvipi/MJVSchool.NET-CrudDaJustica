@@ -1,4 +1,4 @@
-﻿namespace PP_dotNet.Model;
+﻿namespace CrudDaJustica.Cli.App.Model;
 
 /// <summary>
 /// Represents a hero from the DC Universe.

@@ -1,7 +1,6 @@
-﻿using PP_dotNet.Data;
-using System.Text;
+﻿using System.Text;
 
-namespace PP_dotNet.Services;
+namespace CrudDaJustica.Cli.App.Services;
 
 /// <summary>
 /// Represents a service that does data paging in a repository.

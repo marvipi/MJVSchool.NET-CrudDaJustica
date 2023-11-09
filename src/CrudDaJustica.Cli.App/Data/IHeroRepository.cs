@@ -1,7 +1,7 @@
-﻿using PP_dotNet.Model;
-using PP_dotNet.Services;
+﻿using CrudDaJustica.Cli.App.Model;
+using CrudDaJustica.Cli.App.Services;
 
-namespace PP_dotNet.Data;
+namespace CrudDaJustica.Cli.App.Data;
 
 /// <summary>
 /// Represents a repository that stores information about <see cref="HeroEntity"/>.
