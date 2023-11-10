@@ -25,10 +25,6 @@ public class CLI
     {
         this.heroController = heroController;
 
-        // Bugs:
-        //  User can call trigger an Update if a listing is empty.
-        //  User can call trigger a Deletion if a listing is empty.
-
         // WARNING: Boilerplate ahead!
 
         var formHeader = new string[]
@@ -82,6 +78,7 @@ public class CLI
     public void Start()
     {
         heroListing.Display();
+        Console.Clear();
     }
 
     private void OnCreateHero()
