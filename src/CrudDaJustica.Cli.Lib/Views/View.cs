@@ -28,17 +28,6 @@ public abstract class View
 		Console.CursorVisible = false;
 	}
 
-	// Summary: Displays all keybindings in a single line of the console window.
-	protected void DisplayKeybindings()
-	{
-		foreach (var keyMap in Keybindings)
-		{
-			Console.Write(" {0} ", keyMap);
-		}
-
-		Console.WriteLine();
-	}
-
 	// Summary: Invokes the first keybinding associated with a given key, if any exist.
 	protected void Invoke(ConsoleKey key)
 	{

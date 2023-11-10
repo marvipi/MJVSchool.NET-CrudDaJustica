@@ -31,14 +31,17 @@ public class CLI
 
         // WARNING: Boilerplate ahead!
 
-        var formHeaderContent = new StringBuilder()
-            .AppendLine(" USER: J'ONN J'ONZZ")
-            .AppendLine(" Press ENTER to advance to the next field");
-        var formHeader = new Header(formHeaderContent);
+        var formHeader = new string[]
+        {
+            "  @@@@@ @@      Welcome, J'ONN J'ONZZ",
+            "     @@ @@      Role: ADMIN",
+            "  @  @@ @@      ",
+            " @@  @@ @@      ",
+            " @@@@@@ @@@@@@  Press ENTER to advance to the next field",
+        };
 
         heroCreateForm = new Form<HeroFormModel>(
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES/CREATE",
-            '=',
             formHeader,
             new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
             new Keybinding(OnCreateHero, ConsoleKey.Enter, "ENTER: Confirm"));
@@ -46,19 +49,21 @@ public class CLI
 
         heroUpdateForm = new Form<HeroFormModel>(
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES/UPDATE",
-            '=',
             formHeader,
             new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
             new Keybinding(OnUpdateHero, ConsoleKey.Enter, "ENTER: Confirm"));
 
-
-        var listingHeaderContents = new StringBuilder()
-            .AppendLine(" USER: J'ONN J'ONZZ");
-        var listingHeader = new Header(listingHeaderContents);
+        var listingHeader = new string[]
+        {
+            "  @@@@@ @@      Welcome, J'ONN J'ONZZ",
+            "     @@ @@      Role: ADMIN",
+            "  @  @@ @@      ",
+            " @@  @@ @@      ",
+            " @@@@@@ @@@@@@  ",
+        };
 
         heroListing = new Listing<HeroViewModel>(
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES",
-            '=',
             listingHeader,
             heroController.List,
             new BindableKey(ConsoleKey.Escape, "ESC: Exit"),

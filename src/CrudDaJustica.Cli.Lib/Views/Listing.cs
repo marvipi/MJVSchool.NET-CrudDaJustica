@@ -6,10 +6,10 @@ namespace CrudDaJustica.Cli.Lib.Views;
 /// Represents an interactable list of <see cref="T"/>.
 /// </summary>
 /// <typeparam name="T"> The type of the element to list on the screen. </typeparam>
-public class Listing<T> : Frame
+public class Listing<T> : Frame where T : notnull
 {
-	// Summary: The first column of the console buffer.
-	private const int FAR_LEFT_COORD = 0;
+	// Summary: The column of the console buffer where the ">" is drawn.
+	private const int SELECTOR_COLUMN = 2;
 
 	// Summary: The row of the first element of the listing being displayed, in console buffer coordinates.
 	private int firstRow;
@@ -35,7 +35,6 @@ public class Listing<T> : Frame
 	/// Initializes a new instance of the <see cref="Listing{T}"/> class.
 	/// </summary>
 	/// <param name="title"> The title to display on top of the screen. </param>
-	/// <param name="borderChar"> A character to draw on the borders of the console buffer. </param>
 	/// <param name="header"> Information to display on the top of the console buffer. </param>
 	/// <param name="listRetriever"> A reference to a method that retrieves the elements to be listed. </param>
 	/// <param name="exitKey"> The console key that will exit this view. </param>
@@ -45,8 +44,7 @@ public class Listing<T> : Frame
 	/// <param name="nextElement"> A key map used to select the next element in the <see cref="Listing{T}"/>. </param>
 	/// <param name="previousElement"> A key map used to select the previous element in the <see cref="Listing{T}"/>. </param>
 	public Listing(string title,
-		char borderChar,
-		Header header,
+		string[] header,
 		Func<IEnumerable<T>> listRetriever,
 		BindableKey exitKey,
 		Keybinding create,
@@ -55,7 +53,7 @@ public class Listing<T> : Frame
 		Keybinding nextPage,
 		Keybinding previousPage,
 		BindableKey nextElement,
-		BindableKey previousElement) : base(title, borderChar, header)
+		BindableKey previousElement) : base(title, header)
 	{
 		elements = new List<T>();
 		this.listRetriever = listRetriever;
@@ -87,6 +85,8 @@ public class Listing<T> : Frame
 			firstRow = Console.GetCursorPosition().Top;
 
 			ListElements();
+
+			DrawVerticalBorders();
 
 			// Stops the cursor from appearing at the top left of the console when the listing is first displayed.
 			if (currentRow <= firstRow)
@@ -124,9 +124,14 @@ public class Listing<T> : Frame
 
 		foreach (var element in elements)
 		{
-			Console.Write(" ");
-			Console.Write(element?.ToString());
-			Console.WriteLine();
+			var elementAsString = element
+				?.ToString();
+
+			// Puts a space between the border, the selector and the element.
+			var displayElement = elementAsString
+				?.PadLeft(elementAsString.Length + SELECTOR_COLUMN + 1);
+
+			DrawVerticalBorders(displayElement ?? string.Empty, Console.WriteLine);
 		}
 		lastRow = Console.GetCursorPosition().Top - 1;
 	}
@@ -159,7 +164,7 @@ public class Listing<T> : Frame
 		// Stops the ">" from being drawn on the screen when the listing has no elements.
 		if (elements.Any())
 		{
-			Console.SetCursorPosition(FAR_LEFT_COORD, row);
+			Console.SetCursorPosition(SELECTOR_COLUMN, row);
 			Console.Write(">");
 			currentRow = row;
 		}

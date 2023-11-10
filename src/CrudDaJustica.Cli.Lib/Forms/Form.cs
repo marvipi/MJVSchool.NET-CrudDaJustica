@@ -32,15 +32,13 @@ public class Form<T> : Frame where T : new()
 	/// Initializes a new instance of the <see cref="Form{T}"/> class.
 	/// </summary>
 	/// <param name="title"> The title to display on top of the screen. </param>
-	/// <param name="borderChar"> A character to draw on the borders of the console buffer. </param>
 	/// <param name="cancelKey"> An unbound console key that will discard all that in the the form. </param>
 	/// <param name="header"> Information to display on the top of the console buffer. </param>
 	/// <param name="confirmKey"> An unbound console key that will save the data in the form. </param>
 	public Form(string title,
-		char borderChar,
-		Header header,
+		string[] header,
 		BindableKey cancelKey,
-		Keybinding confirmKey) : base(title, borderChar, header)
+		Keybinding confirmKey) : base(title, header)
 	{
 		fields = new();
 		properties = new();
@@ -59,7 +57,6 @@ public class Form<T> : Frame where T : new()
 	/// </summary>
 	public override void Display()
 	{
-		Console.Clear();
 		base.Display();
 
 		InitializeFields();
@@ -109,10 +106,17 @@ public class Form<T> : Frame where T : new()
 
 		foreach (var prop in properties)
 		{
-			Console.Write(" {0}: ", prop.Name);
+			string field = string.Format(" {0}: ", prop.Name);
+			DrawVerticalBorders(field, Console.Write);
+
+			(var column, var row) = Console.GetCursorPosition();
+			Console.SetCursorPosition(field.Length + 1, row);
 			coords.Enqueue(Console.GetCursorPosition());
+
 			Console.WriteLine();
 		}
+
+		DrawVerticalBorders();
 
 		return coords;
 	}
