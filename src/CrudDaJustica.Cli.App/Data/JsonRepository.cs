@@ -110,11 +110,7 @@ public class JsonRepository : IHeroRepository
                 {
                     streamWriter.WriteLine(dataRow);
                 }
-                else if (newData is null)
-                {
-                    continue; // Delete
-                }
-                else
+                else if (newData is not null)
                 {
                     streamWriter.WriteLine(newData); // Update
                 }
