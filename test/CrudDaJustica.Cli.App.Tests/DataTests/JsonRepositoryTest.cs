@@ -14,6 +14,17 @@ public class JsonRepositoryTest
 	private static void DeleteTestDir() => Directory.Delete(Path.GetDirectoryName(TestFilePath)!, true);
 
 	[Test]
+	public void Constructor_HeroDataFilePathIsNullOrRoot_ThrowsArgumentException()
+	{
+		Assert.Multiple(() =>
+			{
+				Assert.Throws<ArgumentException>(() => new JsonRepository(null!));
+				Assert.Throws<ArgumentException>(() => new JsonRepository("C:"));
+				Assert.Throws<ArgumentException>(() => new JsonRepository("/"));
+			});
+	}
+
+	[Test]
 	public void RegisterHero_EmptyRepository_AppendsNewHeroToTheEndOfTheFile()
 	{
 		try
@@ -196,10 +207,10 @@ public class JsonRepositoryTest
 		}
 	}
 
-	[TestCase(0)]
-	[TestCase(1)]
-	[TestCase(2)]
-	public void DeleteHero_PageIsNotEmpty_DeletesTheHeroAtTheGivenRowOfTheGivenPage(int rowToDelete)
+	[TestCase(0, 1, 2)]
+	[TestCase(1, 0, 2)]
+	[TestCase(2, 0, 1)]
+	public void DeleteHero_PageIsNotEmpty_DeletesTheHeroAtTheGivenRowOfTheGivenPage(int rowToDelete, int firstRowToKeep, int secondRowToKeep)
 	{
 		try
 		{
@@ -221,6 +232,8 @@ public class JsonRepositoryTest
 			var deletedHero = heroesBeforeDeletion[rowToDelete];
 			Assert.Multiple(() =>
 			{
+				Assert.That(heroesAfterDeletion, Does.Contain(heroesBeforeDeletion[firstRowToKeep]));
+				Assert.That(heroesAfterDeletion, Does.Contain(heroesBeforeDeletion[secondRowToKeep]));
 				Assert.That(heroesAfterDeletion, Does.Not.Contain(deletedHero));
 				Assert.That(newRepositorySize, Is.EqualTo(initialRepositorySize - 1));
 			});

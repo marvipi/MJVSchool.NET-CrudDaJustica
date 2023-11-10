@@ -1,6 +1,7 @@
 ﻿using CrudDaJustica.Cli.Lib.Keybindings;
 using CrudDaJustica.Cli.Lib.Views;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace CrudDaJustica.Cli.Lib.Forms;
 
@@ -32,15 +33,13 @@ public class Form<T> : Frame where T : new()
 	/// Initializes a new instance of the <see cref="Form{T}"/> class.
 	/// </summary>
 	/// <param name="title"> The title to display on top of the screen. </param>
-	/// <param name="borderChar"> A character to draw on the borders of the console buffer. </param>
 	/// <param name="cancelKey"> An unbound console key that will discard all that in the the form. </param>
 	/// <param name="header"> Information to display on the top of the console buffer. </param>
 	/// <param name="confirmKey"> An unbound console key that will save the data in the form. </param>
 	public Form(string title,
-		char borderChar,
-		Header header,
-		RebindableKey cancelKey,
-		Keybinding confirmKey) : base(title, borderChar, header)
+		string[] header,
+		BindableKey cancelKey,
+		Keybinding confirmKey) : base(title, header)
 	{
 		fields = new();
 		properties = new();
@@ -59,7 +58,6 @@ public class Form<T> : Frame where T : new()
 	/// </summary>
 	public override void Display()
 	{
-		Console.Clear();
 		base.Display();
 
 		InitializeFields();
@@ -69,6 +67,90 @@ public class Form<T> : Frame where T : new()
 		ReadAllFields(screenCoords);
 
 		DisplayConfirmationPrompt();
+	}
+
+	// Summary: Creates a field for each public property in T.
+	private void InitializeFields()
+	{
+		foreach (var prop in FormData.GetType().GetProperties())
+		{
+			var formattedPropName = FormatPropName(prop.Name);
+			fields.Enqueue(new Field(title: formattedPropName));
+			properties.Enqueue(prop);
+		}
+	}
+
+	// Summary: Splits propName by uppercase characters. Converts every word to lowercase, except for the first one.
+	private string FormatPropName(string propName)
+	{
+		var fieldTitle = Regex
+				.Split(propName, @"([A-Z]+[a-z]*)")
+				.Where(word => !string.IsNullOrWhiteSpace(word))
+				.ToArray();
+
+		if (fieldTitle.Length == 1)
+		{
+			return propName;
+		}
+
+		var formattedFieldTitle = fieldTitle[0];
+		foreach (var i in Enumerable.Range(1, fieldTitle.Length - 1))
+		{
+			formattedFieldTitle += string.Format(" {0}", fieldTitle[i].ToLower());
+		}
+
+		return formattedFieldTitle;
+	}
+
+	// Summary: Displays the fields vertically on the console screen.
+	// Returns: The console coordinates right after each field.
+	private Queue<(int column, int row)> DrawFields()
+	{
+		var coords = new Queue<(int column, int row)>();
+
+		foreach (var field in fields)
+		{
+			var displayText = string.Format(" {0}: ", field.Title);
+			DrawVerticalBorders(displayText, Console.Write);
+
+			(var column, var row) = Console.GetCursorPosition();
+			Console.SetCursorPosition(displayText.Length + 1, row);
+			coords.Enqueue(Console.GetCursorPosition());
+
+			Console.WriteLine();
+		}
+
+		DrawVerticalBorders();
+
+		return coords;
+	}
+
+	// Summary: Reads input from each field in the form from top to bottom.
+	private void ReadAllFields(Queue<(int column, int row)> screenCoords)
+	{
+		Console.CursorVisible = true;
+		while (screenCoords.Any())
+		{
+			(var column, var row) = screenCoords.Peek();
+			Console.SetCursorPosition(column, row);
+			ReadField();
+			screenCoords.Dequeue();
+		}
+		Console.CursorVisible = false;
+	}
+
+	// Summary: Reads input from the current field of the user form.
+	private void ReadField()
+	{
+		var currentField = fields.Peek();
+		currentField.Read();
+
+		properties
+			.Peek()
+			.SetValue(FormData, currentField.Value);
+
+		fields.Dequeue();
+		properties.Dequeue();
 	}
 
 	// Summary: Prompts the user to save or discard the data entered in the form.
@@ -89,59 +171,5 @@ public class Form<T> : Frame where T : new()
 			}
 		}
 		ExitKeyPressed = false;
-	}
-
-	// Summary: Creates a field for each public property in T.
-	private void InitializeFields()
-	{
-		foreach (var prop in FormData.GetType().GetProperties())
-		{
-			fields.Enqueue(new Field(prop.Name));
-			properties.Enqueue(prop);
-		}
-	}
-
-	// Summary: Displays the fields vertically on the console screen.
-	// Returns: The console coordinates right after each field.
-	private Queue<(int column, int row)> DrawFields()
-	{
-		var coords = new Queue<(int column, int row)>();
-
-		foreach (var prop in properties)
-		{
-			Console.Write(" {0}: ", prop.Name);
-			coords.Enqueue(Console.GetCursorPosition());
-			Console.WriteLine();
-		}
-
-		return coords;
-	}
-
-	// Summary: Reads input from each field in the form from top to bottom.
-	private void ReadAllFields(Queue<(int column, int row)> screenCoords)
-	{
-		while (screenCoords.Any())
-		{
-			(var column, var row) = screenCoords.Peek();
-			Console.SetCursorPosition(column, row);
-			ReadField();
-			screenCoords.Dequeue();
-		}
-	}
-
-	// Summary: Reads input from the current field of the user form.
-	private void ReadField()
-	{
-		Console.CursorVisible = true;
-		var currentField = fields.Peek();
-		currentField.Read();
-
-		properties
-			.Peek()
-			.SetValue(FormData, currentField.Value);
-
-		fields.Dequeue();
-		properties.Dequeue();
-		Console.CursorVisible = false;
 	}
 }

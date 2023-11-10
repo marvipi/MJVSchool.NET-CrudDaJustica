@@ -3,7 +3,7 @@
 /// <summary>
 /// Contains information about a hero that can be displayed in the user interface.
 /// </summary>
-public readonly struct HeroViewModel
+public class HeroViewModel
 {
     /// <summary>
     /// The name of a hero's secret identity.
@@ -42,8 +42,10 @@ public readonly struct HeroViewModel
 
     public override string ToString()
     {
-        // TODO Display "N/A" if fullName is null.
-        var fullName = string.Format("{0} {1}", FirstName, LastName);
+        var fullName = string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName)
+            ? "N/A"
+            : string.Format("{0} {1}", FirstName, LastName);
+
         return string.Format("{0} - {1} - {2}", Alias, fullName, Debut);
     }
 }

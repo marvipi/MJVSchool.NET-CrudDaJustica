@@ -12,6 +12,7 @@ public class JsonRepository : IHeroRepository
     // Summary: The path of the json file where hero data is stored.
     private readonly string heroDataFilePath;
 
+    // Summary: The path of the directory where the hero data file is stored.
     private readonly string heroDataDirPath;
 
     // Summary: A temporary file used to update or delete heroes from the repository.
@@ -19,31 +20,40 @@ public class JsonRepository : IHeroRepository
 
     public int RepositorySize { get; private set; }
 
-
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonRepository"/> class.
     /// </summary>
     /// <param name="heroDataFilePath"> The absolute path where the hero data file is or will be stored. </param>
+    /// <exception cref="ArgumentException"></exception>
     public JsonRepository(string heroDataFilePath)
     {
-        heroDataDirPath = Path.GetDirectoryName(heroDataFilePath);
-        var heroDataDir = new DirectoryInfo(heroDataDirPath);
-
-        if (!heroDataDir.Exists)
+        var dirPath = Path.GetDirectoryName(heroDataFilePath);
+        if (string.IsNullOrEmpty(dirPath))
         {
+            var errorMsg = string.Format("{0} cannot be a root directory nor null. Given path: {1}", 
+                nameof(heroDataDirPath), 
+                heroDataDirPath);
+
+            throw new ArgumentException(errorMsg);
+        }
+
+        heroDataDirPath = dirPath;
+        if (!Directory.Exists(heroDataDirPath))
+        {
+            var heroDataDir = new DirectoryInfo(heroDataDirPath);
             heroDataDir.Create();
         }
 
-        var heroDataFile = new FileInfo(heroDataFilePath);
-        if (!heroDataFile.Exists)
+        this.heroDataFilePath = heroDataFilePath;
+        if (!File.Exists(this.heroDataFilePath))
         {
+            var heroDataFile = new FileInfo(this.heroDataFilePath);
             heroDataFile
                 .CreateText()
                 .Close();
         }
 
-        this.heroDataFilePath = heroDataFilePath;
-        RepositorySize = File.ReadLines(heroDataFilePath).Count();
+        RepositorySize = File.ReadLines(this.heroDataFilePath).Count();
     }
 
     public void RegisterHero(HeroEntity newHero)
@@ -100,11 +110,7 @@ public class JsonRepository : IHeroRepository
                 {
                     streamWriter.WriteLine(dataRow);
                 }
-                else if (newData is null)
-                {
-                    continue; // Delete
-                }
-                else
+                else if (newData is not null)
                 {
                     streamWriter.WriteLine(newData); // Update
                 }
