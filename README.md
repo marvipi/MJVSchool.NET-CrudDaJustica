@@ -29,4 +29,5 @@ Durante o curso foram abordados diversas características e funcionalidades do C
 ![design.png](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/design.png)
 
 ### Imagens
-![cli.png](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli.png)
+![Listagens na linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli.png)
+![Formulários na linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli-form.png)
