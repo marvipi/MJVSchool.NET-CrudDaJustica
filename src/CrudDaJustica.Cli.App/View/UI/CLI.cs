@@ -105,6 +105,7 @@ public class CLI
     private void OnCreateHero()
     {
         heroController.Create(heroCreateForm.FormData);
+        UpdateListing();
     }
 
     // Summary: Updates the currently selected hero in the heroListing with data read from the heroUpdateForm.
@@ -113,6 +114,7 @@ public class CLI
         if (heroListing.Elements.Any())
         {
             heroController.Update(heroUpdateForm.FormData, heroListing.CurrentlySelectedElement);
+            UpdateListing();
         }
     }
 
@@ -122,6 +124,7 @@ public class CLI
         if (heroListing.Elements.Any())
         {
             heroController.Delete(heroListing.CurrentlySelectedElement);
+            UpdateListing();
         }
     }
 }
