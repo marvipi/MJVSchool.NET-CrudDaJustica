@@ -39,7 +39,7 @@ public class Form<T> : Frame where T : new()
 	public Form(string title,
 		char borderChar,
 		Header header,
-		RebindableKey cancelKey,
+		BindableKey cancelKey,
 		Keybinding confirmKey) : base(title, borderChar, header)
 	{
 		fields = new();

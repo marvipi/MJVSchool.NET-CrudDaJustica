@@ -40,7 +40,7 @@ public class CLI
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES/CREATE",
             '=',
             formHeader,
-            new RebindableKey(ConsoleKey.Escape, "ESC: Cancel"),
+            new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
             new Keybinding(OnCreateHero, ConsoleKey.Enter, "ENTER: Confirm"));
 
 
@@ -48,7 +48,7 @@ public class CLI
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES/UPDATE",
             '=',
             formHeader,
-            new RebindableKey(ConsoleKey.Escape, "ESC: Cancel"),
+            new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
             new Keybinding(OnUpdateHero, ConsoleKey.Enter, "ENTER: Confirm"));
 
 
@@ -61,14 +61,14 @@ public class CLI
             '=',
             listingHeader,
             heroController.List,
-            new RebindableKey(ConsoleKey.Escape, "ESC: Exit"),
+            new BindableKey(ConsoleKey.Escape, "ESC: Exit"),
             new Keybinding(heroCreateForm.Display, ConsoleKey.C, "C: Create"),
             new Keybinding(heroUpdateForm.Display, ConsoleKey.U, "U: Update"),
             new Keybinding(OnDeleteHero, ConsoleKey.D, "D: Delete"),
             new Keybinding(heroController.NextPage, ConsoleKey.RightArrow, "RIGHT: Next page"),
             new Keybinding(heroController.PreviousPage, ConsoleKey.LeftArrow, "LEFT: Previous page"),
-            new RebindableKey(ConsoleKey.DownArrow, "DOWN: Next element"),
-            new RebindableKey(ConsoleKey.UpArrow, "UP: Previous element"));
+            new BindableKey(ConsoleKey.DownArrow, "DOWN: Next element"),
+            new BindableKey(ConsoleKey.UpArrow, "UP: Previous element"));
     }
 
     /// <summary>

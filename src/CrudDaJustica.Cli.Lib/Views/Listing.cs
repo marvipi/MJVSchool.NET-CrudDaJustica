@@ -48,14 +48,14 @@ public class Listing<T> : Frame
 		char borderChar,
 		Header header,
 		Func<IEnumerable<T>> listRetriever,
-		RebindableKey exitKey,
+		BindableKey exitKey,
 		Keybinding create,
 		Keybinding update,
 		Keybinding delete,
 		Keybinding nextPage,
 		Keybinding previousPage,
-		RebindableKey nextElement,
-		RebindableKey previousElement) : base(title, borderChar, header)
+		BindableKey nextElement,
+		BindableKey previousElement) : base(title, borderChar, header)
 	{
 		elements = new List<T>();
 		this.listRetriever = listRetriever;
