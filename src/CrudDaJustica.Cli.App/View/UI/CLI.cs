@@ -3,7 +3,6 @@ using CrudDaJustica.Cli.App.View.Models;
 using CrudDaJustica.Cli.Lib.Forms;
 using CrudDaJustica.Cli.Lib.Keybindings;
 using CrudDaJustica.Cli.Lib.Views;
-using System.Text;
 
 namespace CrudDaJustica.Cli.App.View.UI;
 
@@ -61,13 +60,12 @@ public class CLI
         heroListing = new Listing<HeroViewModel>(
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES",
             listingHeader,
-            heroController.List,
             new BindableKey(ConsoleKey.Escape, "ESC: Exit"),
             new Keybinding(heroCreateForm.Display, ConsoleKey.C, "C: Create"),
             new Keybinding(heroUpdateForm.Display, ConsoleKey.U, "U: Update"),
             new Keybinding(OnDeleteHero, ConsoleKey.D, "D: Delete"),
-            new Keybinding(heroController.NextPage, ConsoleKey.RightArrow, "RIGHT: Next page"),
-            new Keybinding(heroController.PreviousPage, ConsoleKey.LeftArrow, "LEFT: Previous page"),
+            new Keybinding(OnNextHeroPage, ConsoleKey.RightArrow, "RIGHT: Next page"),
+            new Keybinding(OnPreviousHeroPage, ConsoleKey.LeftArrow, "LEFT: Previous page"),
             new BindableKey(ConsoleKey.DownArrow, "DOWN: Next element"),
             new BindableKey(ConsoleKey.UpArrow, "UP: Previous element"));
     }
@@ -77,22 +75,53 @@ public class CLI
     /// </summary>
     public void Start()
     {
+        UpdateListing();
         heroListing.Display();
         Console.Clear();
     }
 
+    // Summary: Advances to the next data page and updates the contents of the hero listing.
+    private void OnNextHeroPage()
+    {
+        heroController.NextPage();
+        UpdateListing();
+    }
+
+    // Summary: Returns to the previous data page and updates the contents of the hero listing.
+    private void OnPreviousHeroPage()
+    {
+        heroController.PreviousPage();
+        UpdateListing();
+    }
+
+    // Summary: Updates the elements displayed in the hero listing and the number of the data page being displayed.
+    private void UpdateListing()
+    {
+        heroListing.Elements = heroController.List();
+        heroListing.CurrentPage = heroController.CurrentPage;
+    }
+
+    // Summary: Creates a new hero from the form data read from the heroCreateForm.
     private void OnCreateHero()
     {
         heroController.Create(heroCreateForm.FormData);
     }
 
+    // Summary: Updates the currently selected hero in the heroListing with data read from the heroUpdateForm.
     private void OnUpdateHero()
     {
-        heroController.Update(heroUpdateForm.FormData, heroListing.CurrentlySelectedElement);
+        if (heroListing.Elements.Any())
+        {
+            heroController.Update(heroUpdateForm.FormData, heroListing.CurrentlySelectedElement);
+        }
     }
 
+    // Summary: Deletes the currently selected hero in the heroListing.
     private void OnDeleteHero()
     {
-        heroController.Delete(heroListing.CurrentlySelectedElement);
+        if (heroListing.Elements.Any())
+        {
+            heroController.Delete(heroListing.CurrentlySelectedElement);
+        }
     }
 }

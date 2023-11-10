@@ -15,6 +15,11 @@ public class HeroController
     private readonly PagingService pagingService;
 
     /// <summary>
+    /// The current data page of the repository.
+    /// </summary>
+    public int CurrentPage => pagingService.CurrentPage;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="HeroController"/> class.
     /// </summary>
     /// <param name="heroRepository"> The repository that stores information about the heroes. </param>

@@ -20,11 +20,15 @@ public class Listing<T> : Frame where T : notnull
 	// Summary: The row of the last element of the listing being displayed, in console buffer coordinates.
 	private int lastRow;
 
-	// Summary: The elements being listed on screen.
-	private IEnumerable<T> elements;
+	/// <summary>
+	/// The elements being listed on screen.
+	/// </summary>
+	public IEnumerable<T> Elements { get; set; }
 
-	// Summary: A delegate that retrives the elements to be listed.
-	private readonly Func<IEnumerable<T>> listRetriever;
+	/// <summary>
+	/// The number of the page being displayed on screen.
+	/// </summary>
+	public int CurrentPage { get; set; }
 
 	/// <summary>
 	/// The position of the currently selected element in the current data page.
@@ -36,7 +40,6 @@ public class Listing<T> : Frame where T : notnull
 	/// </summary>
 	/// <param name="title"> The title to display on top of the screen. </param>
 	/// <param name="header"> Information to display on the top of the console buffer. </param>
-	/// <param name="listRetriever"> A reference to a method that retrieves the elements to be listed. </param>
 	/// <param name="exitKey"> The console key that will exit this view. </param>
 	/// <param name="create"> A keybinding used to open up a creation form. </param>
 	/// <param name="nextPage"> A key map used to get the next page in the <see cref="Listing{T}"/>. </param>
@@ -45,7 +48,6 @@ public class Listing<T> : Frame where T : notnull
 	/// <param name="previousElement"> A key map used to select the previous element in the <see cref="Listing{T}"/>. </param>
 	public Listing(string title,
 		string[] header,
-		Func<IEnumerable<T>> listRetriever,
 		BindableKey exitKey,
 		Keybinding create,
 		Keybinding update,
@@ -55,8 +57,7 @@ public class Listing<T> : Frame where T : notnull
 		BindableKey nextElement,
 		BindableKey previousElement) : base(title, header)
 	{
-		elements = new List<T>();
-		this.listRetriever = listRetriever;
+		Elements = new List<T>();
 		var keybindings = new List<Keybinding>()
 		{
 			exitKey.Bind(Exit),
@@ -81,6 +82,8 @@ public class Listing<T> : Frame where T : notnull
 			base.Display();
 
 			DisplayKeybindings();
+
+			DrawVerticalBorders($" Page: {CurrentPage}", Console.WriteLine);
 
 			firstRow = Console.GetCursorPosition().Top;
 
@@ -116,13 +119,12 @@ public class Listing<T> : Frame where T : notnull
 	// Summary: Retrieves and lists a collection of elements, if any exist.
 	private void ListElements()
 	{
-		elements = listRetriever.Invoke();
-		if (!elements.Any())
+		if (!Elements.Any())
 		{
 			return;
 		}
 
-		foreach (var element in elements)
+		foreach (var element in Elements)
 		{
 			var elementAsString = element
 				?.ToString();
@@ -162,7 +164,7 @@ public class Listing<T> : Frame where T : notnull
 	private void Select(int row)
 	{
 		// Stops the ">" from being drawn on the screen when the listing has no elements.
-		if (elements.Any())
+		if (Elements.Any())
 		{
 			Console.SetCursorPosition(SELECTOR_COLUMN, row);
 			Console.Write(">");
