@@ -8,7 +8,6 @@ O CRUD da Justiça é uma aplicação simples que lida com informações sobre s
 ### Design da aplicação de console
 Design patterns não foram abordados durante o bootcamp, porém apliquei algumas delas para assegurar a qualidade da implementação.
 - MVP e Mediator: a comunicação entre a interface de linha de comando e o back-end é mediada pelos controladores.
-- Decorator: as janelas da interface de linha de comando herdam todas as decorações das janelas-pai.
 - Repository ou Façade: os controladores não sabem com quais repositórios eles se comunicam.
  
 ### Conceitos abordados
