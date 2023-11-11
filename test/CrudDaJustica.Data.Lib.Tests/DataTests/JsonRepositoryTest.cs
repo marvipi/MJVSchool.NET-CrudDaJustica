@@ -1,9 +1,9 @@
-﻿using CrudDaJustica.Cli.App.Data;
-using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Cli.App.Services;
+﻿using CrudDaJustica.Data.Lib.Data;
+using CrudDaJustica.Data.Lib.Model;
+using CrudDaJustica.Data.Lib.Services;
 using System.Text.Json;
 
-namespace CrudDaJustica.Cli.App.Test.DataTests;
+namespace CrudDaJustica.Data.Lib.Test.DataTests;
 
 [TestFixture]
 public class JsonRepositoryTest

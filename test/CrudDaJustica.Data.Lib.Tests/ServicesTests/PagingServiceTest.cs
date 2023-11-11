@@ -1,7 +1,7 @@
-﻿using CrudDaJustica.Cli.App.Data;
-using CrudDaJustica.Cli.App.Services;
+﻿using CrudDaJustica.Data.Lib.Data;
+using CrudDaJustica.Data.Lib.Services;
 
-namespace CrudDaJustica.Cli.App.Test.ServicesTests;
+namespace CrudDaJustica.Data.Lib.Test.ServicesTests;
 
 [TestFixture]
 public class PagingServiceTest
