@@ -180,17 +180,22 @@ public class Form<T> : Frame where T : new()
 	// Summary: Displays each validation problem in a different line.
 	private bool DisplayValidationProblems()
 	{
-		DrawVerticalBorders(string.Empty, Console.WriteLine);
 
 		var validationProblems = validationProblemsRetriver.Invoke(FormData);
-		foreach (var validationProblem in validationProblems)
+		var hasValidationProblems = false;
+
+		if (hasValidationProblems = validationProblems.Any())
 		{
-			var formattedValidationProblem = string.Format(" {0} ", validationProblem);
-			DrawVerticalBorders(formattedValidationProblem, Console.WriteLine);
+			DrawVerticalBorders(string.Empty, Console.WriteLine); // Empty line between fields and validation problems
+
+			foreach (var validationProblem in validationProblems)
+			{
+				var formattedValidationProblem = string.Format(" {0} ", validationProblem);
+				DrawVerticalBorders(formattedValidationProblem, Console.WriteLine);
+			}
 		}
 		
-		DrawVerticalBorders(string.Empty, Console.WriteLine);
-		return validationProblems.Any();
+		return hasValidationProblems;
 	}
 
 	// Summary: Prompts the user to try again or to discard the data entered in the form.
@@ -205,6 +210,8 @@ public class Form<T> : Frame where T : new()
 	//			If firstKey is pressed then invokes the actions associated with the second and third keys, respectively.
 	private void DisplayPrompt(Keybinding firstKey, Keybinding secondKey, Keybinding thirdKey)
 	{
+		DrawVerticalBorders(string.Empty, Console.WriteLine); // Empty line between previous content and prompt
+
 		var prompt = string.Format(" {0}    {1} ", exitKey, firstKey);
 		DrawVerticalBorders(prompt, Console.WriteLine);
 
