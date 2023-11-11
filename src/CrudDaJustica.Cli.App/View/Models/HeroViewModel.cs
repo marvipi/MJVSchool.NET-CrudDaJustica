@@ -18,12 +18,12 @@ public class HeroViewModel
     /// <summary>
     /// The first name of the person behind the secret identity.
     /// </summary>
-    public string? FirstName { get; init; }
+    public string FirstName { get; init; }
 
     /// <summary>
     /// The last name of the person behind the secret identity.
     /// </summary>
-    public string? LastName { get; init; }
+    public string LastName { get; init; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroViewModel"/> struct.
@@ -32,7 +32,7 @@ public class HeroViewModel
     /// <param name="debut"> A date when a hero was first seen. </param>
     /// <param name="firstName"> The first name of the person behind the secret identity. </param>
     /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    public HeroViewModel(string alias, DateOnly debut, string? firstName, string? lastName)
+    public HeroViewModel(string alias, DateOnly debut, string firstName, string lastName)
     {
         Alias = alias;
         Debut = debut;
@@ -42,10 +42,7 @@ public class HeroViewModel
 
     public override string ToString()
     {
-        var fullName = string.IsNullOrWhiteSpace(FirstName) || string.IsNullOrWhiteSpace(LastName)
-            ? "N/A"
-            : string.Format("{0} {1}", FirstName, LastName);
-
-        return string.Format("{0} - {1} - {2}", Alias, fullName, Debut);
+        var fullName = string.Format("{0} {1}", FirstName, LastName);
+        return string.Format("{0}  -  {1}  -  {2}", Alias, fullName, Debut);
     }
 }

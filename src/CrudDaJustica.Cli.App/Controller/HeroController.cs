@@ -1,7 +1,7 @@
-﻿using CrudDaJustica.Cli.App.Data;
-using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Cli.App.Services;
-using CrudDaJustica.Cli.App.View.Models;
+﻿using CrudDaJustica.Cli.App.View.Models;
+using CrudDaJustica.Data.Lib.Data;
+using CrudDaJustica.Data.Lib.Model;
+using CrudDaJustica.Data.Lib.Services;
 using System.Globalization;
 
 namespace CrudDaJustica.Cli.App.Controller;
@@ -31,17 +31,56 @@ public class HeroController
     }
 
     /// <summary>
+    /// Assures that data read from a form is valid.
+    /// </summary>
+    /// <param name="heroFormModel"> The hero data read from a form. </param>
+    /// <returns> A collection of all problems encountered in the data. Or an empty collection, if no problems where found. </returns>
+    public IEnumerable<string> Validate(HeroFormModel heroFormModel)
+    {
+        var validationProblems = new List<string>();
+
+        var expectedFormat = CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern;
+        var validDebut = DateOnly.TryParseExact(heroFormModel.Debut,
+            expectedFormat,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out var _);
+
+        if (!validDebut)
+        {
+            var debutProblem = string.Format("Invalid debut date. Expected format {0}, given {1}", expectedFormat, heroFormModel.Debut);
+            validationProblems.Add(debutProblem);
+        }
+
+        if (string.IsNullOrWhiteSpace(heroFormModel.Alias))
+        {
+            validationProblems.Add("Alias is required");
+        }
+
+        if (string.IsNullOrWhiteSpace(heroFormModel.FirstName))
+        {
+            validationProblems.Add("First name is required");
+        }
+
+        if (string.IsNullOrWhiteSpace(heroFormModel.LastName))
+        {
+            validationProblems.Add("Last name is required");
+        }
+
+        return validationProblems;
+    }
+
+    /// <summary>
     /// Creates a new hero in the repository>.
     /// </summary>
     /// <param name="heroFormModel"> A form model that contains data about the new hero. </param>
     public void Create(HeroFormModel heroFormModel)
     {
-        DateOnly.TryParseExact(heroFormModel.Debut,
-            CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
-            CultureInfo.CurrentCulture,
-            DateTimeStyles.None,
-            out var validDate); // TODO Validate
-        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.LastName)); // TODO Refactor
+        var validDate = DateOnly.ParseExact(heroFormModel.Debut!,
+            CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern,
+            CultureInfo.InvariantCulture);
+
+        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias!, validDate, heroFormModel.FirstName!, heroFormModel.LastName!));
     }
 
     /// <summary>
@@ -69,13 +108,12 @@ public class HeroController
     /// <param name="row"> The row of the current page where the hero is registered. </param>
     public void Update(HeroFormModel heroFormModel, int row)
     {
-        DateOnly.TryParseExact(heroFormModel.Debut,
-            CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern,
-            CultureInfo.CurrentCulture,
-            DateTimeStyles.None,
-            out var validDate); // TODO Validate
+        var validDate = DateOnly.ParseExact(heroFormModel.Debut!,
+            CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern,
+            CultureInfo.InvariantCulture);
+
         heroRepository.UpdateHero(pagingService.GetCurrentPage(), row,
-            new HeroEntity(heroFormModel.Alias, validDate, heroFormModel.FirstName, heroFormModel.LastName)); // TODO Refactor
+            new HeroEntity(heroFormModel.Alias!, validDate, heroFormModel.FirstName!, heroFormModel.LastName!));
     }
 
     /// <summary>

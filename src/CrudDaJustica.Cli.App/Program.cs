@@ -1,7 +1,7 @@
 ﻿using CrudDaJustica.Cli.App.Controller;
-using CrudDaJustica.Cli.App.Data;
-using CrudDaJustica.Cli.App.Services;
 using CrudDaJustica.Cli.App.View.UI;
+using CrudDaJustica.Data.Lib.Data;
+using CrudDaJustica.Data.Lib.Services;
 
 const int INITIAL_ROWS_PER_PAGE = 10;
 

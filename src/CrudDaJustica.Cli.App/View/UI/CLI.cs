@@ -39,14 +39,18 @@ public class CLI
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES/CREATE",
             formHeader,
             new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
-            new Keybinding(OnCreateHero, ConsoleKey.Enter, "ENTER: Confirm"));
+            new Keybinding(OnCreateHero, ConsoleKey.Enter, "ENTER: Confirm"),
+            new BindableKey(ConsoleKey.Spacebar, "SPACE: Retry"),
+            heroController.Validate);
 
 
         heroUpdateForm = new Form<HeroFormModel>(
             "MONITOR_WOMB::MAINFRAME::HOME/HEROES/UPDATE",
             formHeader,
             new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
-            new Keybinding(OnUpdateHero, ConsoleKey.Enter, "ENTER: Confirm"));
+            new Keybinding(OnUpdateHero, ConsoleKey.Enter, "ENTER: Confirm"),
+            new BindableKey(ConsoleKey.Spacebar, "SPACE: Retry"),
+            heroController.Validate);
 
         var listingHeader = new string[]
         {

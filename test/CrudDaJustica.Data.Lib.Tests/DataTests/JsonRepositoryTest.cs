@@ -1,9 +1,9 @@
-﻿using CrudDaJustica.Cli.App.Data;
-using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Cli.App.Services;
+﻿using CrudDaJustica.Data.Lib.Data;
+using CrudDaJustica.Data.Lib.Model;
+using CrudDaJustica.Data.Lib.Services;
 using System.Text.Json;
 
-namespace CrudDaJustica.Cli.App.Test.DataTests;
+namespace CrudDaJustica.Data.Lib.Test.DataTests;
 
 [TestFixture]
 public class JsonRepositoryTest
@@ -32,7 +32,7 @@ public class JsonRepositoryTest
 			var jsonRepo = new JsonRepository(TestFilePath);
 			var initialRepositorySize = jsonRepo.RepositorySize;
 
-			var newHero = new HeroEntity("Superman", new(1938, 6, 1));
+			var newHero = new HeroEntity("Superman", new(1938, 6, 1), "Clark", "Kent");
 			jsonRepo.RegisterHero(newHero);
 			var newRepositorySize = jsonRepo.RepositorySize;
 			const int AMOUNT_HEROES_REGISTERED = 1;
@@ -62,9 +62,9 @@ public class JsonRepositoryTest
 			var jsonRepo = new JsonRepository(TestFilePath);
 			var initialRepositorySize = jsonRepo.RepositorySize;
 
-			var heroAlreadyInRepo = new HeroEntity("Batman", new(1939, 5, 1));
+			var heroAlreadyInRepo = new HeroEntity("Batman", new(1939, 5, 1), "Bruce", "Wayne");
 			jsonRepo.RegisterHero(heroAlreadyInRepo);
-			var newHero = new HeroEntity("Wonder Woman", new(1939, 5, 1));
+			var newHero = new HeroEntity("Wonder Woman", new(1939, 5, 1), "Diana", "of Themyscira");
 			jsonRepo.RegisterHero(newHero);
 			var newRepositorySize = jsonRepo.RepositorySize;
 			const int AMOUNT_HEROES_REGISTERED = 2;
@@ -113,9 +113,9 @@ public class JsonRepositoryTest
 		try
 		{
 			var jsonRepo = new JsonRepository(TestFilePath);
-			var hero1 = new HeroEntity("Martian Manhunter", new(1955, 11, 1));
-			var hero2 = new HeroEntity("Zatanna", new(1964, 11, 1));
-			var hero3 = new HeroEntity("Hawkman", new(1940, 1, 1));
+			var hero1 = new HeroEntity("Martian Manhunter", new(1955, 11, 1), "J'onn", "J'onzz");
+			var hero2 = new HeroEntity("Zatanna", new(1964, 11, 1), "Zatanna", "Zatara");
+			var hero3 = new HeroEntity("Hawkman", new(1940, 1, 1), "Carter", "Hall");
 			jsonRepo.RegisterHero(hero1);
 			jsonRepo.RegisterHero(hero2);
 			jsonRepo.RegisterHero(hero3);
@@ -138,8 +138,8 @@ public class JsonRepositoryTest
 		try
 		{
 			var jsonRepo = new JsonRepository(TestFilePath);
-			var hero1 = new HeroEntity("Green Lantern", new(1959, 10, 1));
-			var hero2 = new HeroEntity("Aquaman", new(1941, 11, 1));
+			var hero1 = new HeroEntity("Green Lantern", new(1959, 10, 1), "Harold", "Jordan");
+			var hero2 = new HeroEntity("Aquaman", new(1941, 11, 1), "Arthur", "Curry");
 			jsonRepo.RegisterHero(hero1);
 			jsonRepo.RegisterHero(hero2);
 
@@ -161,13 +161,13 @@ public class JsonRepositoryTest
 		try
 		{
 			var jsonRepo = new JsonRepository(TestFilePath);
-			var hero1 = new HeroEntity("Atom", new(1961, 10, 1));
-			var hero2 = new HeroEntity("Flash", new(1940, 1, 1));
+			var hero1 = new HeroEntity("Atom", new(1961, 10, 1), "Ray", "Palmer");
+			var hero2 = new HeroEntity("Flash", new(1940, 1, 1), "Barry", "Allen");
 			jsonRepo.RegisterHero(hero1);
 			jsonRepo.RegisterHero(hero2);
 
 			var emptyDataPage = new DataPage(number: 2, rows: 2);
-			var updatedHero = new HeroEntity("Specter", new(1940, 2, 1));
+			var updatedHero = new HeroEntity("Specter", new(1940, 2, 1), "James", "Corrigan");
 			jsonRepo.UpdateHero(emptyDataPage, row: 1, updatedHero);
 
 			var heroesInEmptyPage = jsonRepo.GetHeroes(emptyDataPage);
@@ -187,15 +187,15 @@ public class JsonRepositoryTest
 		try
 		{
 			var jsonRepo = new JsonRepository(TestFilePath);
-			var hero1 = new HeroEntity("Doctor Occult", new(1935, 10, 1));
-			var hero2 = new HeroEntity("Rose Psychic", new(1935, 10, 1));
-			var hero3 = new HeroEntity("Zatara", new(1938, 6, 1));
+			var hero1 = new HeroEntity("Doctor Occult", new(1935, 10, 1), "Richard", "Occult");
+			var hero2 = new HeroEntity("Rose Psychic", new(1935, 10, 1), "Rose", "Spiritus");
+			var hero3 = new HeroEntity("Zatara", new(1938, 6, 1), "Giovanni", "Zatara");
 			jsonRepo.RegisterHero(hero1);
 			jsonRepo.RegisterHero(hero2);
 			jsonRepo.RegisterHero(hero3);
 
 			var dataPage = new DataPage(number: 1, rows: 3);
-			var updatedHero = new HeroEntity("Crimson Avenger", new(1938, 10, 1));
+			var updatedHero = new HeroEntity("Crimson Avenger", new(1938, 10, 1), "Lee", "Travis");
 			jsonRepo.UpdateHero(dataPage, rowToUpdate, updatedHero);
 
 			var heroesInDataPage = jsonRepo.GetHeroes(dataPage).ToList();
@@ -215,9 +215,9 @@ public class JsonRepositoryTest
 		try
 		{
 			var jsonRepo = new JsonRepository(TestFilePath);
-			var hero1 = new HeroEntity("Americommando", new(1938, 6, 1));
-			var hero2 = new HeroEntity("Arrow", new(1938, 9, 1));
-			var hero3 = new HeroEntity("The Guardian Angel", new(1939, 4, 1));
+			var hero1 = new HeroEntity("Americommando", new(1938, 6, 1), "Harold", "Thompson");
+			var hero2 = new HeroEntity("Arrow", new(1938, 9, 1), "Ralph", "Payne");
+			var hero3 = new HeroEntity("The Guardian Angel", new(1939, 4, 1), "Hop", "Harrigan");
 			jsonRepo.RegisterHero(hero1);
 			jsonRepo.RegisterHero(hero2);
 			jsonRepo.RegisterHero(hero3);

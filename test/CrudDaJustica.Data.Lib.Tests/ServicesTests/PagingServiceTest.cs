@@ -1,7 +1,7 @@
-﻿using CrudDaJustica.Cli.App.Data;
-using CrudDaJustica.Cli.App.Services;
+﻿using CrudDaJustica.Data.Lib.Data;
+using CrudDaJustica.Data.Lib.Services;
 
-namespace CrudDaJustica.Cli.App.Test.ServicesTests;
+namespace CrudDaJustica.Data.Lib.Test.ServicesTests;
 
 [TestFixture]
 public class PagingServiceTest
@@ -83,7 +83,7 @@ public class PagingServiceTest
 		var heroRepo = InitializeHeroRepository(validRepositorySize);
 		var pagingService = new PagingService(heroRepo, validRowsPerPage);
 
-		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1)));
+		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
 		pagingService.NextPage();
 
 		var updatedLastPage = pagingService.LastPage;
@@ -126,8 +126,8 @@ public class PagingServiceTest
 		var heroRepo = InitializeHeroRepository(validRepositorySize);
 		var pagingService = new PagingService(heroRepo, validRowsPerPage);
 
-		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1)));
-		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1)));
+		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
+		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
 		pagingService.PreviousPage();
 
 		var updatedLastPage = pagingService.LastPage;
@@ -139,7 +139,7 @@ public class PagingServiceTest
 		var virtualRepository = new VirtualRepository((uint)size);
 		foreach (var i in Enumerable.Range(0, size))
 		{
-			virtualRepository.RegisterHero(new(i.ToString(), new(1, 1, 1)));
+			virtualRepository.RegisterHero(new(i.ToString(), new(1, 1, 1), i.ToString(), i.ToString()));
 		}
 		return virtualRepository;
 	}

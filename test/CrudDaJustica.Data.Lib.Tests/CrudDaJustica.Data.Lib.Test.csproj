@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <RootNamespace>CrudDaJustica.Cli.App.Test</RootNamespace>
+    <RootNamespace>CrudDaJustica.Data.Lib.Test</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\CrudDaJustica.Cli.App\CrudDaJustica.Cli.App.csproj" />
+    <ProjectReference Include="..\..\src\CrudDaJustica.Data.Lib\CrudDaJustica.Data.Lib.csproj" />
   </ItemGroup>
 
 </Project>

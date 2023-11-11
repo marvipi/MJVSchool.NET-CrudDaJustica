@@ -18,6 +18,18 @@ public class Form<T> : Frame where T : new()
 	// Remarks: Used to generate forms dynamically.
 	private readonly Queue<PropertyInfo> properties;
 
+	// Summary: Used to discard all data and exit the form.
+	private readonly Keybinding exitKey;
+
+	// Summary: The key that will trigger an event that utilizes the form data.
+	private readonly Keybinding confirmKey;
+
+	// Summary: Used to redisplay the form after validation problems occur.
+	private readonly Keybinding retryKey;
+
+	// Summary: Delegate that retrieves the problems from the lastest form data read from the user.
+	private readonly Func<T, IEnumerable<string>> validationProblemsRetriver;
+
 	/// <summary>
 	/// The data read from the user.
 	/// </summary>
@@ -26,31 +38,29 @@ public class Form<T> : Frame where T : new()
 	/// </remarks>
 	public T FormData { get; init; }
 
-	// Summary: The key that will trigger an event that utilizes the form data.
-	private readonly Keybinding confirmKey;
-
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Form{T}"/> class.
 	/// </summary>
 	/// <param name="title"> The title to display on top of the screen. </param>
-	/// <param name="cancelKey"> An unbound console key that will discard all that in the the form. </param>
 	/// <param name="header"> Information to display on the top of the console buffer. </param>
+	/// <param name="exitKey"> An unbound console key that will discard all data and exit the form. </param>
 	/// <param name="confirmKey"> An unbound console key that will save the data in the form. </param>
+	/// <param name="retryKey"> An unbound console key that will allow user to retype the form when the data read is invalid. </param>
+	/// <param name="validationProblemsRetriver"> Delegate that retrieves the problems from the lastest form data read from the user. </param>
 	public Form(string title,
 		string[] header,
-		BindableKey cancelKey,
-		Keybinding confirmKey) : base(title, header)
+		BindableKey exitKey,
+		Keybinding confirmKey,
+		BindableKey retryKey,
+		Func<T, IEnumerable<string>> validationProblemsRetriver) : base(title, header)
 	{
 		fields = new();
 		properties = new();
 		FormData = new();
+		this.validationProblemsRetriver = validationProblemsRetriver;
+		this.exitKey = exitKey.Bind(Exit);
 		this.confirmKey = confirmKey;
-		var keybindings = new List<Keybinding>()
-		{
-			cancelKey.Bind(Exit),
-			confirmKey, // Used to display the keybinding when the confirmation prompt is shown.
-        };
-		Keybindings.AddRange(keybindings);
+		this.retryKey = retryKey.Bind(Display);
 	}
 
 	/// <summary>
@@ -66,7 +76,7 @@ public class Form<T> : Frame where T : new()
 
 		ReadAllFields(screenCoords);
 
-		DisplayConfirmationPrompt();
+		DisplayCorrectPrompt();
 	}
 
 	// Summary: Creates a field for each public property in T.
@@ -153,23 +163,61 @@ public class Form<T> : Frame where T : new()
 		properties.Dequeue();
 	}
 
-	// Summary: Prompts the user to save or discard the data entered in the form.
-	private void DisplayConfirmationPrompt()
+	// Summary: Displays the retry prompt if validation problems are found. Otherwise, displays the confirmation prompt.
+	private void DisplayCorrectPrompt()
 	{
-		DisplayKeybindings();
+		var hasProblems = DisplayValidationProblems();
+		if (hasProblems)
+		{
+			DisplayRetryPrompt();
+		}
+		else
+		{
+			DisplayConfirmationPrompt();
+		}
+	}
+
+	// Summary: Displays each validation problem in a different line.
+	private bool DisplayValidationProblems()
+	{
+		var validationProblems = validationProblemsRetriver.Invoke(FormData);
+		foreach (var validationProblem in validationProblems)
+		{
+			var formattedValidationProblems = string.Format(" {0} ", validationProblem);
+			DrawVerticalBorders(validationProblem, Console.WriteLine);
+		}
+		return validationProblems.Any();
+	}
+
+	// Summary: Prompts the user to try again or to discard the data entered in the form.
+	// Remarks: The exitKey is invoked before the form is displayed again, assuring only one form is displayed at a time.
+	private void DisplayRetryPrompt() => DisplayPrompt(retryKey, exitKey, retryKey);
+
+	// Summary: Prompts the user to save or discard the data entered in the form.
+	// Remarks: The exitKey is invoked after the form data is submitted, to exit the form.
+	private void DisplayConfirmationPrompt() => DisplayPrompt(confirmKey, confirmKey, exitKey);
+
+	// Summary: Displays the cancel key on the left and the first key on the right.
+	//			If firstKey is pressed then invokes the actions associated with the second and third keys, respectively.
+	private void DisplayPrompt(Keybinding firstKey, Keybinding secondKey, Keybinding thirdKey)
+	{
+		var prompt = string.Format("{0}    {1}", exitKey, firstKey);
+		DrawVerticalBorders(prompt, Console.WriteLine);
+
+		ExitKeyPressed = false;
+
 		while (!ExitKeyPressed)
 		{
 			var input = Console.ReadKey(true).Key;
-			if (input == confirmKey.Key)
+			if (input == firstKey.Key)
 			{
-				confirmKey.Invoke();
-				Exit();
+				secondKey.Invoke();
+				thirdKey.Invoke();
 			}
-			else
+			else if (input == exitKey.Key)
 			{
-				Invoke(input);
+				exitKey.Invoke();
 			}
 		}
-		ExitKeyPressed = false;
 	}
 }
