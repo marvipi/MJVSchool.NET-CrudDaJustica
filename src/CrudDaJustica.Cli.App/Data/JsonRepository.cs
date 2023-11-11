@@ -30,8 +30,8 @@ public class JsonRepository : IHeroRepository
         var dirPath = Path.GetDirectoryName(heroDataFilePath);
         if (string.IsNullOrEmpty(dirPath))
         {
-            var errorMsg = string.Format("{0} cannot be a root directory nor null. Given path: {1}", 
-                nameof(heroDataDirPath), 
+            var errorMsg = string.Format("{0} cannot be a root directory nor null. Given path: {1}",
+                nameof(heroDataDirPath),
                 heroDataDirPath);
 
             throw new ArgumentException(errorMsg);

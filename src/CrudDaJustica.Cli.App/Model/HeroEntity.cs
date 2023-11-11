@@ -24,28 +24,17 @@ public class HeroEntity
     /// <summary>
     /// The first name of the person behind the secret identity.
     /// </summary>
-    public string? FirstName { get; set; }
+    public string FirstName { get; set; }
 
     /// <summary>
     /// The last name of the person behind the secret identity.
     /// </summary>
-    public string? LastName { get; set; }
+    public string LastName { get; set; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroEntity"/> class.
     /// </summary>
-    public HeroEntity() { Id = Guid.NewGuid(); }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HeroEntity"/> class.
-    /// </summary>
-    /// <param name="alias"> The name of a hero's secret identity. </param>
-    /// <param name="debut"> A date when a hero was first seen. </param>
-    public HeroEntity(string alias, DateOnly debut) : this()
-    {
-        Alias = alias;
-        Debut = debut;
-    }
+    public HeroEntity() { }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroEntity"/> class.
@@ -54,8 +43,11 @@ public class HeroEntity
     /// <param name="debut"> A date when a hero was first seen. </param>
     /// <param name="firstName"> The first name of the person behind the secret identity. </param>
     /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    public HeroEntity(string alias, DateOnly debut, string? firstName, string? lastName) : this(alias, debut)
+    public HeroEntity(string alias, DateOnly debut, string firstName, string lastName)
     {
+        Id = Guid.NewGuid();
+        Alias = alias;
+        Debut = debut;
         FirstName = firstName;
         LastName = lastName;
     }

@@ -25,9 +25,12 @@ Durante o curso foram abordados diversas características e funcionalidades do C
 - ✔ Interfaces: os repositórios de dados implementam interfaces. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.App/Data/IHeroRepository.cs)
 - ✔ Classes abstratas e herança: a interface de linha de comando utiliza ambos para desenhar decorações de janela. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.Lib/Views/Frame.cs)
 
-### Diagrama UML
-![design.png](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/design.png)
+### Diagramas UML
+![Design do aplicativo de linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/CrudDaJustica.Cli.App.png)
+![Design da interface de linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/CrudDaJustica.Cli.Lib.png)
+![Design da camada de dados](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/CrudDaJustica.Data.Lib.png)
 
 ### Imagens
 ![Listagens na linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli.png)
 ![Formulários na linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli-form.png)
+![Validação de formulários na linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli-form-validation.png)

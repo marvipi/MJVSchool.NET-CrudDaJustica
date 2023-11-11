@@ -60,7 +60,7 @@ public class PagingService
     /// A <see cref="DataPage"/> that can be used to retrieve data from the repository.
     /// </returns>
     public DataPage GetCurrentPage() => new DataPage(CurrentPage, RowsPerPage);
-    
+
 
     /// <summary>   
     /// Advances to the next page in the repository, up to the <see cref="LastPage"/>.
