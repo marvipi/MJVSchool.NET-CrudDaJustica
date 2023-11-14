@@ -1,5 +1,5 @@
 ﻿using CrudDaJustica.Cli.App.Controller;
-using CrudDaJustica.Cli.App.View.UI;
+using CrudDaJustica.Cli.App.View;
 using CrudDaJustica.Data.Lib.Data;
 using CrudDaJustica.Data.Lib.Services;
 

@@ -1,10 +1,10 @@
 ﻿using CrudDaJustica.Cli.App.Controller;
-using CrudDaJustica.Cli.App.View.Models;
+using CrudDaJustica.Cli.App.Model;
 using CrudDaJustica.Cli.Lib.Forms;
 using CrudDaJustica.Cli.Lib.Keybindings;
 using CrudDaJustica.Cli.Lib.Views;
 
-namespace CrudDaJustica.Cli.App.View.UI;
+namespace CrudDaJustica.Cli.App.View;
 
 /// <summary>
 /// Represents a command-line interface used to interact with this system.

@@ -32,6 +32,11 @@ public class PagingService
 	public int RowsPerPage { get; private set; }
 
 	/// <summary>
+	/// Produces a range of pages in the range [FIRST_PAGE, LastPage]
+	/// </summary>
+	public IEnumerable<int> PageRange => Enumerable.Range(FIRST_PAGE, LastPage);
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="PagingService"/> class.
 	/// </summary>
 	/// <param name="heroRepository"> The hero repository that will be paged by this service. </param>
@@ -61,32 +66,25 @@ public class PagingService
 	/// </returns>
 	public DataPage GetCurrentPage() => new DataPage(CurrentPage, RowsPerPage);
 
-
-	/// <summary>   
-	/// Advances to the next page in the repository, up to the <see cref="LastPage"/>.
-	/// </summary>
-	public void NextPage()
-	{
-		CalculateLastPage();
-		if (CurrentPage < LastPage)
-		{
-			CurrentPage++;
-		}
-	}
-
 	/// <summary>
-	/// Returns to the previous page of the repository, down to the <see cref="FIRST_PAGE"/>.
+	/// Jumps to a data page.
 	/// </summary>
-	public void PreviousPage()
+	/// <param name="number"> The number of the page to jump to. </param>
+	/// <remarks> 
+	///		If given page number is less than <see cref="FIRST_PAGE"/> then jumps to it instead.
+	///		Else, if given page number is greater than <see cref="LastPage"/> then jump to it instead.
+	/// </remarks>
+	public void JumpToPage(int number)
 	{
 		CalculateLastPage();
-		if (CurrentPage > FIRST_PAGE)
-		{
-			CurrentPage--;
-		}
+		CurrentPage = number < FIRST_PAGE
+			? FIRST_PAGE
+			: number > LastPage
+			? LastPage
+			: number;
 	}
 
-	// Summary: Calculates the last page of the repository using on its size.
+	// Summary: Calculates the last page of the repository based on its size.
 	private void CalculateLastPage()
 	{
 		var numPagesRequired = heroRepository.RepositorySize / (double)RowsPerPage;

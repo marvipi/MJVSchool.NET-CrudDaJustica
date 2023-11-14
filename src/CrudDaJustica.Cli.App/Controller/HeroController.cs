@@ -1,4 +1,4 @@
-﻿using CrudDaJustica.Cli.App.View.Models;
+﻿using CrudDaJustica.Cli.App.Model;
 using CrudDaJustica.Data.Lib.Data;
 using CrudDaJustica.Data.Lib.Model;
 using CrudDaJustica.Data.Lib.Services;
@@ -125,10 +125,10 @@ public class HeroController
     /// <summary>
     /// Moves to the next page of the repository, up to the last page.
     /// </summary>
-    public void NextPage() => pagingService.NextPage();
+    public void NextPage() => pagingService.JumpToPage(pagingService.CurrentPage + 1);
 
     /// <summary>
     /// Returns to the previous page of the repository, down to the first page.
     /// </summary>
-    public void PreviousPage() => pagingService.PreviousPage();
+    public void PreviousPage() => pagingService.JumpToPage(pagingService.CurrentPage - 1);
 }

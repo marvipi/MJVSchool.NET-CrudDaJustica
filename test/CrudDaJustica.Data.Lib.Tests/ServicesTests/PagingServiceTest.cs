@@ -48,90 +48,48 @@ public class PagingServiceTest
 		});
 	}
 
-	[TestCase(200, 20)]
-	public void NextPage_CurrentPageIsLessThanLastPage_IncrementsCurrentPage
-		(int validRepositorySize, int validRowsPerPage)
-	{
-		var heroRepo = InitializeHeroRepository(validRepositorySize);
-		var pagingService = new PagingService(heroRepo, validRowsPerPage);
-		var initialCurrentPage = pagingService.CurrentPage;
-
-		pagingService.NextPage();
-
-		var expected = initialCurrentPage + 1;
-		Assert.That(pagingService.CurrentPage, Is.EqualTo(expected));
-	}
-
-	[TestCase(1, 10)]
-	public void NextPage_CurrentPageIsEqualToLastPage_DoesntIncrementCurrentPage
-		(int validRepositorySize, int validRowsPerPage)
-	{
-		var heroRepo = InitializeHeroRepository(validRepositorySize);
-		var pagingService = new PagingService(heroRepo, validRowsPerPage);
-		var initialCurrentPage = pagingService.CurrentPage;
-
-		pagingService.NextPage();
-
-		var newCurrentPage = pagingService.CurrentPage;
-		Assert.That(initialCurrentPage, Is.EqualTo(newCurrentPage));
-	}
-
 	[TestCase(10, 10, 2)]
-	public void NextPage_RepositoryChangedSize_UpdatesTheLastPage
+	public void JumpToPage_RepositoryChangedSize_UpdatesTheLastPage
 	(int validRepositorySize, int validRowsPerPage, int expected)
 	{
 		var heroRepo = InitializeHeroRepository(validRepositorySize);
 		var pagingService = new PagingService(heroRepo, validRowsPerPage);
 
 		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
-		pagingService.NextPage();
+		pagingService.JumpToPage(expected);
 
 		var updatedLastPage = pagingService.LastPage;
 		Assert.That(updatedLastPage, Is.EqualTo(expected));
 	}
 
-	[TestCase(10, 5)]
-	public void PreviousPage_CurrentPageIsGreaterThanFirstPage_DecrementsCurrentPage
-		(int validRepositorySize, int validRowsPerPage)
+	[TestCase(20, 5, -1, PagingService.FIRST_PAGE)]
+	[TestCase(30, 10, 2, 2)]
+	[TestCase(100, 25, 5, 4)]
+	public void JumpToPage_AllPointsOfVariance_AlwaysStaysBetweenFirstAndLastPage
+		(int validRepositorySize, int validRowsPerPage, int pageNumber, int expected)
 	{
 		var heroRepo = InitializeHeroRepository(validRepositorySize);
 		var pagingService = new PagingService(heroRepo, validRowsPerPage);
-		var initialCurrentPage = pagingService.CurrentPage;
 
-		pagingService.NextPage();
-		pagingService.PreviousPage();
+		pagingService.JumpToPage(pageNumber);
+		var actual = pagingService.CurrentPage;
 
-		var newCurrentPage = pagingService.CurrentPage;
-
-		Assert.That(newCurrentPage, Is.EqualTo(initialCurrentPage));
+		Assert.That(actual, Is.EqualTo(expected));
 	}
 
-	[TestCase(75, 10)]
-	public void PreviousPage_CurrentPageIsEqualToFirstPage_DoesntDecrementCurrentPage
-		(int validRepositorySize, int validRowsPerPage)
-	{
-		var heroRepo = InitializeHeroRepository(validRepositorySize);
-		var pagingService = new PagingService(heroRepo, validRowsPerPage);
-		var numFirstPage = pagingService.CurrentPage;
-
-		pagingService.PreviousPage();
-
-		Assert.That(pagingService.CurrentPage, Is.EqualTo(numFirstPage));
-	}
-
-	[TestCase(20, 5, 5)]
-	public void PreviousPage_RepositoryChangedSize_UpdatesTheLastPage
-		(int validRepositorySize, int validRowsPerPage, int expected)
+	[TestCase(25, 25, 1, 1)]
+	[TestCase(10, 5, 1, 2)]
+	[TestCase(50, 5, 1, 10)]
+	public void PageRange_VariousPageRanges_AlwaysReturnsARangeBetweenFirstPageAndLastPage
+		(int validRepositorySize, int validRowsPerPage, int expectedRangeStart, int expectedRangeEnd)
 	{
 		var heroRepo = InitializeHeroRepository(validRepositorySize);
 		var pagingService = new PagingService(heroRepo, validRowsPerPage);
 
-		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
-		heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
-		pagingService.PreviousPage();
+		var actual = pagingService.PageRange;
+		var expected = Enumerable.Range(expectedRangeStart, expectedRangeEnd);
 
-		var updatedLastPage = pagingService.LastPage;
-		Assert.That(updatedLastPage, Is.EqualTo(expected));
+		Assert.That(actual, Is.EquivalentTo(expected));
 	}
 
 	private static IHeroRepository InitializeHeroRepository(int size)
