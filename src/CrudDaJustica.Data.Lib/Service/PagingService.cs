@@ -1,7 +1,7 @@
-﻿using CrudDaJustica.Data.Lib.Data;
+﻿using CrudDaJustica.Data.Lib.Repository;
 using System.Text;
 
-namespace CrudDaJustica.Data.Lib.Services;
+namespace CrudDaJustica.Data.Lib.Service;
 
 /// <summary>
 /// Represents a service that does data paging in a repository.

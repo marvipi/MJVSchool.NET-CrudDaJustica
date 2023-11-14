@@ -1,7 +1,7 @@
 ﻿using CrudDaJustica.Data.Lib.Model;
-using CrudDaJustica.Data.Lib.Services;
+using CrudDaJustica.Data.Lib.Service;
 
-namespace CrudDaJustica.Data.Lib.Data;
+namespace CrudDaJustica.Data.Lib.Repository;
 
 /// <summary>
 /// Represents a repository that stores data in memory.

@@ -1,6 +1,6 @@
-﻿using CrudDaJustica.Data.Lib.Data;
+﻿using CrudDaJustica.Data.Lib.Repository;
 using CrudDaJustica.Data.Lib.Model;
-using CrudDaJustica.Data.Lib.Services;
+using CrudDaJustica.Data.Lib.Service;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Text.Json;
 

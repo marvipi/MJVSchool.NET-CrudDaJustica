@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CrudDaJustica.Data.Lib.Services;
+namespace CrudDaJustica.Data.Lib.Service;
 
 /// <summary>
 /// Represents a page of information in a repository.

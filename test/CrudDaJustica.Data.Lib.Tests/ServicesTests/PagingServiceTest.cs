@@ -1,5 +1,5 @@
-﻿using CrudDaJustica.Data.Lib.Data;
-using CrudDaJustica.Data.Lib.Services;
+﻿using CrudDaJustica.Data.Lib.Repository;
+using CrudDaJustica.Data.Lib.Service;
 
 namespace CrudDaJustica.Data.Lib.Test.ServicesTests;
 
