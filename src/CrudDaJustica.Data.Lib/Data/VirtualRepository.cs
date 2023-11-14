@@ -37,8 +37,8 @@ public class VirtualRepository : IHeroRepository
 
 	public IEnumerable<HeroEntity> GetHeroes(DataPage page)
 	{
-		var skip = Skip(page);
-		var take = Take(page);
+		var skip = (page.Number - 1) * page.Rows;
+		var take = page.Number * page.Rows;
 		var heroesPage = heroes[skip..take];
 
 		var amountNonNull = LastFilledIndex(heroesPage) + 1;
@@ -46,28 +46,56 @@ public class VirtualRepository : IHeroRepository
 		return nonNullHeroes;
 	}
 
-	public void UpdateHero(DataPage page, int row, HeroEntity updatedHero)
+	public bool UpdateHero(Guid id, HeroEntity updatedHero)
 	{
-		var heroIndex = Skip(page) + row;
-		heroes[heroIndex] = updatedHero;
+		var index = 0;
+
+		foreach (var hero in heroes[..])
+		{
+			if (hero.Id == id)
+			{
+				heroes[index] = new HeroEntity()
+				{
+					Id = id,
+					Alias = updatedHero.Alias,
+					Debut = updatedHero.Debut,
+					FirstName = updatedHero.FirstName,
+					LastName = updatedHero.LastName,
+				};
+				return true;
+			}
+			index++;
+		}
+
+		return false;
 	}
 
-	public void DeleteHero(DataPage page, int row)
+	public bool DeleteHero(Guid id)
 	{
-		var skip = Skip(page) + row;
-		var heroesUntilLastIndex = heroes.Length - 1 - skip;
+		var indexToDelete = -1;
 
-		foreach (var i in Enumerable.Range(skip, heroesUntilLastIndex))
+		foreach (var i in Enumerable.Range(0, RepositorySize))
+		{
+			if (heroes[i].Id == id)
+			{
+				indexToDelete = i;
+				break;
+			}
+
+		}
+
+		if (indexToDelete < 0)
+		{
+			return false;
+		}
+
+		foreach (var i in Enumerable.Range(indexToDelete, heroes.Length - 2))
 		{
 			heroes[i] = heroes[i + 1];
 		}
+
+		return true;
 	}
-
-	// Summary: Calculates how many rows of data to skip to reach a given data page.
-	private static int Skip(DataPage page) => (page.Number - 1) * page.Rows;
-
-	// Summary: Calculates how many rows of data to take in a given data page.
-	private static int Take(DataPage page) => page.Number * page.Rows;
 
 	// Summary: Produces the last filled index in an array of T.
 	private static int LastFilledIndex<T>(T[] array)

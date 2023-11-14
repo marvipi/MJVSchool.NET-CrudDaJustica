@@ -29,15 +29,13 @@ public interface IHeroRepository
 	/// <summary>
 	/// Updates the information about a registered <see cref="HeroEntity"/>.
 	/// </summary>
-	/// <param name="page"> The page where the hero is registered. </param>
-	/// <param name="row"> The row where the hero is registered, in relation to <paramref name="page"/>. </param>
+	/// <param name="id"> The id of the hero to update. </param>
 	/// <param name="updatedHero"> A <see cref="HeroEntity"/> containing update to date information about the hero. </param>
-	public void UpdateHero(DataPage page, int row, HeroEntity updatedHero);
+	public bool UpdateHero(Guid id, HeroEntity updatedHero);
 
 	/// <summary>
 	/// Deletes a <see cref="HeroEntity"/> from the repository.
 	/// </summary>
-	/// <param name="page"> The page where the hero is registered. </param>
-	/// <param name="row"> The row where the hero is registered, in relation to <paramref name="page"/>. </param>
-	public void DeleteHero(DataPage page, int row);
+	/// <param name="id"> The id of the hero to delete. </param>
+	public bool DeleteHero(Guid id);
 }

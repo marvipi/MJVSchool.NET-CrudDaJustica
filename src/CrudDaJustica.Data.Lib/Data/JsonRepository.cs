@@ -70,55 +70,74 @@ public class JsonRepository : IHeroRepository
 																	.Skip(RowsToSkip(page))
 																	.Take(RowToTake(page))
 																	.Select(line => JsonSerializer.Deserialize<HeroEntity>(line))
-																	.Cast<HeroEntity>();
+																	.Cast<HeroEntity>()
+																	.ToList();
 
-	public void UpdateHero(DataPage page, int row, HeroEntity updatedHero)
-	{
-		if (GetHeroes(page).Any())
-		{
-			OverwriteData(page, row, JsonSerializer.Serialize(updatedHero));
-		}
-	}
+	public bool UpdateHero(Guid id, HeroEntity updatedHero) => OverwriteData(id, updatedHero);
 
-	public void DeleteHero(DataPage page, int row)
+	public bool DeleteHero(Guid id)
 	{
-		if (GetHeroes(page).Any())
+		var success = OverwriteData(id);
+
+		if (success)
 		{
-			OverwriteData(page, row);
 			RepositorySize--;
 		}
+
+		return success;
 	}
 
-	// Summary: Copies all data from the current data file into a temporary one, altering it as necessary.
+	// Summary: Deletes or updates a hero whose id matches then given one.
+	//			Copies all data from the current data file into a temporary one, altering it as necessary.
 	//          Replaces the old data file with the temporary one, once the operation has completed.
 	//
-	// Remarks: If newData is null then the contents of row will be deleted from the file,
-	//          otherwise they will be overwritten with newData.
+	// Remarks: If updatedInformation is null then the hero will be deleted from the file,
+	//          otherwise they will be overwritten with updatedInformation.
 	//          All other rows in the repository will be left untouched.
-	private void OverwriteData(DataPage page, int row, string? newData = null)
+	private bool OverwriteData(Guid id, HeroEntity? updatedInformation = null)
 	{
 		var currentLine = 0;
-		var lineToAlter = RowsToSkip(page) + row;
 		var dataRow = string.Empty;
+		var fileChanged = false;
 
 		using (var streamReader = new StreamReader(heroDataFilePath))
 		{
 			using var streamWriter = new StreamWriter(HeroDataTempFilePath);
 			while ((dataRow = streamReader.ReadLine()) is not null)
 			{
-				if (currentLine != lineToAlter)
+				var currentHero = JsonSerializer.Deserialize<HeroEntity>(dataRow);
+
+				if (currentHero?.Id != id)
 				{
 					streamWriter.WriteLine(dataRow);
 				}
-				else if (newData is not null)
+				else if (updatedInformation is null)
 				{
-					streamWriter.WriteLine(newData); // Update
+					fileChanged = true; // Delete
 				}
+				else if (updatedInformation is not null)
+				{
+					var updatedHero = new HeroEntity()
+					{
+						Id = id,
+						Alias = updatedInformation.Alias,
+						Debut = updatedInformation.Debut,
+						FirstName = updatedInformation.FirstName,
+						LastName = updatedInformation.LastName,
+					};
+
+					var updatedHeroAsJson = JsonSerializer.Serialize(updatedHero);
+					streamWriter.WriteLine(updatedHeroAsJson); // Update
+
+					fileChanged = true;
+				}
+
 				currentLine++;
 			}
 		}
 
 		File.Move(HeroDataTempFilePath, heroDataFilePath, true);
+		return fileChanged;
 	}
 
 	// Summary: Calculates how many rows of data to skip to reach a given data page.

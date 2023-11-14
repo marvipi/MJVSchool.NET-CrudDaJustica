@@ -95,7 +95,7 @@ public class HeroController
         var heroes = heroRepository.GetHeroes(currentPage);
 
         var heroViewModels = heroes
-            .Select(hero => new HeroViewModel(hero.Alias, hero.Debut, hero.FirstName, hero.LastName))
+            .Select(hero => new HeroViewModel(hero.Id, hero.Alias, hero.Debut, hero.FirstName, hero.LastName))
             .ToList();
 
         return heroViewModels;
@@ -105,22 +105,23 @@ public class HeroController
     /// Updates the information about a hero.
     /// </summary>
     /// <param name="heroFormModel"> The updated information about a hero. </param>
-    /// <param name="row"> The row of the current page where the hero is registered. </param>
-    public void Update(HeroFormModel heroFormModel, int row)
+    /// <param name="id"> The id of the hero to update. </param>
+    public void Update(Guid id, HeroFormModel heroFormModel)
     {
         var validDate = DateOnly.ParseExact(heroFormModel.Debut!,
             CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern,
             CultureInfo.InvariantCulture);
 
-        heroRepository.UpdateHero(pagingService.GetCurrentPage(), row,
+        heroRepository.UpdateHero(id,
             new HeroEntity(heroFormModel.Alias!, validDate, heroFormModel.FirstName!, heroFormModel.LastName!));
     }
 
     /// <summary>
     /// Removes a hero from the repository.
     /// </summary>
-    /// <param name="row"> The row of the current page where the hero is registered. </param>
-    public void Delete(int row) => heroRepository.DeleteHero(pagingService.GetCurrentPage(), row);
+    /// <param name="id"> The id of the hero to delete. </param>
+    public void Delete(Guid id) => heroRepository.DeleteHero(id);
+
 
     /// <summary>
     /// Moves to the next page of the repository, up to the last page.

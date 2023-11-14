@@ -55,12 +55,15 @@ public class HeroEntity
 	public override bool Equals(object? obj)
 	{
 		return obj is HeroEntity entity &&
-			   Id.Equals(entity.Id);
+			   Id.Equals(entity.Id) &&
+			   Alias == entity.Alias &&
+			   Debut.Equals(entity.Debut) &&
+			   FirstName == entity.FirstName &&
+			   LastName == entity.LastName;
 	}
 
 	public override int GetHashCode()
 	{
-		return HashCode.Combine(Id);
+		return HashCode.Combine(Id, Alias, Debut, FirstName, LastName);
 	}
-
 }

@@ -16,6 +16,9 @@ public class CLI
     private readonly Form<HeroFormModel> heroCreateForm;
     private readonly Form<HeroFormModel> heroUpdateForm;
 
+    // Summary: The hero currently selected in the heroListing.
+    private HeroViewModel CurrentlySelectedHero => Enumerable.ElementAt(heroListing.Elements, heroListing.CurrentlySelectedElement);
+
     /// <summary>
     /// Initializes a new instance of the <see cref="CLI"/> class.
     /// </summary>
@@ -117,7 +120,7 @@ public class CLI
     {
         if (heroListing.Elements.Any())
         {
-            heroController.Update(heroUpdateForm.FormData, heroListing.CurrentlySelectedElement);
+            heroController.Update(CurrentlySelectedHero.Id, heroUpdateForm.FormData);
             UpdateListing();
         }
     }
@@ -127,7 +130,7 @@ public class CLI
     {
         if (heroListing.Elements.Any())
         {
-            heroController.Delete(heroListing.CurrentlySelectedElement);
+            heroController.Delete(CurrentlySelectedHero.Id);
             UpdateListing();
         }
     }
