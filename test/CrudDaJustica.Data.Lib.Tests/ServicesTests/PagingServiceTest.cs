@@ -4,7 +4,7 @@ using CrudDaJustica.Data.Lib.Services;
 namespace CrudDaJustica.Data.Lib.Test.ServicesTests;
 
 [TestFixture]
-public class PagingServiceTest
+internal class PagingServiceTest
 {
 	[Test]
 	public void Constructor_RowsPerPageIsLessThanOne_RaisesArgumentOutOfRangeException()
