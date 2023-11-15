@@ -56,7 +56,7 @@ public class JsonRepository : IHeroRepository
         RepositorySize = File.ReadLines(this.heroDataFilePath).Count();
     }
 
-    public void RegisterHero(HeroEntity newHero)
+    public bool RegisterHero(HeroEntity newHero)
     {
         var heroAsJson = JsonSerializer.Serialize(newHero);
         using (var streamWriter = File.AppendText(heroDataFilePath))
@@ -64,6 +64,7 @@ public class JsonRepository : IHeroRepository
             streamWriter.WriteLine(heroAsJson);
         }
         RepositorySize++;
+        return true;
     }
 
     public IEnumerable<HeroEntity> GetHeroes(DataPage page) => File.ReadLines(heroDataFilePath)

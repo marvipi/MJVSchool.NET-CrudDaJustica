@@ -25,7 +25,7 @@ public class VirtualRepository : IHeroRepository
         heroes = new HeroEntity[initialSize];
     }
 
-    public void RegisterHero(HeroEntity newHero)
+    public bool RegisterHero(HeroEntity newHero)
     {
         if (RepositorySize == heroes.Length)
         {
@@ -33,6 +33,7 @@ public class VirtualRepository : IHeroRepository
         }
         var firstEmptyIndex = LastFilledIndex(heroes) + 1;
         heroes[firstEmptyIndex] = newHero;
+        return true;
     }
 
     public IEnumerable<HeroEntity> GetHeroes(DataPage page)

@@ -56,7 +56,7 @@ public class HeroController : Controller
     [HttpGet]
     public IActionResult Create()
     {
-        var emptyForm = new HeroFormModel(string.Empty, DateOnly.MinValue, string.Empty, string.Empty);
+        var emptyForm = new HeroFormModel(string.Empty, DateOnly.FromDateTime(DateTime.Today), string.Empty, string.Empty);
         return View(emptyForm);
     }
 

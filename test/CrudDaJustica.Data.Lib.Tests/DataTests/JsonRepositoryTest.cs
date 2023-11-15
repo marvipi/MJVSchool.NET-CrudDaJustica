@@ -34,7 +34,7 @@ internal class JsonRepositoryTest
             var initialRepositorySize = jsonRepo.RepositorySize;
 
             var newHero = new HeroEntity("Superman", new(1938, 6, 1), "Clark", "Kent");
-            jsonRepo.RegisterHero(newHero);
+            var success = jsonRepo.RegisterHero(newHero);
 
             var newRepositorySize = jsonRepo.RepositorySize;
             const int AMOUNT_HEROES_REGISTERED = 1;
@@ -44,6 +44,7 @@ internal class JsonRepositoryTest
                 var newHeroAsJson = JsonSerializer.Serialize(newHero);
                 Assert.Multiple(() =>
                 {
+                    Assert.That(success, Is.True);
                     Assert.That(heroInFile, Is.EqualTo(newHeroAsJson));
                     Assert.That(newRepositorySize, Is.EqualTo(AMOUNT_HEROES_REGISTERED));
                 });
@@ -66,7 +67,7 @@ internal class JsonRepositoryTest
             var heroAlreadyInRepo = new HeroEntity("Batman", new(1939, 5, 1), "Bruce", "Wayne");
             jsonRepo.RegisterHero(heroAlreadyInRepo);
             var newHero = new HeroEntity("Wonder Woman", new(1939, 5, 1), "Diana", "of Themyscira");
-            jsonRepo.RegisterHero(newHero);
+            var success = jsonRepo.RegisterHero(newHero);
 
             var newRepositorySize = jsonRepo.RepositorySize;
             const int AMOUNT_HEROES_REGISTERED = 2;
@@ -78,6 +79,7 @@ internal class JsonRepositoryTest
 
                 Assert.Multiple(() =>
                 {
+                    Assert.That(success, Is.True);
                     Assert.That(lastHeroInRepo, Is.EqualTo(newHeroAsJson));
                     Assert.That(newRepositorySize, Is.EqualTo(AMOUNT_HEROES_REGISTERED));
                 });

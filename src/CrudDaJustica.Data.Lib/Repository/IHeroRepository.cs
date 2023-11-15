@@ -17,7 +17,7 @@ public interface IHeroRepository
     /// Registers a new hero in this repository.
     /// </summary>
     /// <param name="newHero"> The hero to register. </param>
-    public void RegisterHero(HeroEntity newHero);
+    public bool RegisterHero(HeroEntity newHero);
 
     /// <summary>
     /// Retrieves information about all heroes registered in a given page.

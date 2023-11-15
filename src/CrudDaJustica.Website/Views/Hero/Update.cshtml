@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Update Hero";
 }
 
-<h1> ViewData["Title"]  </h1>
+<h1> @ViewData["Title"]  </h1>
 <hr />
 
 <form asp-controller="Hero" asp-action="Update" asp-route-id="@Model.idToUpdate" method="post">
@@ -14,6 +14,8 @@
 	</div>
 
 	<partial name="_HeroForm" model="@Model.heroFormModel" />
+
+	<br />
 
 	<span>
 		<a class="btn btn-outline-secondary" type="button" asp-controller="Hero" asp-action="Index"> Cancel </a>
