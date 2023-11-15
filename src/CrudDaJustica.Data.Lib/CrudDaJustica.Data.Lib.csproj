@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Projects\MJV School .NET - Crud da Justica\src\CrudDaJustica.Data.Lib\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Projects\MJV School .NET - Crud da Justica\src\CrudDaJustica.Data.Lib\.editorconfig" />
+  </ItemGroup>
+
 </Project>
