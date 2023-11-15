@@ -1,0 +1,42 @@
+﻿@model HeroListModel
+
+<partial name="_ValidationScriptsPartial" />
+@{
+	ViewData["Title"] = "Heroes";
+
+	var formTemplate = new HeroFormModel(string.Empty, DateOnly.MinValue, string.Empty, string.Empty);
+}
+
+<h2> @ViewData["Title"] </h2>
+<hr />
+
+<table class="table table-hover table-striped table-bordered">
+
+	<thead class="table-dark">
+		<tr>
+			<th> Secret Identity </th>
+			<th> Debut Date </th>
+			<th> Initials </th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var heroViewModel in Model.heroViewModels)
+		{
+			<tr>
+				<td> @heroViewModel.Alias</td>
+				<td> @heroViewModel.Debut</td>
+				<td> @heroViewModel.FirstName[0]. @heroViewModel.LastName[0]. </td>
+				<td> <a class="text-decoration-none" asp-controller="Hero" asp-action="Delete" asp-route-id="@heroViewModel.Id"> &#128465; </a> </td>
+				<td> <a class="text-decoration-none" asp-controller="Hero" asp-action="Update" asp-route-id="@heroViewModel.Id"> Update </a> </td>
+			</tr>
+		}
+	</tbody>
+
+</table>
+
+<partial name="_PageSwitcher" model=@(Model.PageRange, Model.CurrentPage) />
+
+

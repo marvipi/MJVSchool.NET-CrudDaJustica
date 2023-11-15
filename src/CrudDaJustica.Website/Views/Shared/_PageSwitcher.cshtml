@@ -1,0 +1,46 @@
+﻿@model (IEnumerable<int> PageRange, int CurrentPage)
+
+@{
+	var firstPage = Model.PageRange.First();
+	var lastPage = Model.PageRange.Last();
+	int prevPage = Model.PageRange.FirstOrDefault(i => i == Model.CurrentPage - 1, firstPage);
+	int nextPage = Model.PageRange.LastOrDefault(i => i == Model.CurrentPage + 1, lastPage);
+}
+
+<nav aria-label="Pages in a list">
+	<ul class="pagination justify-content-center">
+
+		<li class="page-item">
+			<a class="page-link" href="?page=@prevPage" aria-label="Previous page">
+				<span aria-hidden="true">&#8592;</span>
+			</a>
+		</li>
+
+		@foreach (var pageNumber in Model.PageRange)
+		{
+			@if (pageNumber == Model.CurrentPage)
+			{
+				<li class="page-item active">
+					<a class="page-link" href="?page=@pageNumber" aria-label="Jump to page">
+						<span>@pageNumber</span>
+					</a>
+				</li>
+			}
+			else
+			{
+				<li class="page-item">
+					<a class="page-link" href="?page=@pageNumber" aria-label="Jump to page">
+						<span>@pageNumber</span>
+					</a>
+				</li>
+			}
+		}
+
+		<li class="page-item">
+			<a class="page-link" href="?page=@nextPage" aria-label="Next page">
+				<span aria-hidden="true">&#8594;</span>
+			</a>
+		</li>
+
+	</ul>
+</nav>

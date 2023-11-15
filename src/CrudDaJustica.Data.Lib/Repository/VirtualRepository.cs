@@ -46,6 +46,18 @@ public class VirtualRepository : IHeroRepository
         return nonNullHeroes;
     }
 
+    public HeroEntity? GetHero(Guid id)
+    {
+        foreach (var hero in heroes)
+        {
+            if (hero.Id == id)
+            {
+                return hero;
+            }
+        }
+        return null;
+    }
+
     public bool UpdateHero(Guid id, HeroEntity updatedHero)
     {
         var index = 0;
@@ -105,4 +117,5 @@ public class VirtualRepository : IHeroRepository
             ? array.Length - 1
             : firstEmptyIndex - 1;
     }
+
 }

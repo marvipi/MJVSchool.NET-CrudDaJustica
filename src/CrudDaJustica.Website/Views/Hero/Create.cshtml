@@ -1,0 +1,24 @@
+﻿@model HeroFormModel
+
+@{
+	ViewData["Title"] = "New Hero";
+}
+
+<h1> ViewData["Title"]  </h1>
+<hr />
+
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
+
+<form asp-controller="Hero" asp-action="Create" method="post">
+	<partial name="_HeroForm" model="@Model" />
+
+	<br />
+
+	<div>
+		<a class="btn btn-outline-secondary" type="button" asp-controller="Hero" asp-action="Index"> Cancel </a>
+		<button class="btn btn-outline-primary" type="submit"> Create </button>
+	</div>
+
+</form>

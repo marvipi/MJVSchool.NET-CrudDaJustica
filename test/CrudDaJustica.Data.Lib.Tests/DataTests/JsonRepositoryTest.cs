@@ -157,6 +157,50 @@ internal class JsonRepositoryTest
     }
 
     [Test]
+    public void GetHero_IdIsNotRegisteredInTheRepository_ReturnsNullHeroEntity()
+    {
+        try
+        {
+            var jsonRepo = new JsonRepository(TestFilePath);
+
+            var heroEntity = jsonRepo.GetHero(Guid.NewGuid());
+
+            Assert.That(heroEntity, Is.Null);
+        }
+        finally
+        {
+            DeleteTestDir();
+        }
+    }
+
+    [Test]
+    public void GetHero_IdIsRegisteredInTheRepository_ReturnsTheHeroEntity()
+    {
+        try
+        {
+            var jsonRepository = new JsonRepository(TestFilePath);
+            var hero1 = new HeroEntity("Green Lantern", new(1940, 7, 1), "Alan", "Scott");
+            var hero2 = new HeroEntity("Phantom Lady", new(1941, 8, 1), "Sandra", "Knight");
+            jsonRepository.RegisterHero(hero1);
+            jsonRepository.RegisterHero(hero2);
+
+            var firstHeroEntity = jsonRepository.GetHero(hero1.Id);
+            var secondHeroEntity = jsonRepository.GetHero(hero2.Id);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(firstHeroEntity, Is.EqualTo(hero1));
+                Assert.That(secondHeroEntity, Is.EqualTo(hero2));
+            });
+
+        }
+        finally
+        {
+            DeleteTestDir();
+        }
+    }
+
+    [Test]
     public void UpdateHero_IdIsNotRegistered_DoesNothing()
     {
         try

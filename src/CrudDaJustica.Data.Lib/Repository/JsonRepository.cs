@@ -73,6 +73,10 @@ public class JsonRepository : IHeroRepository
                                                                     .Cast<HeroEntity>()
                                                                     .ToList();
 
+    public HeroEntity? GetHero(Guid id) => File.ReadLines(heroDataFilePath)
+                                                .Select(line => JsonSerializer.Deserialize<HeroEntity>(line))
+                                                .FirstOrDefault(he => he?.Id == id, null);
+
     public bool UpdateHero(Guid id, HeroEntity updatedHero) => OverwriteData(id, updatedHero);
 
     public bool DeleteHero(Guid id)
@@ -145,5 +149,4 @@ public class JsonRepository : IHeroRepository
 
     // Summary: Calculates how many rows of data to take in a given data page.
     private static int RowToTake(DataPage page) => page.Number * page.Rows;
-
 }
