@@ -4,7 +4,7 @@ using CrudDaJustica.Data.Lib.Service;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Text.Json;
 
-namespace CrudDaJustica.Data.Lib.Test.DataTests;
+namespace CrudDaJustica.Data.Lib.Test.RepositoryTests;
 
 [TestFixture]
 internal class JsonRepositoryTest

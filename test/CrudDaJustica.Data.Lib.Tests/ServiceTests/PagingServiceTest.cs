@@ -1,7 +1,7 @@
 ﻿using CrudDaJustica.Data.Lib.Repository;
 using CrudDaJustica.Data.Lib.Service;
 
-namespace CrudDaJustica.Data.Lib.Test.ServicesTests;
+namespace CrudDaJustica.Data.Lib.Test.ServiceTests;
 
 [TestFixture]
 internal class PagingServiceTest
