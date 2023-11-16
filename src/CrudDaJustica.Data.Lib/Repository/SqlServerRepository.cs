@@ -31,7 +31,7 @@ public class SqlServerRepository : IHeroRepository
           FROM Hero
           ORDER BY Alias
           OFFSET (@page - 1) * @rows ROWS
-          FETCH NEXT @page * @rows ROWS ONLY;";
+          FETCH NEXT @rows ROWS ONLY;";
 
     private const string GET_HERO =
         @"SELECT Id, Alias, Debut, FirstName, LastName

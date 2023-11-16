@@ -33,8 +33,8 @@
 				<td> @heroViewModel.Alias</td>
 				<td> @heroViewModel.Debut</td>
 				<td> @heroViewModel.FirstName[0]. @heroViewModel.LastName[0]. </td>
-				<td> <a class="fa fa-trash text-decoration-none" asp-controller="Hero" asp-action="Delete" asp-route-id="@heroViewModel.Id"> </a> </td>
-				<td> <a class="fa fa-pencil text-decoration-none" asp-controller="Hero" asp-action="Update" asp-route-id="@heroViewModel.Id"> </a> </td>
+				<td> <partial name="_HeroDeleteButton" model="@heroViewModel" /> </td>
+				<td> <a class="btn btn-outline-primary fa fa-pencil text-decoration-none" asp-controller="Hero" asp-action="Update" asp-route-id="@heroViewModel.Id"> </a> </td>
 			</tr>
 		}
 	</tbody>
@@ -42,5 +42,3 @@
 </table>
 
 <partial name="_PageSwitcher" model=@(Model.PageRange, Model.CurrentPage) />
-
-
