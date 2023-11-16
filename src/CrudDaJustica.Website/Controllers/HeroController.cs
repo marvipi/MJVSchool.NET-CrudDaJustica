@@ -74,6 +74,7 @@ public class HeroController : Controller
         {
             var newHero = new HeroEntity(heroFormModel.Alias, heroFormModel.Debut, heroFormModel.FirstName, heroFormModel.LastName);
             heroRepository.RegisterHero(newHero);
+            logger.LogInformation("Hero successfully created");
         }
 
         return Create();
@@ -87,7 +88,13 @@ public class HeroController : Controller
     [HttpGet]
     public IActionResult Update(Guid id)
     {
-        var hero = heroRepository.GetHero(id) ?? null!;
+        var hero = heroRepository.GetHero(id);
+
+        if (hero is null)
+        {
+            logger.LogWarning("{timestamp}: there was an attempt at updating a non-registered hero", DateTime.Now.ToString());
+            return RedirectToAction(nameof(Index));
+        }
 
         var heroFormModel = new HeroFormModel(hero.Alias, hero.Debut, hero.FirstName, hero.LastName);
 
@@ -115,7 +122,10 @@ public class HeroController : Controller
                 LastName = heroFormModel.LastName,
             };
 
-            heroRepository.UpdateHero(id, updatedInformation);
+            if (heroRepository.UpdateHero(id, updatedInformation))
+            {
+                logger.LogInformation("Hero successfully updated");
+            }
         }
 
         return View((heroFormModel, id));
@@ -131,7 +141,10 @@ public class HeroController : Controller
     {
         logger.LogInformation("Attempting to delete a hero");
 
-        heroRepository.DeleteHero(id);
+        if (heroRepository.DeleteHero(id))
+        {
+            logger.LogInformation("Hero successfully deleted");
+        }
 
         return RedirectToAction(nameof(Index));
     }
