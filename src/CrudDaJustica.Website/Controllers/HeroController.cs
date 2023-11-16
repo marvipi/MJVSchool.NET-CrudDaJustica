@@ -35,7 +35,7 @@ public class HeroController : Controller
     /// <returns> A view containing a list of heroes. </returns>
     public IActionResult Index(int page = 1)
     {
-        logger.LogInformation("Displaying a list of heroes");
+        logger.LogInformation("{timestamp}: displaying a list of heroes", DateTime.Now);
 
         pagingService.JumpToPage(page);
         var pageToList = pagingService.GetCurrentPage();
@@ -68,13 +68,17 @@ public class HeroController : Controller
     [HttpPost]
     public IActionResult Create(HeroFormModel heroFormModel)
     {
-        logger.LogInformation("Attempting to create a new hero");
+        logger.LogInformation("{timestamp}: Attempting to create a new hero", DateTime.Now);
 
         if (ModelState.IsValid)
         {
             var newHero = new HeroEntity(heroFormModel.Alias, heroFormModel.Debut, heroFormModel.FirstName, heroFormModel.LastName);
             heroRepository.RegisterHero(newHero);
-            logger.LogInformation("Hero successfully created");
+            logger.LogInformation("{timestamp}: Hero successfully created", DateTime.Now);
+        }
+        else
+        {
+            logger.LogWarning("{timestamp}: Failed to create a new hero", DateTime.Now);
         }
 
         return Create();
@@ -92,7 +96,7 @@ public class HeroController : Controller
 
         if (hero is null)
         {
-            logger.LogWarning("{timestamp}: there was an attempt at updating a non-registered hero", DateTime.Now.ToString());
+            logger.LogWarning("{timestamp}: there was an attempt at updating a non-registered hero", DateTime.Now);
             return RedirectToAction(nameof(Index));
         }
 
@@ -110,7 +114,7 @@ public class HeroController : Controller
     [HttpPost]
     public IActionResult Update(HeroFormModel heroFormModel, Guid id)
     {
-        logger.LogInformation("Attempting to update a hero");
+        logger.LogInformation("{timestamp}: Attempting to update hero", DateTime.Now);
 
         if (ModelState.IsValid)
         {
@@ -124,7 +128,11 @@ public class HeroController : Controller
 
             if (heroRepository.UpdateHero(id, updatedInformation))
             {
-                logger.LogInformation("Hero successfully updated");
+                logger.LogInformation("{timestamp}: Hero successfully updated", DateTime.Now);
+            }
+            else
+            {
+                logger.LogWarning("{timestamp}: Failed to update hero", DateTime.Now);
             }
         }
 
@@ -139,11 +147,15 @@ public class HeroController : Controller
     [HttpGet]
     public IActionResult Delete(Guid id)
     {
-        logger.LogInformation("Attempting to delete a hero");
+        logger.LogInformation("{timestamp}: Attempting to delete hero", DateTime.Now);
 
         if (heroRepository.DeleteHero(id))
         {
-            logger.LogInformation("Hero successfully deleted");
+            logger.LogInformation("{timestamp}: Hero successfully deleted", DateTime.Now);
+        }
+        else
+        {
+            logger.LogWarning("{timestamp}: Failed to delete hero", DateTime.Now);
         }
 
         return RedirectToAction(nameof(Index));

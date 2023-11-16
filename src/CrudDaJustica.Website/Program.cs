@@ -6,11 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-/*
- * var appDataDirPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
- * var heroDataFilePath = Path.Combine(appDataDirPath, "CRUD da Justica", "herodata.json");
- */
-
 var sqlServerUsername = Environment.GetEnvironmentVariable("MJVSCHOOLDB_USERNAME");
 var sqlServerPassword = Environment.GetEnvironmentVariable("MJVSCHOOLDB_PASSWORD");
 var connectionString = string.Format(builder.Configuration.GetConnectionString("SqlServer") ?? "{0}{1}", sqlServerUsername, sqlServerPassword);
