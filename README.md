@@ -45,10 +45,9 @@ Durante o curso foram abordados diversas características e funcionalidades do C
 ### Imagens
 #### Website
 ![Listagem no website](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-heroes.png)
-![Formulário de atualização de heróis](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-updatehero.png)
+![Prompt de confirmação](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-confirmation-prompt.png)
 ![Validação nos formulários de atualização de hérois](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-updatehero-validation.png)
 ![Validação nos formulários de criação de hérois](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-createhero-validation.png)
-![Prompt de confirmação](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-confirmation-prompt.png)
 
 #### Linha de comando
 ![Listagens na linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/cli.png)
