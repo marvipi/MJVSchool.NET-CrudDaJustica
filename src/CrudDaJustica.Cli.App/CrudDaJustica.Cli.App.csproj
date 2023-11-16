@@ -9,16 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EditorConfigFiles Remove="D:\Projects\MJV School dotNet\PP dotNet\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="D:\Projects\MJV School dotNet\PP dotNet\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CrudDaJustica.Cli.Lib\CrudDaJustica.Cli.Lib.csproj" />
     <ProjectReference Include="..\CrudDaJustica.Data.Lib\CrudDaJustica.Data.Lib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Projects\MJV School .NET - Crud da Justica\src\CrudDaJustica.Cli.App\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Projects\MJV School .NET - Crud da Justica\src\CrudDaJustica.Cli.App\.editorconfig" />
   </ItemGroup>
 
 </Project>

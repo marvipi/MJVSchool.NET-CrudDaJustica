@@ -7,35 +7,35 @@ namespace CrudDaJustica.Cli.Lib.Views;
 /// </summary>
 public abstract class View
 {
-	// Summary: Keyboard keys used to invoke events.
-	protected readonly List<Keybinding> Keybindings; // TODO Change to data type that doesn't accept duplicates.
+    // Summary: Keyboard keys used to invoke events.
+    protected readonly List<Keybinding> Keybindings; // TODO Change to data type that doesn't accept duplicates.
 
-	// Summary: Indicates whether a view should terminate its display method.
-	// Remarks: It's up to the subclasses whether to bind a key to the exit method.
-	protected bool ExitKeyPressed { get; set; }
+    // Summary: Indicates whether a view should terminate its display method.
+    // Remarks: It's up to the subclasses whether to bind a key to the exit method.
+    protected bool ExitKeyPressed { get; set; }
 
-	protected View()
-	{
-		Keybindings = new();
-		ExitKeyPressed = false;
-	}
+    protected View()
+    {
+        Keybindings = new();
+        ExitKeyPressed = false;
+    }
 
-	/// <summary>
-	/// Disables the console cursor.
-	/// </summary>
-	public virtual void Display()
-	{
-		Console.CursorVisible = false;
-	}
+    /// <summary>
+    /// Disables the console cursor.
+    /// </summary>
+    public virtual void Display()
+    {
+        Console.CursorVisible = false;
+    }
 
-	// Summary: Invokes the first keybinding associated with a given key, if any exist.
-	protected void Invoke(ConsoleKey key)
-	{
-		Keybindings
-			.FirstOrDefault(kb => kb.Key == key)
-			?.Invoke();
-	}
+    // Summary: Invokes the first keybinding associated with a given key, if any exist.
+    protected void Invoke(ConsoleKey key)
+    {
+        Keybindings
+            .FirstOrDefault(kb => kb.Key == key)
+            ?.Invoke();
+    }
 
-	// Summary: Signals the view that it's time to exit.
-	protected void Exit() => ExitKeyPressed = true;
+    // Summary: Signals the view that it's time to exit.
+    protected void Exit() => ExitKeyPressed = true;
 }

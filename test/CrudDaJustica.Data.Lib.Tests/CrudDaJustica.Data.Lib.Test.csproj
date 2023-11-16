@@ -25,4 +25,12 @@
     <ProjectReference Include="..\..\src\CrudDaJustica.Data.Lib\CrudDaJustica.Data.Lib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="D:\Projects\MJV School .NET - Crud da Justica\test\CrudDaJustica.Data.Lib.Tests\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="D:\Projects\MJV School .NET - Crud da Justica\test\CrudDaJustica.Data.Lib.Tests\.editorconfig" />
+  </ItemGroup>
+
 </Project>
