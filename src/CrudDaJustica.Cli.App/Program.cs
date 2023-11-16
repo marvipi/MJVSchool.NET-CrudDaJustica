@@ -5,10 +5,11 @@ using CrudDaJustica.Data.Lib.Service;
 
 const int INITIAL_ROWS_PER_PAGE = 10;
 
-var appDataDirPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-var heroDataFilePath = Path.Combine(appDataDirPath, "CRUD da Justica", "herodata.json");
+var sqlServerUsername = Environment.GetEnvironmentVariable("MJVSCHOOLDB_USERNAME");
+var sqlServerPassword = Environment.GetEnvironmentVariable("MJVSCHOOLDB_PASSWORD");
+var connectionString = string.Format("Server=DESKTOP-GI663U1\\SQLEXPPERSONAL;Database=CrudDaJustica;User Id={0};Password={1};TrustServerCertificate=true;", sqlServerUsername, sqlServerPassword);
 
-var heroRepository = new JsonRepository(heroDataFilePath);
+var heroRepository = new SqlServerRepository(connectionString);
 var pagingService = new PagingService(heroRepository, INITIAL_ROWS_PER_PAGE);
 var heroController = new HeroController(heroRepository, pagingService);
 
