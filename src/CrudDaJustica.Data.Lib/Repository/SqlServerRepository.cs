@@ -71,10 +71,7 @@ public class SqlServerRepository : IHeroRepository
         countHeroCommand = new(COUNT_HERO, sqlConnection);
 
         sqlConnection.Open();
-        Console.WriteLine("Opened connection to sql server");
         sqlConnection.Close();
-        Console.WriteLine("Closed connection to sql server");
-        Console.WriteLine("Connection test succeeded");
     }
 
     public bool RegisterHero(HeroEntity newHero)
