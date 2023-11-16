@@ -5,7 +5,10 @@
 	var modalId = string.Format("d{0}", Model.Id);
 }
 
-<button type="button" class="btn btn-outline-primary fa fa-trash" data-bs-toggle="modal" data-bs-target="#@modalId"> </button>
+<span data-bs-toggle="tooltip" data-bs-placement="top" title="Delete hero">
+	<button type="button" class="btn btn-outline-primary fa fa-trash"data-bs-toggle="modal" data-bs-target="#@modalId"> </button>
+</span>
+
 <div class="modal fade" id="@modalId">
 	<div class="modal-dialog">
 		<div class="modal-content">
