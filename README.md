@@ -2,11 +2,11 @@
 Desenvolvi este projeto para colocar em prática tudo que aprendemos durante a primeira MJV School de .NET, que foi ao ar entre 23/10/2023 e 23/11/2023.
 
 ### Sumário
-- [Introdução](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/README.md#introdu%C3%A7%C3%A3o)
-- [Design patterns e padrões de projeto](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/README.md#design-patterns-e-padr%C3%B5es-de-projeto)
-- [Conceitos abordados](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/README.md#conceitos-abordados)
-- [Diagramas UML](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/README.md#diagramas-uml)
-- [Imagens](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/README.md#imagens)
+- [Introdução](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#introdu%C3%A7%C3%A3o)
+- [Design patterns e padrões de projeto](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#design-patterns-e-padr%C3%B5es-de-projeto)
+- [Conceitos abordados](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#conceitos-abordados)
+- [Diagramas UML](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#diagramas-uml)
+- [Imagens](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#imagens)
 
 ### Introdução
 O CRUD da Justiça é uma aplicação simples que lida com informações sobre super-heróis. Programas desse tipo são maçantes por natureza, e por isso, escolhi um tema leve para tentar torná-lo menos entediante.
