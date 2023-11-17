@@ -33,12 +33,18 @@ public class HeroController : Controller
     /// Lists all heroes in a given data page.
     /// </summary>
     /// <returns> A view containing a list of heroes. </returns>
-    public IActionResult Index(int page = 1)
+    public IActionResult Index(int page = PagingService.FIRST_PAGE, int rows = PagingService.MIN_ROWS_PER_PAGE)
     {
         logger.LogInformation("{timestamp}: displaying a list of heroes", DateTime.Now);
 
+        // Used to display this page when another view redirects to here.
+        TempData["Page"] = page;
+        TempData["Rows"] = rows;
+
+        pagingService.RowsPerPage = rows;
         pagingService.JumpToPage(page);
-        var pageToList = pagingService.GetCurrentPage();
+
+        var pageToList = pagingService.DataPage;
 
         var heroesInCurrentPage = heroRepository
             .GetHeroes(pageToList)
@@ -158,7 +164,37 @@ public class HeroController : Controller
             logger.LogWarning("{timestamp}: Failed to delete hero", DateTime.Now);
         }
 
-        return RedirectToAction(nameof(Index));
+        return RedirectToLastVisitedIndexPage();
+    }
+
+    /// <summary>
+    /// Redirects to the page of the Index view last visited by the user.
+    /// </summary>
+    /// <returns> A <see cref="RedirectToActionResult"/> that points to last visited page of the index. </returns>
+    public IActionResult RedirectToLastVisitedIndexPage()
+    {
+        return RedirectToIndexPage(Convert.ToInt32(TempData["Page"]));
+    }
+
+    /// <summary>
+    /// Redirects to a page of the Index view, displaying the same amount of rows as before.
+    /// </summary>
+    /// <param name="page"> The page to redirect to. </param>
+    /// <returns> A <see cref="RedirectToActionResult"/> that points to a specific page of the Index. </returns>
+    public IActionResult RedirectToIndexPage(int page)
+    {
+        return RedirectToAction(nameof(Index), new { page, rows = Convert.ToInt32(TempData["Rows"]) });
+    }
+
+    /// <summary>
+    /// Changes the amount of rows being displayed in the Index.
+    /// </summary>
+    /// <param name="rows"> The amount of rows to display from now on. </param>
+    /// <returns> A <see cref="RedirectToActionResult"/> that points to last visited page of the index. </returns>
+    public IActionResult UpdateRows(int rows)
+    {
+        TempData["Rows"] = rows;
+        return RedirectToLastVisitedIndexPage();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

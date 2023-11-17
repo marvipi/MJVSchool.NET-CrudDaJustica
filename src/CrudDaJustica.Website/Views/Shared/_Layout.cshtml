@@ -8,13 +8,14 @@
 	<link rel="stylesheet" href="~/css/simplex.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/CrudDaJustica.Website.styles.css" asp-append-version="true" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
 </head>
 
-<body>
+<body data-bs-theme="light">
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary border-bottom box-shadow mb-3" data-bs-theme="dark">
 			<div class="container-fluid">
-				<a class="navbar-brand" asp-area="" asp-controller="Hero" asp-action="Index">CRUD da Justiça</a>
+				<a class="navbar-brand" asp-area="" asp-controller="Hero" asp-action="RedirectToIndexPage" asp-route-page="1">CRUD da Justiça</a>
 				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -22,7 +23,7 @@
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
 					<ul class="navbar-nav flex-grow-1">
 						<li class="nav-item">
-							<a class="nav-link text-light" asp-area="" asp-controller="Hero" asp-action="Index">Heroes</a>
+							<a class="nav-link text-light" asp-area="" asp-controller="Hero" asp-action="RedirectToIndexPage" asp-route-page="1">Heroes</a>
 						</li>
 						<li class="nav-item">
 							<a class="nav-link text-light" asp-area="" asp-controller="Hero" asp-action="Create">New Hero</a>
