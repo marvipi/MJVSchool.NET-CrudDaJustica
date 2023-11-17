@@ -11,13 +11,13 @@
 	@Html.ValidationSummary()
 </div>
 
-<form asp-controller="Hero" asp-action="Create" method="post">
+<form asp-action="Create" method="post">
 	<partial name="_HeroForm" model="@Model" />
 
 	<br />
 
 	<div>
-		<a class="btn btn-outline-dark" type="button" asp-controller="Hero" asp-action="Index"> Cancel </a>
+		<a class="btn btn-outline-dark" type="button" asp-action="RedirectToLastVisitedIndexPage"> Cancel </a>
 		<button class="btn btn-outline-primary" type="submit"> Create </button>
 	</div>
 

@@ -7,14 +7,23 @@
 	var formTemplate = new HeroFormModel(string.Empty, DateOnly.MinValue, string.Empty, string.Empty);
 }
 
-<head>
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.2/css/all.css">
-</head>
-
 <h2> @ViewData["Title"] </h2>
 <hr />
 
-<table class="table table-light table-hover table-striped table-bordered">
+<div class="dropdown">
+	<button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown"> Number of heroes to display </button>
+	<ul class="dropdown-menu">
+		<li> <a class="dropdown-item" asp-action="UpdateRows" asp-route-rows="10"> 10 </a></li>
+		<li> <a class="dropdown-item" asp-action="UpdateRows" asp-route-rows="25"> 25 </a> </li>
+		<li> <a class="dropdown-item" asp-action="UpdateRows" asp-route-rows="50"> 50 </a> </li>
+		<li> <a class="dropdown-item" asp-action="UpdateRows" asp-route-rows="75"> 75 </a> </li>
+		<li> <a class="dropdown-item" asp-action="UpdateRows" asp-route-rows="100"> 100 </a> </li>
+	</ul>
+</div>
+
+<br />
+
+<table class="table table-hover table-striped table-bordered">
 
 	<thead class="table-dark">
 		<tr>
@@ -34,9 +43,11 @@
 				<td> @heroViewModel.Debut</td>
 				<td> @heroViewModel.FirstName[0]. @heroViewModel.LastName[0]. </td>
 				<td> <partial name="_HeroDeleteButton" model="@heroViewModel" /> </td>
-				<td> <a class="btn btn-outline-primary fa fa-pencil text-decoration-none" 
-					data-bs-toggle="tooltip" data-bs-placement="top" title="Update hero" 
-					asp-controller="Hero" asp-action="Update" asp-route-id="@heroViewModel.Id"> </a> </td>
+				<td>
+					<a class="btn btn-outline-primary fa fa-pencil text-decoration-none"
+					   data-bs-toggle="tooltip" data-bs-placement="top" title="Update hero"
+					   asp-action="Update" asp-route-id="@heroViewModel.Id"> </a>
+				</td>
 			</tr>
 		}
 	</tbody>

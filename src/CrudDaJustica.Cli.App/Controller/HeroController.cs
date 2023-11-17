@@ -91,7 +91,7 @@ public class HeroController
     /// </returns>
     public IEnumerable<HeroViewModel> List()
     {
-        var currentPage = pagingService.GetCurrentPage();
+        var currentPage = pagingService.DataPage;
         var heroes = heroRepository.GetHeroes(currentPage);
 
         var heroViewModels = heroes

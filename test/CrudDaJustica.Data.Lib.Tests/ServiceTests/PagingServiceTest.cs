@@ -17,9 +17,9 @@ internal class PagingServiceTest
     }
 
     [TestCase(10, 10, 1)]
-    [TestCase(40, 05, 8)]
-    [TestCase(11, 03, 4)]
-    [TestCase(01, 07, 1)]
+    [TestCase(40, 12, 4)]
+    [TestCase(11, 10, 2)]
+    [TestCase(01, 15, 1)]
     public void Constructor_ValidParameters_CalculatesTheLastPageCorrectly
         (int repositorySize, int rowsPerPage, int expected)
     {
@@ -34,18 +34,32 @@ internal class PagingServiceTest
 
     [TestCase(250, 150)]
     [TestCase(5, 100)]
-    public void GetCurrentPage_DataPageCreation_NumberAndRowsAreEqualToCurrentPageAndRowsPerPage
+    public void DataPage_DataPageCreation_NumberAndRowsAreEqualToCurrentPageAndRowsPerPage
         (int validRepositorySize, int validRowsPerPage)
     {
         var heroRepo = InitializeHeroRepository(validRepositorySize);
         var pagingService = new PagingService(heroRepo, validRowsPerPage);
 
-        var currentPage = pagingService.GetCurrentPage();
+        var currentPage = pagingService.DataPage;
         Assert.Multiple(() =>
         {
             Assert.That(currentPage.Number, Is.EqualTo(pagingService.CurrentPage));
             Assert.That(currentPage.Rows, Is.EqualTo(pagingService.RowsPerPage));
         });
+    }
+
+    [TestCase(100, PagingService.MIN_ROWS_PER_PAGE - 1, PagingService.MIN_ROWS_PER_PAGE)]
+    [TestCase(50, (PagingService.MIN_ROWS_PER_PAGE + PagingService.MAX_ROWS_PER_PAGE) / 2, (PagingService.MIN_ROWS_PER_PAGE + PagingService.MAX_ROWS_PER_PAGE) / 2)]
+    [TestCase(37, PagingService.MAX_ROWS_PER_PAGE + 1, PagingService.MAX_ROWS_PER_PAGE)]
+    public void RowsPerPage_Setting_AlwaysStaysWithinRange(int validRepositorySize, int value, int expected)
+    {
+        var heroRepo = InitializeHeroRepository(validRepositorySize);
+
+        var pagingService = new PagingService(heroRepo, PagingService.MIN_ROWS_PER_PAGE);
+
+        pagingService.RowsPerPage = value;
+
+        Assert.That(pagingService.RowsPerPage, Is.EqualTo(expected));
     }
 
     [TestCase(10, 10, 2)]
@@ -78,8 +92,8 @@ internal class PagingServiceTest
     }
 
     [TestCase(25, 25, 1, 1)]
-    [TestCase(10, 5, 1, 2)]
-    [TestCase(50, 5, 1, 10)]
+    [TestCase(100, 50, 1, 2)]
+    [TestCase(500, 50, 1, 10)]
     public void PageRange_VariousPageRanges_AlwaysReturnsARangeBetweenFirstPageAndLastPage
         (int validRepositorySize, int validRowsPerPage, int expectedRangeStart, int expectedRangeEnd)
     {

@@ -3,16 +3,22 @@
 @{
 	var firstPage = Model.PageRange.First();
 	var lastPage = Model.PageRange.Last();
-	int prevPage = Model.PageRange.FirstOrDefault(i => i == Model.CurrentPage - 1, firstPage);
-	int nextPage = Model.PageRange.LastOrDefault(i => i == Model.CurrentPage + 1, lastPage);
+
+	int prevPage = Model.CurrentPage > firstPage
+		? Model.CurrentPage - 1
+		: firstPage;
+
+	int nextPage = Model.CurrentPage < lastPage
+		? Model.CurrentPage + 1
+		: lastPage;
 }
 
-<nav aria-label="Pages in a list">
+<nav>
 	<ul class="pagination justify-content-center">
 
 		<li class="page-item">
-			<a class="page-link" href="?page=@prevPage" aria-label="Previous page">
-				<span aria-hidden="true">&#8592;</span>
+			<a class="page-link" asp-action="RedirectToIndexPage" asp-route-page="@prevPage">
+				&#8592;
 			</a>
 		</li>
 
@@ -21,7 +27,7 @@
 			@if (pageNumber == Model.CurrentPage)
 			{
 				<li class="page-item active">
-					<a class="page-link" href="?page=@pageNumber" aria-label="Jump to page">
+					<a class="page-link" asp-action="RedirectToIndexPage" asp-route-page="@pageNumber">
 						<span>@pageNumber</span>
 					</a>
 				</li>
@@ -29,7 +35,7 @@
 			else
 			{
 				<li class="page-item">
-					<a class="page-link" href="?page=@pageNumber" aria-label="Jump to page">
+					<a class="page-link" asp-action="RedirectToIndexPage" asp-route-page="@pageNumber">
 						<span>@pageNumber</span>
 					</a>
 				</li>
@@ -37,8 +43,8 @@
 		}
 
 		<li class="page-item">
-			<a class="page-link" href="?page=@nextPage" aria-label="Next page">
-				<span aria-hidden="true">&#8594;</span>
+			<a class="page-link" asp-action="RedirectToIndexPage" asp-route-page="@nextPage">
+				&#8594;
 			</a>
 		</li>
 

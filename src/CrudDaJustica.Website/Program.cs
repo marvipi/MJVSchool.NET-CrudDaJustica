@@ -6,14 +6,19 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var sqlServerUsername = Environment.GetEnvironmentVariable("MJVSCHOOLDB_USERNAME");
-var sqlServerPassword = Environment.GetEnvironmentVariable("MJVSCHOOLDB_PASSWORD");
-var connectionString = string.Format(builder.Configuration.GetConnectionString("SqlServer") ?? "{0}{1}", sqlServerUsername, sqlServerPassword);
+builder.Services.AddScoped<IHeroRepository, SqlServerRepository>(serviceProvider =>
+{
+    var sqlServerUsername = Environment.GetEnvironmentVariable("MJVSCHOOLDB_USERNAME");
+    var sqlServerPassword = Environment.GetEnvironmentVariable("MJVSCHOOLDB_PASSWORD");
+    var connectionString = string.Format(builder.Configuration.GetConnectionString("SqlServer")!,
+        sqlServerUsername,
+        sqlServerPassword);
+    return new(connectionString);
+});
 
-builder.Services.AddScoped<IHeroRepository, SqlServerRepository>(serviceProvider => new SqlServerRepository(connectionString));
 builder.Services.AddScoped(serviceProvider => new PagingService(
     heroRepository: serviceProvider.GetRequiredService<IHeroRepository>(),
-    rowsPerPage: 10));
+    rowsPerPage: PagingService.MIN_ROWS_PER_PAGE));
 
 var app = builder.Build();
 

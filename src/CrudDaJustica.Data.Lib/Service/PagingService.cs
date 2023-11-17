@@ -8,13 +8,25 @@ namespace CrudDaJustica.Data.Lib.Service;
 /// </summary>
 public class PagingService
 {
+    private int rowsPerPage;
+
     // Summary: The hero repository being paged by this service.
-    private IHeroRepository heroRepository;
+    private readonly IHeroRepository heroRepository;
 
     /// <summary>
     /// The first page of data in the repository.
     /// </summary>
     public const int FIRST_PAGE = 1;
+
+    /// <summary>
+    /// The minimum amount of rows that a data page can contain.
+    /// </summary>
+    public const int MIN_ROWS_PER_PAGE = 10;
+
+    /// <summary>
+    /// The maximum amount of rows that a data page can contain.
+    /// </summary>
+    public const int MAX_ROWS_PER_PAGE = 100;
 
     /// <summary>
     /// The current page of the repository.
@@ -27,9 +39,28 @@ public class PagingService
     public int LastPage { get; private set; }
 
     /// <summary>
-    /// The amount of rows read per page.
+    /// The amount of rows contained in each page of data.
     /// </summary>
-    public int RowsPerPage { get; private set; }
+    public int RowsPerPage
+    {
+        get => rowsPerPage;
+        set
+        {
+            rowsPerPage = value < MIN_ROWS_PER_PAGE
+                ? MIN_ROWS_PER_PAGE
+                : value > MAX_ROWS_PER_PAGE
+                ? MAX_ROWS_PER_PAGE
+                : value;
+        }
+    }
+
+    /// <summary>
+    /// Gets the <see cref="CurrentPage"/> and the <see cref="RowsPerPage"/> as a <see cref="Service.DataPage"/>.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="Service.DataPage"/> that can be used to retrieve data from the repository.
+    /// </returns>
+    public DataPage DataPage => new(CurrentPage, RowsPerPage);
 
     /// <summary>
     /// Produces a range of pages in the range [FIRST_PAGE, LastPage]
@@ -41,30 +72,13 @@ public class PagingService
     /// </summary>
     /// <param name="heroRepository"> The hero repository that will be paged by this service. </param>
     /// <param name="rowsPerPage"> The amount of rows read per page. </param>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public PagingService(IHeroRepository heroRepository, int rowsPerPage)
     {
-        if (rowsPerPage < 1)
-        {
-            var msg = new StringBuilder()
-                .AppendFormat("O parâmetro {0} não pode ser menor que 1.", nameof(rowsPerPage))
-                .ToString();
-            throw new ArgumentOutOfRangeException(msg);
-        }
-
         this.heroRepository = heroRepository;
         RowsPerPage = rowsPerPage;
         CurrentPage = FIRST_PAGE;
         CalculateLastPage();
     }
-
-    /// <summary>
-    /// Gets the <see cref="CurrentPage"/> and the <see cref="RowsPerPage"/> as a <see cref="DataPage"/>.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="DataPage"/> that can be used to retrieve data from the repository.
-    /// </returns>
-    public DataPage GetCurrentPage() => new DataPage(CurrentPage, RowsPerPage);
 
     /// <summary>
     /// Jumps to a data page.
