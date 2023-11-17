@@ -37,12 +37,12 @@ public class HeroController : Controller
     {
         logger.LogInformation("{timestamp}: displaying a list of heroes", DateTime.Now);
 
-        // Used to display this page when another view redirects to here.
-        TempData["Page"] = page;
-        TempData["Rows"] = rows;
-
         pagingService.RowsPerPage = rows;
         pagingService.JumpToPage(page);
+
+        // Used to display this page when another view redirects to here.
+        TempData["Rows"] = pagingService.RowsPerPage;
+        TempData["Page"] = pagingService.CurrentPage;
 
         var pageToList = pagingService.DataPage;
 
