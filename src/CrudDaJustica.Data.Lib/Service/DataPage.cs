@@ -25,18 +25,18 @@ public readonly struct DataPage
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public DataPage(int number, int rows)
     {
-        if (int.IsNegative(number))
+        if (number < PagingService.FIRST_PAGE)
         {
             var errorMsg = new StringBuilder()
-                .AppendFormat("The parameter {0} cannot be negative.", nameof(number))
+                .AppendFormat("The parameter {0} cannot be less than {1}.", nameof(number), PagingService.FIRST_PAGE)
                 .ToString();
             throw new ArgumentOutOfRangeException(errorMsg);
         }
 
-        if (rows < 1)
+        if (rows < PagingService.MIN_ROWS_PER_PAGE)
         {
             var errorMsg = new StringBuilder()
-                .AppendFormat("The parameter {0} cannot be less than 1.", nameof(rows))
+                .AppendFormat("The parameter {0} cannot be less than {1}.", nameof(rows), PagingService.MIN_ROWS_PER_PAGE)
                 .ToString();
             throw new ArgumentOutOfRangeException(errorMsg);
         }
