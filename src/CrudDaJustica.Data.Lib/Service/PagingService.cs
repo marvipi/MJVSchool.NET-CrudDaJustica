@@ -84,10 +84,7 @@ public class PagingService
     /// Jumps to a data page.
     /// </summary>
     /// <param name="number"> The number of the page to jump to. </param>
-    /// <remarks> 
-    ///		If given page number is less than <see cref="FIRST_PAGE"/> then jumps to it instead.
-    ///		Else, if given page number is greater than <see cref="LastPage"/> then jump to it instead.
-    /// </remarks>
+    /// <remarks> Always stays within range of <see cref="FIRST_PAGE"/> and <see cref="LastPage"/>. </remarks>
     public void JumpToPage(int number)
     {
         CalculateLastPage();
