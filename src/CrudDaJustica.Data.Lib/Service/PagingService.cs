@@ -1,5 +1,4 @@
 ﻿using CrudDaJustica.Data.Lib.Repository;
-using System.Text;
 
 namespace CrudDaJustica.Data.Lib.Service;
 
