@@ -12,8 +12,14 @@ namespace CrudDaJustica.Cli.App.View;
 public class CLI
 {
     private readonly HeroController heroController;
+
+    // Summary: A View that lists heroes in the console window.
     private readonly Listing<HeroViewModel> heroListing;
+
+    // Summary: A form used to register new heroes.
     private readonly Form<HeroFormModel> heroCreateForm;
+
+    // Summary: A form used to change information about a registered hero.
     private readonly Form<HeroFormModel> heroUpdateForm;
 
     // Summary: The hero currently selected in the heroListing.
