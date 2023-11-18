@@ -13,13 +13,19 @@ O CRUD da Justiça é uma aplicação simples que lida com informações sobre s
 
 ### Design patterns e padrões de projeto
 Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns deles para assegurar a qualidade da implementação.
-- MVC: o website é implementado usando o framework ASP.NET MVC.
+- MVC: o website é estruturado neste padrão.
 - MVP e Mediator: a comunicação entre a interface de linha de comando e o back-end é mediada pelos controladores.
 - Repository ou Façade: os controladores não sabem com quais repositórios eles se comunicam.
 
 ### Conceitos abordados
 Durante o curso foram abordados diversas características e funcionalidades do C# e .NET. A seguir estão aquelas que melhor se encaixaram no escopo deste projeto.
+#### Conceitos avançados
+- ✔ ASP.NET MVC: a interface web do projeto. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/tree/stable/src/CrudDaJustica.Website)
+- ✔ Leitura do arquivo appsettings.json: a string de conexão do banco de dados é lida deste arquivo. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Website/Program.cs)
+- ✔ Injeção de dependências: tanto o website quanto o aplicativo de console fazem injeção de dependências. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Website/Program.cs)
+- ✔ Conexão com um banco de dados: o projeto consegue armazenar dados em por meio do SQL Server. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Repository/SqlServerRepository.cs)
 
+#### Conceitos básicos
 - ✔ String: a interface de linha de comando é desenhada usando strings. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.Lib/Views/Frame.cs)
 - ✔ Array: o projeto tem um repositório virtual que armazena informações em arrays. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Data/VirtualRepository.cs)
 - ✔ Serialização e manipulação de arquivos: o projeto consegue salvar dados em arquivos JSON. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Data/JsonRepository.cs)
@@ -30,7 +36,6 @@ Durante o curso foram abordados diversas características e funcionalidades do C
 - ✔ Classes: quase todos os tipos do projeto são classes. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.App/Controller/HeroController.cs)
 - ✔ Interfaces: os repositórios de dados implementam interfaces. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Data/IHeroRepository.cs)
 - ✔ Classes abstratas e herança: a interface de linha de comando utiliza ambos para desenhar decorações de janela. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.Lib/Views/Frame.cs)
-- ✔ Conexão com um banco de dados: o projeto consegue armazenar dados em por meio do SQL Server. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Repository/SqlServerRepository.cs)
 
 ### Diagramas UML
 #### Website
