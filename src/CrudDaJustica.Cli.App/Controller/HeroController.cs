@@ -22,8 +22,8 @@ public class HeroController
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroController"/> class.
     /// </summary>
-    /// <param name="heroRepository"> The repository that stores information about the heroes. </param>
-    /// <param name="pagingService"> A service responsible for paging the data in the repositories. </param>
+    /// <param name="heroRepository"> Repository that stores information about the heroes. </param>
+    /// <param name="pagingService"> Service responsible for paging the data hero repository. </param>
     public HeroController(IHeroRepository heroRepository, PagingService pagingService)
     {
         this.heroRepository = heroRepository;
@@ -104,8 +104,8 @@ public class HeroController
     /// <summary>
     /// Updates the information about a hero.
     /// </summary>
-    /// <param name="heroFormModel"> The updated information about a hero. </param>
     /// <param name="id"> The id of the hero to update. </param>
+    /// <param name="heroFormModel"> The updated information about a hero. </param>
     public void Update(Guid id, HeroFormModel heroFormModel)
     {
         var validDate = DateOnly.ParseExact(heroFormModel.Debut!,

@@ -2,7 +2,6 @@
 using CrudDaJustica.Data.Lib.Service;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Xml;
 
 namespace CrudDaJustica.Data.Lib.Repository;
 
