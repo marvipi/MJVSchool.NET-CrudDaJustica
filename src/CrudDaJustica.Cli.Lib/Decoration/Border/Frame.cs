@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.Lib.Decoration;
+﻿namespace CrudDaJustica.Cli.Lib.Decoration.Border;
 
 /// <summary>
 /// Represents the borders around a console window.

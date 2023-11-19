@@ -14,4 +14,8 @@
     <None Include="D:\Projects\MJV School .NET - Crud da Justica\src\CrudDaJustica.Cli.Lib\.editorconfig" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Window\" />
+  </ItemGroup>
+
 </Project>

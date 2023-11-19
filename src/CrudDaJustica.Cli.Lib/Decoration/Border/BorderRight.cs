@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.Lib.Decoration;
+﻿namespace CrudDaJustica.Cli.Lib.Decoration.Border;
 
 /// <summary>
 /// Represents the right border of a console window.
@@ -8,7 +8,7 @@ internal class BorderRight : IDisplayable
     public void Display()
     {
         foreach (var row in Enumerable.Range(
-            BorderDrawingConstants.FIRST_VERT_BORDER_ROW, 
+            BorderDrawingConstants.FIRST_VERT_BORDER_ROW,
             Console.BufferHeight - 1 - BorderDrawingConstants.AMOUNT_OF_CORNERS))
         {
             Console.SetCursorPosition(Console.BufferWidth - 1, row);

@@ -1,5 +1,7 @@
 ﻿using CrudDaJustica.Cli.App.Controller;
 using CrudDaJustica.Cli.App.Model;
+using CrudDaJustica.Cli.Lib.Decoration;
+using CrudDaJustica.Cli.Lib.Decoration.Header;
 using CrudDaJustica.Cli.Lib.Forms;
 using CrudDaJustica.Cli.Lib.Keybindings;
 using CrudDaJustica.Cli.Lib.Views;
@@ -88,9 +90,19 @@ public class CLI
     /// </summary>
     public void Start()
     {
-        UpdateListing();
-        heroListing.Display();
-        Console.Clear();
+        //UpdateListing();
+        //heroListing.Display();
+        var frame = new Cli.Lib.Decoration.Border.Frame("MONITOR_WOMB::MAINFRAME::HOME/HEROES");
+        frame.Display();
+        var header = new Header(new string[] {
+            "  @@@@@ @@      Welcome, J'ONN J'ONZZ",
+            "     @@ @@      Role: ADMIN",
+            "  @  @@ @@      ",
+            " @@  @@ @@      ",
+            " @@@@@@ @@@@@@  ",
+        });
+        header.Display();
+        //Console.Clear();
     }
 
     // Summary: Advances to the next data page and updates the contents of the hero listing.

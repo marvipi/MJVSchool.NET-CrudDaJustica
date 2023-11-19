@@ -16,9 +16,12 @@ internal static class BorderDrawingConstants
     public const char LEFT_TITLE_BORDER = '┤';
     public const char RIGHT_TITLE_BORDER = '├';
 
-    public const char DOWNWARD_LEFT_CORNER = '┌';
-    public const char DOWNWARD_RIGHT_CORNER = '┐';
+    public const char UPPER_LEFT_CORNER = '┌';
+    public const char UPPER_RIGHT_CORNER = '┐';
 
-    public const char UPWARD_LEFT_CORNER = '└';
-    public const char UPWARD_RIGHT_CORNER = '┘';
+    public const char LOWER_LEFT_CORNER = '└';
+    public const char LOWER_RIGHT_CORNER = '┘';
+
+    public const char SEPARATOR_LEFT_BORDER = RIGHT_TITLE_BORDER;
+    public const char SEPARATOR_RIGHT_BORDER = LEFT_TITLE_BORDER;
 }
