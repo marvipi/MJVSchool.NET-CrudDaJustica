@@ -1,15 +1,13 @@
-﻿using CrudDaJustica.Cli.Lib.Keybindings;
-using CrudDaJustica.Cli.Lib.Views;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace CrudDaJustica.Cli.Lib.Forms;
+namespace CrudDaJustica.Cli.Lib.Window;
 
 /// <summary>
 /// Represents a form that generates fields automatically for a <typeparamref name="T"/> and uses them to read input from the user.
 /// </summary>
 /// <typeparam name="T"> The type of the class used to generate the fields. </typeparam>
-public class Form<T> : Frame where T : new()
+public class Form<T> : Window where T : new()
 {
     // Summary: The fields that have not been read yet.
     private readonly Queue<Field> fields;
@@ -19,13 +17,13 @@ public class Form<T> : Frame where T : new()
     private readonly Queue<PropertyInfo> properties;
 
     // Summary: Used to discard all data and exit the form.
-    private readonly Keybinding exitKey;
+    private Keybinding cancel = null!;
 
     // Summary: The key that will trigger an event that utilizes the form data.
-    private readonly Keybinding confirmKey;
+    private Keybinding confirm = null!;
 
     // Summary: Used to redisplay the form after validation problems occur.
-    private readonly Keybinding retryKey;
+    private Keybinding retry = null!;
 
     // Summary: Delegate that retrieves the problems from the lastest form data read from the user.
     private readonly Func<T, IEnumerable<string>> validationProblemsRetriver;
@@ -41,26 +39,15 @@ public class Form<T> : Frame where T : new()
     /// <summary>
     /// Initializes a new instance of the <see cref="Form{T}"/> class.
     /// </summary>
-    /// <param name="title"> The title to display on top of the screen. </param>
-    /// <param name="header"> Information to display on the top of the console buffer. </param>
-    /// <param name="exitKey"> An unbound console key that will discard all data and exit the form. </param>
-    /// <param name="confirmKey"> An unbound console key that will save the data in the form. </param>
-    /// <param name="retryKey"> An unbound console key that will allow user to retype the form when the data read is invalid. </param>
+    /// <param name="frame"> The borders around a form. </param>
+    /// <param name="header"> Information to display above the form. </param>
     /// <param name="validationProblemsRetriver"> Delegate that retrieves the problems from the lastest form data read from the user. </param>
-    public Form(string title,
-        string[] header,
-        BindableKey exitKey,
-        Keybinding confirmKey,
-        BindableKey retryKey,
-        Func<T, IEnumerable<string>> validationProblemsRetriver) : base(title, header)
+    public Form(IDisplayable frame, IDisplayable header, Func<T, IEnumerable<string>> validationProblemsRetriver) : base(frame, header)
     {
         fields = new();
         properties = new();
         FormData = new();
         this.validationProblemsRetriver = validationProblemsRetriver;
-        this.exitKey = exitKey.Bind(Exit);
-        this.confirmKey = confirmKey;
-        this.retryKey = retryKey.Bind(Display);
     }
 
     /// <summary>
@@ -77,6 +64,19 @@ public class Form<T> : Frame where T : new()
         ReadAllFields(screenCoords);
 
         DisplayCorrectPrompt();
+    }
+
+    /// <summary>
+    /// Adds the keybindings required for this form to function.
+    /// </summary>
+    /// <param name="cancel"> Used to discard all that and exit the form. </param>
+    /// <param name="confirm"> Used to submit form data and exit the form. </param>
+    /// <param name="retry"> Used to retry filling up the form when validation problems arise. </param>
+    public void AddKeybindings(Keybinding cancel, Keybinding confirm, Keybinding retry)
+    {
+        this.cancel = cancel;
+        this.confirm = confirm;
+        this.retry = retry;
     }
 
     // Summary: Creates a field for each public property in T.
@@ -118,19 +118,21 @@ public class Form<T> : Frame where T : new()
     {
         var coords = new Queue<(int column, int row)>();
 
+        var currentRow = Console.GetCursorPosition().Top;
         foreach (var field in fields)
         {
+            currentRow++;
             var displayText = string.Format(" {0}: ", field.Title);
-            DrawVerticalBorders(displayText, Console.Write);
+            Console.SetCursorPosition(1, currentRow);
+            Console.Write(displayText);
 
-            (var column, var row) = Console.GetCursorPosition();
-            Console.SetCursorPosition(displayText.Length + 1, row);
+            Console.SetCursorPosition(displayText.Length + 1, currentRow);
             coords.Enqueue(Console.GetCursorPosition());
 
             Console.WriteLine();
-        }
 
-        DrawVerticalBorders();
+            currentRow++;
+        }
 
         return coords;
     }
@@ -180,18 +182,20 @@ public class Form<T> : Frame where T : new()
     // Summary: Displays each validation problem in a different line.
     private bool DisplayValidationProblems()
     {
-
         var validationProblems = validationProblemsRetriver.Invoke(FormData);
-        var hasValidationProblems = false;
+        bool hasValidationProblems;
 
         if (hasValidationProblems = validationProblems.Any())
         {
-            DrawVerticalBorders(string.Empty, Console.WriteLine); // Empty line between fields and validation problems
+            var currentRow = Console.GetCursorPosition().Top;
+            Console.SetCursorPosition(1, currentRow++); // Empty line between fields and validation problems
 
             foreach (var validationProblem in validationProblems)
             {
                 var formattedValidationProblem = string.Format(" {0} ", validationProblem);
-                DrawVerticalBorders(formattedValidationProblem, Console.WriteLine);
+                Console.Write(" {0} ", formattedValidationProblem);
+
+                Console.SetCursorPosition(1, currentRow++);
             }
         }
 
@@ -199,25 +203,25 @@ public class Form<T> : Frame where T : new()
     }
 
     // Summary: Prompts the user to try again or to discard the data entered in the form.
-    // Remarks: The exitKey is invoked before the form is displayed again, assuring only one form is displayed at a time.
-    private void DisplayRetryPrompt() => DisplayPrompt(retryKey, exitKey, retryKey);
+    // Remarks: The cancel is invoked before the form is displayed again, assuring only one form is displayed at a time.
+    private void DisplayRetryPrompt() => DisplayPrompt(retry, cancel, retry);
 
     // Summary: Prompts the user to save or discard the data entered in the form.
-    // Remarks: The exitKey is invoked after the form data is submitted, to exit the form.
-    private void DisplayConfirmationPrompt() => DisplayPrompt(confirmKey, confirmKey, exitKey);
+    // Remarks: The cancel is invoked after the form data is submitted, to exit the form.
+    private void DisplayConfirmationPrompt() => DisplayPrompt(confirm, confirm, cancel);
 
     // Summary: Displays the cancel key on the left and the first key on the right.
     //			If firstKey is pressed then invokes the actions associated with the second and third keys, respectively.
     private void DisplayPrompt(Keybinding firstKey, Keybinding secondKey, Keybinding thirdKey)
     {
-        DrawVerticalBorders(string.Empty, Console.WriteLine); // Empty line between previous content and prompt
+        Console.SetCursorPosition(1, Console.GetCursorPosition().Top + 1); // Empty line between previous content and prompt
 
-        var prompt = string.Format(" {0}    {1} ", exitKey, firstKey);
-        DrawVerticalBorders(prompt, Console.WriteLine);
+        var prompt = string.Format(" {0}    {1} ", cancel, firstKey);
+        Console.Write(prompt);
 
-        ExitKeyPressed = false;
+        ShouldExit = false;
 
-        while (!ExitKeyPressed)
+        while (!ShouldExit)
         {
             var input = Console.ReadKey(true).Key;
             if (input == firstKey.Key)
@@ -225,10 +229,27 @@ public class Form<T> : Frame where T : new()
                 secondKey.Invoke();
                 thirdKey.Invoke();
             }
-            else if (input == exitKey.Key)
+            else if (input == cancel.Key)
             {
-                exitKey.Invoke();
+                cancel.Invoke();
             }
         }
     }
+
+    /// <summary>
+    /// Signals the form to exit at the start of the next frame.
+    /// </summary>
+    public void Cancel() => Exit();
+
+    /// <summary>
+    /// Starts the form-filling process from the beginning.
+    /// </summary>
+    public void Retry()
+    {
+        Exit();
+        Display();
+    }
+
+    // Summary: Signals the form to exit at the start of the next frame.
+    private void Exit() => ShouldExit = true;
 }

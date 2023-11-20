@@ -1,15 +1,18 @@
-﻿using CrudDaJustica.Cli.Lib.Keybindings;
+﻿using System.Text;
 
-namespace CrudDaJustica.Cli.Lib.Views;
+namespace CrudDaJustica.Cli.Lib.Window;
 
 /// <summary>
 /// Represents an interactable list of <see cref="T"/>.
 /// </summary>
 /// <typeparam name="T"> The type of the element to list on the screen. </typeparam>
-public class Listing<T> : Frame where T : notnull
+public class Listing<T> : Window where T : notnull
 {
     // Summary: The column of the console buffer where the ">" is drawn.
     private const int SELECTOR_COLUMN = 2;
+
+    // Summary: The keybindings used to interact with a listing.
+    private readonly List<Keybinding> keybindings;
 
     // Summary: The row of the first element of the listing being displayed, in console buffer coordinates.
     private int firstRow;
@@ -38,38 +41,12 @@ public class Listing<T> : Frame where T : notnull
     /// <summary>
     /// Initializes a new instance of the <see cref="Listing{T}"/> class.
     /// </summary>
-    /// <param name="title"> The title to display on top of the screen. </param>
-    /// <param name="header"> Information to display on the top of the console buffer. </param>
-    /// <param name="exitKey"> The console key that will exit this view. </param>
-    /// <param name="create"> A keybinding used to open up a creation form. </param>
-    /// <param name="nextPage"> A key map used to get the next page in the <see cref="Listing{T}"/>. </param>
-    /// <param name="previousPage"> A key map used to return to the previous page <see cref="Listing{T}"/>. </param>
-    /// <param name="nextElement"> A key map used to select the next element in the <see cref="Listing{T}"/>. </param>
-    /// <param name="previousElement"> A key map used to select the previous element in the <see cref="Listing{T}"/>. </param>
-    public Listing(string title,
-        string[] header,
-        BindableKey exitKey,
-        Keybinding create,
-        Keybinding update,
-        Keybinding delete,
-        Keybinding nextPage,
-        Keybinding previousPage,
-        BindableKey nextElement,
-        BindableKey previousElement) : base(title, header)
+    /// <param name="frame"> The borders around a listing. </param>
+    /// <param name="header"> Information to display above the listing. </param>
+    public Listing(IDisplayable frame, IDisplayable header) : base(frame, header)
     {
         Elements = new List<T>();
-        var keybindings = new List<Keybinding>()
-        {
-            exitKey.Bind(Exit),
-            create,
-            update,
-            delete,
-            nextPage,
-            previousPage,
-            nextElement.Bind(Next),
-            previousElement.Bind(Previous),
-        };
-        Keybindings.AddRange(keybindings);
+        keybindings = new List<Keybinding>();
     }
 
     /// <summary>
@@ -77,19 +54,16 @@ public class Listing<T> : Frame where T : notnull
     /// </summary>
     public override void Display()
     {
-        while (!ExitKeyPressed)
+        while (!ShouldExit)
         {
+            Console.CursorVisible = false;
             base.Display();
 
             DisplayKeybindings();
-
-            DrawVerticalBorders($" Page: {CurrentPage}", Console.WriteLine);
+            DisplayCurrentPage();
 
             firstRow = Console.GetCursorPosition().Top;
-
             ListElements();
-
-            DrawVerticalBorders();
 
             // Stops the cursor from appearing at the top left of the console when the listing is first displayed.
             if (currentRow <= firstRow)
@@ -109,11 +83,40 @@ public class Listing<T> : Frame where T : notnull
             }
 
             var input = Console.ReadKey(true).Key;
-
-            Invoke(input);
+            keybindings
+                .First(kb => kb.Key == input)
+                ?.Invoke();
         }
 
-        ExitKeyPressed = false;
+        ShouldExit = false;
+        Console.CursorVisible = true;
+    }
+
+    /// <summary>
+    /// Adds a collection of keybindings to this <see cref="Listing{T}"/>.
+    /// </summary>
+    /// <param name="keybindings"> The keybindings to add. </param>
+    public void AddKeybindings(IEnumerable<Keybinding> keybindings) => this.keybindings.AddRange(keybindings);
+
+    // Summary: Displays all keybindings in a single line of the console window.
+    private void DisplayKeybindings()
+    {
+        var keybindingDisplay = new StringBuilder();
+        foreach (var keybinding in keybindings)
+        {
+            keybindingDisplay.AppendFormat(" {0} ", keybinding);
+        }
+
+        Console.SetCursorPosition(SELECTOR_COLUMN, Console.GetCursorPosition().Top + 1);
+        Console.Write(keybindingDisplay);
+        Console.SetCursorPosition(SELECTOR_COLUMN, Console.GetCursorPosition().Top + 1);
+    }
+
+    // Summary: Displays the current page in the console window.
+    private void DisplayCurrentPage()
+    {
+        Console.Write(" Page: {0}", CurrentPage);
+        Console.SetCursorPosition(SELECTOR_COLUMN, Console.GetCursorPosition().Top + 1);
     }
 
     // Summary: Retrieves and lists a collection of elements, if any exist.
@@ -124,23 +127,28 @@ public class Listing<T> : Frame where T : notnull
             return;
         }
 
+        var consoleRow = firstRow;
         foreach (var element in Elements)
         {
             var elementAsString = element
                 ?.ToString();
 
-            // Puts a space between the border, the selector and the element.
-            var displayElement = elementAsString
-                ?.PadLeft(elementAsString.Length + SELECTOR_COLUMN + 1);
+            var displayElement = string.Format(" {0}", elementAsString);
 
-            DrawVerticalBorders(displayElement ?? string.Empty, Console.WriteLine);
+            Console.SetCursorPosition(SELECTOR_COLUMN + 1, consoleRow);
+            Console.Write(displayElement);
+            consoleRow++;
         }
-        lastRow = Console.GetCursorPosition().Top - 1;
+        lastRow = Console.GetCursorPosition().Top;
     }
 
-    // Summary: Selects the next element of the listing.
-    // Remarks: Wraps back to the first row if the user tries to move past the last row.
-    private void Next()
+    /// <summary>
+    /// Selects the next element of the listing.
+    /// </summary>
+    /// <remarks>
+    /// Wraps back to the first row if the user tries to move past the last row.
+    /// </remarks>
+    public void Next()
     {
         currentRow = currentRow < lastRow
             ? currentRow + 1
@@ -149,9 +157,13 @@ public class Listing<T> : Frame where T : notnull
         Select(currentRow);
     }
 
-    // Summary: Selects the previous element of the listing
-    // Remarks: Wraps around to the last row if the user tries to move behind the first row.
-    private void Previous()
+    /// <summary>
+    /// Selects the previous element of the listing.
+    /// </summary>
+    /// <remarks>
+    /// Wraps around to the last row if the user tries to move behind the first row.
+    /// </remarks>
+    public void Previous()
     {
         currentRow = currentRow > firstRow
             ? currentRow - 1
@@ -171,4 +183,9 @@ public class Listing<T> : Frame where T : notnull
             currentRow = row;
         }
     }
+
+    /// <summary>
+    /// Signals the listing that it should exit during the next frame.
+    /// </summary>
+    public void Exit() => ShouldExit = true;
 }
