@@ -78,7 +78,13 @@ public class HeroController : Controller
 
         if (ModelState.IsValid)
         {
-            var newHero = new HeroEntity(heroFormModel.Alias, heroFormModel.Debut, heroFormModel.FirstName, heroFormModel.LastName);
+            var newHero = new HeroEntity(
+                Guid.NewGuid(),
+                heroFormModel.Alias,
+                heroFormModel.Debut,
+                heroFormModel.FirstName,
+                heroFormModel.LastName);
+
             heroRepository.RegisterHero(newHero);
             logger.LogInformation("{timestamp}: Hero successfully created", DateTime.Now);
         }

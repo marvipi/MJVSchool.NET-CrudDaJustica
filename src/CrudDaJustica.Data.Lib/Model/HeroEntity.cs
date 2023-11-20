@@ -39,13 +39,14 @@ public class HeroEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroEntity"/> class.
     /// </summary>
+    /// <param name="id"> A unique global identifier that distinguishes this hero from all others. </param>
     /// <param name="alias"> The name of a hero's secret identity. </param>
     /// <param name="debut"> A date when a hero was first seen. </param>
     /// <param name="firstName"> The first name of the person behind the secret identity. </param>
     /// <param name="lastName"> The last name of the person behind the secret identity. </param>
-    public HeroEntity(string alias, DateOnly debut, string firstName, string lastName)
+    public HeroEntity(Guid id, string alias, DateOnly debut, string firstName, string lastName)
     {
-        Id = Guid.NewGuid();
+        Id = id;
         Alias = alias;
         Debut = debut;
         FirstName = firstName;
