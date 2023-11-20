@@ -16,7 +16,7 @@ Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns 
 - MVC: o website é estruturado neste padrão.
 - MVP e Mediator: a comunicação entre a interface de linha de comando e o back-end é mediada pelos controladores.
 - Repository ou Façade: os controladores não sabem com quais repositórios eles se comunicam.
-- Decorator: o componente Cli.Lib é implementado neste padrão.
+- Decorator: a interface de linha de comando é implementada neste padrão.
 
 ### Conceitos abordados
 Durante o curso foram abordados diversas características e funcionalidades do C# e .NET. A seguir estão aquelas que melhor se encaixaram no escopo deste projeto.
