@@ -1,9 +1,9 @@
-﻿namespace CrudDaJustica.Cli.Lib.Forms;
+﻿namespace CrudDaJustica.Cli.Lib.Window;
 
 /// <summary>
 /// Represents a field <see cref="Form{T}"/>.
 /// </summary>
-public class Field
+internal class Field
 {
     /// <summary>
     /// The text to display when this field is shown on screen.

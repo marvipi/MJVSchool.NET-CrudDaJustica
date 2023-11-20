@@ -1,8 +1,7 @@
 ﻿using CrudDaJustica.Cli.App.Controller;
 using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Cli.Lib.Forms;
-using CrudDaJustica.Cli.Lib.Keybindings;
-using CrudDaJustica.Cli.Lib.Views;
+using CrudDaJustica.Cli.Lib.Decoration;
+using CrudDaJustica.Cli.Lib.Window;
 
 namespace CrudDaJustica.Cli.App.View;
 
@@ -35,52 +34,52 @@ public class CLI
 
         // WARNING: Boilerplate ahead!
 
-        var formHeader = new string[]
+        var formHeader = new Header(new string[]
         {
             "  @@@@@ @@      Welcome, J'ONN J'ONZZ",
             "     @@ @@      Role: ADMIN",
             "  @  @@ @@      ",
             " @@  @@ @@      ",
             " @@@@@@ @@@@@@  Press ENTER to advance to the next field",
-        };
+        });
 
-        heroCreateForm = new Form<HeroFormModel>(
-            "MONITOR_WOMB::MAINFRAME::HOME/HEROES/CREATE",
-            formHeader,
-            new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
-            new Keybinding(OnCreateHero, ConsoleKey.Enter, "ENTER: Confirm"),
-            new BindableKey(ConsoleKey.Spacebar, "SPACE: Retry"),
-            heroController.Validate);
+        var createHeroFormFrame = new Frame("MONITOR_WOMB::MAINFRAME::HOME/HEROES/CREATE");
+        heroCreateForm = new Form<HeroFormModel>(createHeroFormFrame, formHeader, heroController.Validate);
+        heroCreateForm.AddKeybindings(
+            new(ConsoleKey.Escape, heroCreateForm.Cancel, "ESC: Cancel"),
+            new(ConsoleKey.Enter, OnCreateHero, "ENTER: Confirm"),
+            new(ConsoleKey.Spacebar, heroCreateForm.Retry, "SPACE: Retry"));
+
+        var updateHeroFormFrame = new Frame("MONITOR_WOMB::MAINFRAME::HOME/HEROES/UPDATE");
+        heroUpdateForm = new Form<HeroFormModel>(updateHeroFormFrame, formHeader, heroController.Validate);
+        heroUpdateForm.AddKeybindings(
+            new(ConsoleKey.Escape, heroUpdateForm.Cancel, "ESC: Cancel"),
+            new(ConsoleKey.Enter, OnUpdateHero, "ENTER: Confirm"),
+            new(ConsoleKey.Spacebar, heroUpdateForm.Retry, "SPACE: Retry"));
 
 
-        heroUpdateForm = new Form<HeroFormModel>(
-            "MONITOR_WOMB::MAINFRAME::HOME/HEROES/UPDATE",
-            formHeader,
-            new BindableKey(ConsoleKey.Escape, "ESC: Cancel"),
-            new Keybinding(OnUpdateHero, ConsoleKey.Enter, "ENTER: Confirm"),
-            new BindableKey(ConsoleKey.Spacebar, "SPACE: Retry"),
-            heroController.Validate);
-
-        var listingHeader = new string[]
+        var heroListingFrame = new Frame("MONITOR_WOMB::MAINFRAME::HOME/HEROES");
+        var heroListingHeader = new Header(new string[]
         {
             "  @@@@@ @@      Welcome, J'ONN J'ONZZ",
             "     @@ @@      Role: ADMIN",
             "  @  @@ @@      ",
             " @@  @@ @@      ",
             " @@@@@@ @@@@@@  ",
-        };
+        });
 
-        heroListing = new Listing<HeroViewModel>(
-            "MONITOR_WOMB::MAINFRAME::HOME/HEROES",
-            listingHeader,
-            new BindableKey(ConsoleKey.Escape, "ESC: Exit"),
-            new Keybinding(heroCreateForm.Display, ConsoleKey.C, "C: Create"),
-            new Keybinding(heroUpdateForm.Display, ConsoleKey.U, "U: Update"),
-            new Keybinding(OnDeleteHero, ConsoleKey.D, "D: Delete"),
-            new Keybinding(OnNextHeroPage, ConsoleKey.RightArrow, "RIGHT: Next page"),
-            new Keybinding(OnPreviousHeroPage, ConsoleKey.LeftArrow, "LEFT: Previous page"),
-            new BindableKey(ConsoleKey.DownArrow, "DOWN: Next element"),
-            new BindableKey(ConsoleKey.UpArrow, "UP: Previous element"));
+        heroListing = new Listing<HeroViewModel>(heroListingFrame, heroListingHeader);
+        heroListing.AddKeybindings(new Keybinding[]
+        {
+            new(ConsoleKey.Escape, heroListing.Exit, "ESC: Exit"),
+            new(ConsoleKey.C, heroCreateForm.Display, "C: Create"),
+            new(ConsoleKey.U, heroUpdateForm.Display, "U: Update"),
+            new(ConsoleKey.D, OnDeleteHero, "D: Delete"),
+            new(ConsoleKey.RightArrow, OnNextHeroPage, "RIGHT: Next page"),
+            new(ConsoleKey.LeftArrow, OnPreviousHeroPage, "LEFT: Previous page"),
+            new(ConsoleKey.DownArrow, heroListing.Next, "DOWN: Next element"),
+            new(ConsoleKey.UpArrow, heroListing.Previous, "UP: Previous element"),
+        });
     }
 
     /// <summary>
