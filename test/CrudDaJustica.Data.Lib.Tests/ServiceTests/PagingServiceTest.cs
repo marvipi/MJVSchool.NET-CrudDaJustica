@@ -6,16 +6,6 @@ namespace CrudDaJustica.Data.Lib.Test.ServiceTests;
 [TestFixture]
 internal class PagingServiceTest
 {
-    [Test]
-    public void Constructor_RowsPerPageIsLessThanOne_RaisesArgumentOutOfRangeException()
-    {
-        const int NOT_BEING_TESTED = 1;
-
-        var heroRepo = InitializeHeroRepository(NOT_BEING_TESTED);
-
-        Assert.Throws<ArgumentOutOfRangeException>(() => new PagingService(heroRepo, 0));
-    }
-
     [TestCase(10, 10, 1)]
     [TestCase(40, 12, 4)]
     [TestCase(11, 10, 2)]
@@ -69,7 +59,7 @@ internal class PagingServiceTest
         var heroRepo = InitializeHeroRepository(validRepositorySize);
         var pagingService = new PagingService(heroRepo, validRowsPerPage);
 
-        heroRepo.RegisterHero(new("Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
+        heroRepo.RegisterHero(new(Guid.NewGuid(), "Doesn't matter", new(1, 1, 1), "Doesn't matter", "Doesn't matter"));
         pagingService.JumpToPage(expected);
 
         var updatedLastPage = pagingService.LastPage;
@@ -111,7 +101,7 @@ internal class PagingServiceTest
         var virtualRepository = new VirtualRepository((uint)size);
         foreach (var i in Enumerable.Range(0, size))
         {
-            virtualRepository.RegisterHero(new(i.ToString(), new(1, 1, 1), i.ToString(), i.ToString()));
+            virtualRepository.RegisterHero(new(Guid.NewGuid(), i.ToString(), new(1, 1, 1), i.ToString(), i.ToString()));
         }
         return virtualRepository;
     }

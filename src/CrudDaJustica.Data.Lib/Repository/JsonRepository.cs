@@ -122,14 +122,12 @@ public class JsonRepository : IHeroRepository
                 }
                 else if (updatedInformation is not null)
                 {
-                    var updatedHero = new HeroEntity()
-                    {
-                        Id = id,
-                        Alias = updatedInformation.Alias,
-                        Debut = updatedInformation.Debut,
-                        FirstName = updatedInformation.FirstName,
-                        LastName = updatedInformation.LastName,
-                    };
+                    var updatedHero = new HeroEntity(
+                        id,
+                        updatedInformation.Alias,
+                        updatedInformation.Debut,
+                        updatedInformation.FirstName,
+                        updatedInformation.LastName);
 
                     var updatedHeroAsJson = JsonSerializer.Serialize(updatedHero);
                     streamWriter.WriteLine(updatedHeroAsJson); // Update

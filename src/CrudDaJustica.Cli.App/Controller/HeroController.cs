@@ -1,5 +1,4 @@
 ﻿using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Data.Lib.Model;
 using CrudDaJustica.Data.Lib.Repository;
 using CrudDaJustica.Data.Lib.Service;
 using System.Globalization;
@@ -80,7 +79,11 @@ public class HeroController
             CultureInfo.InvariantCulture.DateTimeFormat.ShortDatePattern,
             CultureInfo.InvariantCulture);
 
-        heroRepository.RegisterHero(new HeroEntity(heroFormModel.Alias!, validDate, heroFormModel.FirstName!, heroFormModel.LastName!));
+        heroRepository.RegisterHero(new(
+            Guid.NewGuid(),
+            heroFormModel.Alias!, validDate,
+            heroFormModel.FirstName!,
+            heroFormModel.LastName!));
     }
 
     /// <summary>
@@ -113,7 +116,11 @@ public class HeroController
             CultureInfo.InvariantCulture);
 
         heroRepository.UpdateHero(id,
-            new HeroEntity(heroFormModel.Alias!, validDate, heroFormModel.FirstName!, heroFormModel.LastName!));
+            new(id,
+            heroFormModel.Alias!,
+            validDate,
+            heroFormModel.FirstName!,
+            heroFormModel.LastName!));
     }
 
     /// <summary>
@@ -121,7 +128,6 @@ public class HeroController
     /// </summary>
     /// <param name="id"> The id of the hero to delete. </param>
     public void Delete(Guid id) => heroRepository.DeleteHero(id);
-
 
     /// <summary>
     /// Moves to the next page of the repository, up to the last page.
