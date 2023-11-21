@@ -1,5 +1,8 @@
 # MJV School .NET - CRUD da Justiça
-Desenvolvi este projeto para colocar em prática tudo que aprendemos durante a primeira MJV School de .NET, que foi ao ar entre 23/10/2023 e 23/11/2023.
+Desenvolvi este projeto para colocar em prática tudo que aprendemos durante a primeira MJV School de .NET, que foi ao ar entre 23/10/2023 e 23/11/2023. 
+
+O CRUD da Justiça é uma aplicação simples que lida com informações sobre super-heróis. Programas desse tipo são maçantes por natureza, e por isso, escolhi um tema leve para tentar torná-lo menos entediante.
+Ele possui duas interfaces de usuário: uma web implementada com o ASP.NET MVC e uma de console. Você pode vê-las na seção de imagens deste readme.
 
 ### Sumário
 - [Introdução](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#introdu%C3%A7%C3%A3o)
@@ -8,13 +11,10 @@ Desenvolvi este projeto para colocar em prática tudo que aprendemos durante a p
 - [Diagramas UML](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#diagramas-uml)
 - [Imagens](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#imagens)
 
-### Introdução
-O CRUD da Justiça é uma aplicação simples que lida com informações sobre super-heróis. Programas desse tipo são maçantes por natureza, e por isso, escolhi um tema leve para tentar torná-lo menos entediante.
-
 ### Design patterns e padrões de projeto
 Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns deles para assegurar a qualidade da implementação.
 - MVC: o website é estruturado neste padrão.
-- MVP e Mediator: a comunicação entre a interface de linha de comando e o back-end é mediada pelos controladores.
+- MVP e Mediator: a comunicação entre a interface de linha de comando e o backend é mediada pelos controladores.
 - Repository ou Façade: os controladores não sabem com quais repositórios eles se comunicam.
 - Decorator: a interface de linha de comando é implementada neste padrão.
 
@@ -22,7 +22,7 @@ Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns 
 Durante o curso foram abordados diversas características e funcionalidades do C# e .NET. A seguir estão aquelas que melhor se encaixaram no escopo deste projeto.
 #### ASP.NET
 - [x] ASP.NET MVC: a interface web do projeto. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/tree/stable/src/CrudDaJustica.Website)
-- [x] ADO.NET: o projeto consegue armazenar dados em por meio do SQL Server. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Repository/SqlServerRepository.cs)
+- [x] ADO.NET: o projeto consegue armazenar dados por meio do SQL Server. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Repository/SqlServerRepository.cs)
 - [x] Leitura do arquivo appsettings.json: a string de conexão do banco de dados é lida deste arquivo. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Website/Program.cs)
 - [x] Injeção de dependências: tanto o website quanto o aplicativo de console fazem injeção de dependências. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Website/Program.cs)
 
