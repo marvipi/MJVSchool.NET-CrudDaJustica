@@ -5,18 +5,10 @@ O CRUD da Justiça é uma aplicação simples que lida com informações sobre s
 Ele possui duas interfaces de usuário: uma web implementada com o ASP.NET MVC e uma de console. Você pode vê-las na seção de imagens deste readme.
 
 ### Sumário
-- [Introdução](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#introdu%C3%A7%C3%A3o)
-- [Design patterns e padrões de projeto](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#design-patterns-e-padr%C3%B5es-de-projeto)
-- [Conceitos abordados](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#conceitos-abordados)
-- [Diagramas UML](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#diagramas-uml)
-- [Imagens](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica#imagens)
-
-### Design patterns e padrões de projeto
-Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns deles para assegurar a qualidade da implementação.
-- MVC: o website é estruturado neste padrão.
-- MVP e Mediator: a comunicação entre a interface de linha de comando e o backend é mediada pelos controladores.
-- Repository ou Façade: os controladores não sabem com quais repositórios eles se comunicam.
-- Decorator: a interface de linha de comando é implementada neste padrão.
+- [Conceitos abordados](#conceitos-abordados)
+- [Design patterns e padrões de projeto](#design-patterns-e-padr%C3%B5es-de-projeto)
+- [Diagramas UML](#diagramas-uml)
+- [Imagens](#imagens)
 
 ### Conceitos abordados
 Durante o curso foram abordados diversas características e funcionalidades do C# e .NET. A seguir estão aquelas que melhor se encaixaram no escopo deste projeto.
@@ -37,6 +29,13 @@ Durante o curso foram abordados diversas características e funcionalidades do C
 - [x] Classes: quase todos os tipos do projeto são classes. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.App/Controller/HeroController.cs)
 - [x] Interfaces: os repositórios de dados implementam interfaces. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Repository/IHeroRepository.cs)
 - [x] Classes abstratas e herança: ambos são usados para desenhar decorações de janela na linha de comando. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Cli.Lib/Window/Window.cs)
+
+### Design patterns e padrões de projeto
+Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns deles para assegurar a qualidade da implementação.
+- MVC: o website é estruturado neste padrão.
+- MVP e Mediator: a comunicação entre a interface de linha de comando e o backend é mediada pelos controladores.
+- Repository ou Façade: os controladores não sabem com quais repositórios eles se comunicam.
+- Decorator: a interface de linha de comando é implementada neste padrão.
 
 ### Diagramas UML
 #### Website
