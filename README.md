@@ -53,8 +53,10 @@ Estes conceitos não foram abordados durante o bootcamp, porém apliquei alguns 
 ![Design da interface de linha de comando](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/CrudDaJustica.Cli.Lib.png)
 
 ### Imagens
-#### Website
+#### REST API
 ![Endpoints](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-api.png)
+
+#### Website
 ![Listagem no website](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-heroes.png)
 ![Prompt de confirmação](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-confirmation-prompt.png)
 ![Validação nos formulários de criação de hérois](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/res/web-createhero-validation.png)
