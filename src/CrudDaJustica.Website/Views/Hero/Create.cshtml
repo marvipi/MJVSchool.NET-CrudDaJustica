@@ -7,9 +7,16 @@
 <h1> @ViewData["Title"]  </h1>
 <hr />
 
-<div class="text-danger">
-	@Html.ValidationSummary()
-</div>
+@if (ViewBag.Success ?? false)
+{
+	<p class="text-success"> Hero succesfully created! </p>
+}
+else
+{
+	<div class="text-danger">
+		@Html.ValidationSummary()
+	</div>
+}
 
 <form asp-action="Create" method="post">
 	<partial name="_HeroForm" model="@Model" />

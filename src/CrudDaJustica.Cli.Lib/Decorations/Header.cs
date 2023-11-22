@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.Lib.Decoration;
+﻿namespace CrudDaJustica.Cli.Lib.Decorations;
 
 /// <summary>
 /// Represents static information to display on the upper part of a console window.

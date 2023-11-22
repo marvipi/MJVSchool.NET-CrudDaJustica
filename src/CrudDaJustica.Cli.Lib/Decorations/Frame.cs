@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CrudDaJustica.Cli.Lib.Decoration;
+namespace CrudDaJustica.Cli.Lib.Decorations;
 
 /// <summary>
 /// Represents the borders around a console window.

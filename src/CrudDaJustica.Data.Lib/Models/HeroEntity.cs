@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Data.Lib.Model;
+﻿namespace CrudDaJustica.Data.Lib.Models;
 
 /// <summary>
 /// Represents a hero from the DC Universe.

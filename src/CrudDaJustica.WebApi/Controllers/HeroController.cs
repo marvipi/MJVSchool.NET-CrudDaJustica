@@ -1,6 +1,6 @@
-﻿using CrudDaJustica.Data.Lib.Model;
-using CrudDaJustica.Data.Lib.Repository;
-using CrudDaJustica.Data.Lib.Service;
+﻿using CrudDaJustica.Data.Lib.Models;
+using CrudDaJustica.Data.Lib.Repositories;
+using CrudDaJustica.Data.Lib.Services;
 using CrudDaJustica.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,7 +52,7 @@ public class HeroController : ControllerBase
             .GetHeroes(dataPage)
             .Select(he => new HeroGetResponse(he.Id, he.Alias, he.Debut, he.FirstName, he.LastName));
 
-        return Ok(new HeroGetPagedResponse(heroes, pagingService.PageRange, dataPage));
+        return Ok(new HeroGetPagedResponse(heroes, pagingService.PageRange, dataPage.Number, dataPage.Rows));
     }
 
     /// <summary>

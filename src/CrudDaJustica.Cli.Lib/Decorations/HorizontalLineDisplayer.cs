@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.Lib.Decoration;
+﻿namespace CrudDaJustica.Cli.Lib.Decorations;
 
 /// <summary>
 /// Represents a window decoration that draws horizontal lines in the console window.

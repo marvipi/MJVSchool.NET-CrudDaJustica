@@ -1,6 +1,6 @@
-﻿using CrudDaJustica.Data.Lib.Repository;
+﻿using CrudDaJustica.Data.Lib.Repositories;
 
-namespace CrudDaJustica.Data.Lib.Service;
+namespace CrudDaJustica.Data.Lib.Services;
 
 /// <summary>
 /// Represents a service that does data paging in a repository.
@@ -54,10 +54,10 @@ public class PagingService
     }
 
     /// <summary>
-    /// Gets the <see cref="CurrentPage"/> and the <see cref="RowsPerPage"/> as a <see cref="Service.DataPage"/>.
+    /// Gets the <see cref="CurrentPage"/> and the <see cref="RowsPerPage"/> as a <see cref="Services.DataPage"/>.
     /// </summary>
     /// <returns>
-    /// A <see cref="Service.DataPage"/> that can be used to retrieve data from the repository.
+    /// A <see cref="Services.DataPage"/> that can be used to retrieve data from the repository.
     /// </returns>
     public DataPage DataPage => new(CurrentPage, RowsPerPage);
 
