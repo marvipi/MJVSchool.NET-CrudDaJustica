@@ -1,5 +1,4 @@
-﻿using CrudDaJustica.Data.Lib.Service;
-using CrudDaJustica.Website.Models;
+﻿using CrudDaJustica.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -28,18 +27,18 @@ public class HeroController : Controller
     /// Lists all heroes in a given data page.
     /// </summary>
     /// <returns> A view containing a list of heroes. </returns>
-    public async Task<IActionResult> Index(int page = PagingService.FIRST_PAGE, int rows = PagingService.MIN_ROWS_PER_PAGE)
+    public async Task<IActionResult> Index(int page = 1, int rows = 10)
     {
         logger.LogInformation("{timestamp}: displaying a list of heroes", DateTime.Now);
         var httpClient = httpClientFactory.CreateClient("HeroApi");
 
-        (var heroes, var pageRange, var dataPage) = await httpClient.GetFromJsonAsync<HeroGetPagedResponse>($"?page={page}&rows={rows}");
+        (var heroes, var pageRange, var validPage, var validRows) = await httpClient.GetFromJsonAsync<HeroGetPagedResponse>($"?page={page}&rows={rows}");
 
-        var heroListModel = new HeroListModel(heroes, pageRange, dataPage.Number);
+        var heroListModel = new HeroListModel(heroes, pageRange, validPage);
 
         // Used to display this page when another view redirects to here.
-        TempData["Rows"] = dataPage.Rows;
-        TempData["Page"] = dataPage.Number;
+        TempData["Rows"] = validRows;
+        TempData["Page"] = validPage;
 
         return View(heroListModel);
     }

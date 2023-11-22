@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace CrudDaJustica.Cli.Lib.Window;
+namespace CrudDaJustica.Cli.Lib.Windows;
 
 /// <summary>
 /// Represents a form that generates fields automatically for a <typeparamref name="T"/> and uses them to read input from the user.

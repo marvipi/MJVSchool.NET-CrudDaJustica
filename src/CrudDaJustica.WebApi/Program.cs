@@ -1,5 +1,5 @@
-using CrudDaJustica.Data.Lib.Repository;
-using CrudDaJustica.Data.Lib.Service;
+using CrudDaJustica.Data.Lib.Repositories;
+using CrudDaJustica.Data.Lib.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

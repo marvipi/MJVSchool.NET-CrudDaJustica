@@ -1,7 +1,7 @@
-﻿using CrudDaJustica.Cli.App.Controller;
-using CrudDaJustica.Cli.App.View;
-using CrudDaJustica.Data.Lib.Repository;
-using CrudDaJustica.Data.Lib.Service;
+﻿using CrudDaJustica.Cli.App.Controllers;
+using CrudDaJustica.Cli.App.Views;
+using CrudDaJustica.Data.Lib.Repositories;
+using CrudDaJustica.Data.Lib.Services;
 
 var sqlServerUsername = Environment.GetEnvironmentVariable("MJVSCHOOLDB_USERNAME");
 var sqlServerPassword = Environment.GetEnvironmentVariable("MJVSCHOOLDB_PASSWORD");

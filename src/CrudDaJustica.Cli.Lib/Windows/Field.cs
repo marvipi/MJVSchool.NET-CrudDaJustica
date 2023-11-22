@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.Lib.Window;
+﻿namespace CrudDaJustica.Cli.Lib.Windows;
 
 /// <summary>
 /// Represents a field <see cref="Form{T}"/>.

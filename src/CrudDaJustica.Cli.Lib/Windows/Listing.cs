@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace CrudDaJustica.Cli.Lib.Window;
+namespace CrudDaJustica.Cli.Lib.Windows;
 
 /// <summary>
 /// Represents an interactable list of <see cref="T"/>.

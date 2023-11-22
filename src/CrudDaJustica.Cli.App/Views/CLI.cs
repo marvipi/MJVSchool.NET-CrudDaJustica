@@ -1,9 +1,9 @@
-﻿using CrudDaJustica.Cli.App.Controller;
-using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Cli.Lib.Decoration;
-using CrudDaJustica.Cli.Lib.Window;
+﻿using CrudDaJustica.Cli.App.Controllers;
+using CrudDaJustica.Cli.App.Models;
+using CrudDaJustica.Cli.Lib.Decorations;
+using CrudDaJustica.Cli.Lib.Windows;
 
-namespace CrudDaJustica.Cli.App.View;
+namespace CrudDaJustica.Cli.App.Views;
 
 /// <summary>
 /// Represents a command-line interface used to interact with this system.
@@ -22,7 +22,7 @@ public class CLI
     private readonly Form<HeroFormModel> heroUpdateForm;
 
     // Summary: The hero currently selected in the heroListing.
-    private HeroViewModel CurrentlySelectedHero => Enumerable.ElementAt(heroListing.Elements, heroListing.CurrentlySelectedElement);
+    private HeroViewModel CurrentlySelectedHero => heroListing.Elements.ElementAt(heroListing.CurrentlySelectedElement);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="CLI"/> class.

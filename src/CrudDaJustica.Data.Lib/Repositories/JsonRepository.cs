@@ -1,8 +1,8 @@
-﻿using CrudDaJustica.Data.Lib.Model;
-using CrudDaJustica.Data.Lib.Service;
+﻿using CrudDaJustica.Data.Lib.Models;
+using CrudDaJustica.Data.Lib.Services;
 using System.Text.Json;
 
-namespace CrudDaJustica.Data.Lib.Repository;
+namespace CrudDaJustica.Data.Lib.Repositories;
 
 /// <summary>
 /// Represents a repository that stores information in a JSON file.

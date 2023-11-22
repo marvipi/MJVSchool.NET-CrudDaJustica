@@ -1,9 +1,9 @@
-﻿using CrudDaJustica.Cli.App.Model;
-using CrudDaJustica.Data.Lib.Repository;
-using CrudDaJustica.Data.Lib.Service;
+﻿using CrudDaJustica.Cli.App.Models;
+using CrudDaJustica.Data.Lib.Repositories;
+using CrudDaJustica.Data.Lib.Services;
 using System.Globalization;
 
-namespace CrudDaJustica.Cli.App.Controller;
+namespace CrudDaJustica.Cli.App.Controllers;
 
 /// <summary>
 /// Represents a controller that manages communication between the hero repository and the user interface.

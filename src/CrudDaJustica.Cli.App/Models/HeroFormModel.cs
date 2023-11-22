@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.App.Model;
+﻿namespace CrudDaJustica.Cli.App.Models;
 
 /// <summary>
 /// Represents the hero data that can be read from a form.

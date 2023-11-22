@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.Lib.Window;
+﻿namespace CrudDaJustica.Cli.Lib.Windows;
 
 /// <summary>
 /// Represents the mapping of a <see cref="ConsoleKey"/> to an <see cref="Action"/>.

@@ -1,4 +1,4 @@
-﻿namespace CrudDaJustica.Cli.App.Model;
+﻿namespace CrudDaJustica.Cli.App.Models;
 
 /// <summary>
 /// Contains information about a hero that can be displayed in the user interface.
