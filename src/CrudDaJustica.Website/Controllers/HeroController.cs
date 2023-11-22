@@ -1,6 +1,4 @@
-﻿using CrudDaJustica.Data.Lib.Model;
-using CrudDaJustica.Data.Lib.Repository;
-using CrudDaJustica.Data.Lib.Service;
+﻿using CrudDaJustica.Data.Lib.Service;
 using CrudDaJustica.Website.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -13,44 +11,35 @@ namespace CrudDaJustica.Website.Controllers;
 public class HeroController : Controller
 {
     private readonly ILogger<HeroController> logger;
-    private readonly IHeroRepository heroRepository;
-    private readonly PagingService pagingService;
+    private readonly IHttpClientFactory httpClientFactory;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeroController"/> class.
     /// </summary>
     /// <param name="logger"> A service responsible for logging the behavior of the website. </param>
-    /// <param name="heroRepository"> The data repository that stores hero information. </param>
-    /// <param name="pagingService"> The service responsible for data paging. </param>
-    public HeroController(ILogger<HeroController> logger, IHeroRepository heroRepository, PagingService pagingService)
+    /// <param name="httpClientFactory"> Service responsible for instantiating http clients. </param>
+    public HeroController(ILogger<HeroController> logger, IHttpClientFactory httpClientFactory)
     {
         this.logger = logger;
-        this.heroRepository = heroRepository;
-        this.pagingService = pagingService;
+        this.httpClientFactory = httpClientFactory;
     }
 
     /// <summary>
     /// Lists all heroes in a given data page.
     /// </summary>
     /// <returns> A view containing a list of heroes. </returns>
-    public IActionResult Index(int page = PagingService.FIRST_PAGE, int rows = PagingService.MIN_ROWS_PER_PAGE)
+    public async Task<IActionResult> Index(int page = PagingService.FIRST_PAGE, int rows = PagingService.MIN_ROWS_PER_PAGE)
     {
         logger.LogInformation("{timestamp}: displaying a list of heroes", DateTime.Now);
+        var httpClient = httpClientFactory.CreateClient("HeroApi");
 
-        pagingService.RowsPerPage = rows;
-        pagingService.JumpToPage(page);
+        (var heroes, var pageRange, var dataPage) = await httpClient.GetFromJsonAsync<HeroGetPagedResponse>($"?page={page}&rows={rows}");
+
+        var heroListModel = new HeroListModel(heroes, pageRange, dataPage.Number);
 
         // Used to display this page when another view redirects to here.
-        TempData["Rows"] = pagingService.RowsPerPage;
-        TempData["Page"] = pagingService.CurrentPage;
-
-        var pageToList = pagingService.DataPage;
-
-        var heroesInCurrentPage = heroRepository
-            .GetHeroes(pageToList)
-            .Select(he => new HeroViewModel(he.Id, he.Alias, he.Debut, he.FirstName, he.LastName));
-
-        var heroListModel = new HeroListModel(heroesInCurrentPage, pagingService.PageRange, pageToList.Number);
+        TempData["Rows"] = dataPage.Rows;
+        TempData["Page"] = dataPage.Number;
 
         return View(heroListModel);
     }
@@ -72,20 +61,21 @@ public class HeroController : Controller
     /// <param name="heroFormModel"> Hero data read from a form. </param>
     /// <returns> The hero creation form. </returns>
     [HttpPost]
-    public IActionResult Create(HeroFormModel heroFormModel)
+    public async Task<IActionResult> Create(HeroFormModel heroFormModel)
     {
         logger.LogInformation("{timestamp}: Attempting to create a new hero", DateTime.Now);
 
-        if (ModelState.IsValid)
+        bool success;
+        if (success = ModelState.IsValid)
         {
-            var newHero = new HeroEntity(
-                Guid.NewGuid(),
-                heroFormModel.Alias,
-                heroFormModel.Debut,
-                heroFormModel.FirstName,
-                heroFormModel.LastName);
+            var httpClient = httpClientFactory.CreateClient("HeroApi");
+            var response = await httpClient.PostAsJsonAsync(httpClient.BaseAddress, heroFormModel);
 
-            heroRepository.RegisterHero(newHero);
+            success = response.IsSuccessStatusCode;
+        }
+
+        if (success)
+        {
             logger.LogInformation("{timestamp}: Hero successfully created", DateTime.Now);
         }
         else
@@ -95,73 +85,79 @@ public class HeroController : Controller
 
         return Create();
     }
-
     /// <summary>
     /// Opens the hero update form.
     /// </summary>
     /// <param name="id"> The id of the hero to update. </param>
     /// <returns> The hero update form pre-filled with information. </returns>
     [HttpGet]
-    public IActionResult Update(Guid id)
+    public async Task<IActionResult> Update(Guid id)
     {
-        var hero = heroRepository.GetHero(id);
+        var httpClient = httpClientFactory.CreateClient("HeroApi");
+        var requestUrl = GetRequestUrl(id, httpClient);
+        var response = await httpClient.GetFromJsonAsync<HeroViewModel>(requestUrl);
 
-        if (hero is null)
+        if (response is null)
         {
             logger.LogWarning("{timestamp}: there was an attempt at updating a non-registered hero", DateTime.Now);
             return RedirectToAction(nameof(Index));
         }
 
-        var heroFormModel = new HeroFormModel(hero.Alias, hero.Debut, hero.FirstName, hero.LastName);
+        var heroFormModel = new HeroFormModel(response.Alias, response.Debut, response.FirstName, response.LastName);
 
         return View((heroFormModel, id));
     }
 
+
     /// <summary>
     /// Updates the information registered about a hero.
     /// </summary>
-    /// <param name="heroFormModel"> New information about the hero. </param>
     /// <param name="id"> The id of the hero to update. </param>
+    /// <param name="heroFormModel"> New information about the hero. </param>
     /// <returns> The hero update form. </returns>
     [HttpPost]
-    public IActionResult Update(HeroFormModel heroFormModel, Guid id)
+    public async Task<IActionResult> Update(Guid id, HeroFormModel heroFormModel)
     {
         logger.LogInformation("{timestamp}: Attempting to update hero", DateTime.Now);
 
-        if (ModelState.IsValid)
+        bool success;
+        if (success = ModelState.IsValid)
         {
-            var updatedInformation = new HeroEntity
-            {
-                Alias = heroFormModel.Alias,
-                Debut = heroFormModel.Debut,
-                FirstName = heroFormModel.FirstName,
-                LastName = heroFormModel.LastName,
-            };
+            var httpClient = httpClientFactory.CreateClient("HeroApi");
+            var requestUrl = GetRequestUrl(id, httpClient);
+            var response = await httpClient.PutAsJsonAsync(requestUrl, heroFormModel);
 
-            if (heroRepository.UpdateHero(id, updatedInformation))
-            {
-                logger.LogInformation("{timestamp}: Hero successfully updated", DateTime.Now);
-            }
-            else
-            {
-                logger.LogWarning("{timestamp}: Failed to update hero", DateTime.Now);
-            }
+            success = response.IsSuccessStatusCode;
+        }
+
+        if (success)
+        {
+            logger.LogInformation("{timestamp}: Hero successfully updated", DateTime.Now);
+        }
+        else
+        {
+            logger.LogWarning("{timestamp}: Failed to update hero", DateTime.Now);
         }
 
         return View((heroFormModel, id));
     }
 
+
     /// <summary>
     /// Deletes a hero from the repository.
     /// </summary>
     /// <param name="id"> The unique identifier of the hero to delete. </param>
-    /// <returns> A redirection to the Index page. </returns>
+    /// <returns> A redirection to the last visited index page. </returns>
     [HttpGet]
-    public IActionResult Delete(Guid id)
+    public async Task<IActionResult> Delete(Guid id)
     {
         logger.LogInformation("{timestamp}: Attempting to delete hero", DateTime.Now);
 
-        if (heroRepository.DeleteHero(id))
+        var httpClient = httpClientFactory.CreateClient("HeroApi");
+        string requestUrl = GetRequestUrl(id, httpClient);
+        var response = await httpClient.DeleteAsync(requestUrl);
+
+        if (response.IsSuccessStatusCode)
         {
             logger.LogInformation("{timestamp}: Hero successfully deleted", DateTime.Now);
         }
@@ -172,6 +168,10 @@ public class HeroController : Controller
 
         return RedirectToLastVisitedIndexPage();
     }
+
+    // Summary: Appends an id to the end of an HttpClient's base address.
+    // Returns: An URL in the format: domain/id
+    private static string GetRequestUrl(Guid id, HttpClient httpClient) => $"{httpClient.BaseAddress}/{id}";
 
     /// <summary>
     /// Redirects to the page of the Index view last visited by the user.

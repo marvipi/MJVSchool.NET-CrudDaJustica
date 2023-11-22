@@ -1,24 +1,12 @@
-using CrudDaJustica.Data.Lib.Repository;
-using CrudDaJustica.Data.Lib.Service;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IHeroRepository, SqlServerRepository>(serviceProvider =>
+builder.Services.AddHttpClient("HeroApi", httpClient =>
 {
-    var sqlServerUsername = Environment.GetEnvironmentVariable("MJVSCHOOLDB_USERNAME");
-    var sqlServerPassword = Environment.GetEnvironmentVariable("MJVSCHOOLDB_PASSWORD");
-    var connectionString = string.Format(builder.Configuration.GetConnectionString("SqlServer")!,
-        sqlServerUsername,
-        sqlServerPassword);
-    return new(connectionString);
+    httpClient.BaseAddress = new Uri("https://localhost:7042/api/Hero");
 });
-
-builder.Services.AddScoped(serviceProvider => new PagingService(
-    heroRepository: serviceProvider.GetRequiredService<IHeroRepository>(),
-    rowsPerPage: PagingService.MIN_ROWS_PER_PAGE));
 
 var app = builder.Build();
 
