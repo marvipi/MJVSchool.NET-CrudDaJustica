@@ -13,7 +13,7 @@ Ele possui duas interfaces de usuário: uma web implementada com o ASP.NET MVC e
 ### Conceitos abordados
 Durante o curso foram abordados diversas características e funcionalidades do C# e .NET. A seguir estão aquelas que melhor se encaixaram no escopo deste projeto.
 #### ASP.NET
-- [x] REST API: o website envia requisições http para um API: [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/tree/stable/src/CrudDaJustica.WebApi)
+- [x] REST API: o backend do sistema web é um API. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/tree/stable/src/CrudDaJustica.WebApi)
 - [x] ASP.NET MVC: a interface web do projeto. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/tree/stable/src/CrudDaJustica.Website)
 - [x] ADO.NET: o projeto consegue armazenar dados por meio do SQL Server. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Data.Lib/Repositories/SqlServerRepository.cs)
 - [x] Leitura do arquivo appsettings.json: a string de conexão do banco de dados é lida deste arquivo. [Link](https://github.com/marvipi/MJVSchool.NET-CrudDaJustica/blob/stable/src/CrudDaJustica.Website/Program.cs)
