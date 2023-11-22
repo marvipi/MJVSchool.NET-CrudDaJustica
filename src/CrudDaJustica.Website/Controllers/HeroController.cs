@@ -71,6 +71,7 @@ public class HeroController : Controller
             var response = await httpClient.PostAsJsonAsync(httpClient.BaseAddress, heroFormModel);
 
             success = response.IsSuccessStatusCode;
+            ViewBag.Success = success;
         }
 
         if (success)
@@ -131,6 +132,7 @@ public class HeroController : Controller
 
         if (success)
         {
+            ViewBag.Success = success;
             logger.LogInformation("{timestamp}: Hero successfully updated", DateTime.Now);
         }
         else
